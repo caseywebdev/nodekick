@@ -16,7 +16,8 @@
 
   <body>
     <% if (o.req.user) { %>
-      Welcome back, <img src="<%= o.req.user.pic %>"> <%= o.req.user.sn %>
+      Welcome back, <img src="<%= o.req.user.pic %>"> <%= o.req.user.sn %><br>
+      <a href='/auth/sign-out'>Sign Out</a>
     <% } else { %>
       <a href="/auth/twitter">Sign in with Twitter</a>
     <% } %>
