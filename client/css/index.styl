@@ -11,8 +11,19 @@ global-reset()
 .js-desktop .mobile-only
   display none
 
-.swipe-ack
+.move-ack
   width 200px
   height 400px
+  transition opacity 1s ease-in-out
+  opacity 0
+  &.js-flash
+    opacity 1
+  &.js-left
+  &.js-right
   &.js-up
     background url('/images/kick-sprite.png')
+  &.js-left
+    background-position 200px 0
+    transform scaleX(-1)
+  &.js-right
+    background-position 200px 0
