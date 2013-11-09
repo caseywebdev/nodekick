@@ -4,14 +4,27 @@
   "description": "Team Us",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:nko4/team-us.git"
   },
   "dependencies": {
-    "nko": "*"
+    "nko": "x",
+    "underscore": "x",
+    "passport": "x",
+    "passport-twitter": "x",
+    "socket.io": "x",
+    "redis": "x",
+    "hiredis": "x",
+    "express": "x"
+  },
+  "devDependencies": {
+    "cogs": "x",
+    "watchy": "x",
+    "stylus": "x",
+    "nib": "x"
   },
   "engines": {
     "node": "0.10.x"

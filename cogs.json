@@ -1,0 +1,14 @@
+{
+  "paths": [
+    "node_modules",
+    "bower_components",
+    "client"
+  ],
+  "options": {
+    "processors.styl.options.nib": true
+  },
+  "targets": {
+    "client/index.js": "public",
+    "client/css/index.styl": "public"
+  }
+}
