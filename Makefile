@@ -4,13 +4,16 @@ WATCHY=$(BIN)watchy
 SERVER=node server
 
 dev:
-	$(MAKE) -j server-w cogs-w
+	$(MAKE) -j nginx server-w cogs-w
+
+nginx:
+	mkdir -p log &&	sudo nginx >> log/nginx.log 2>&1
 
 server:
 	node server
 
 server-w:
-	$(WATCHY) -w server -W 10 -- node server
+	$(WATCHY) -w server -W 0.25 -- node server
 
 cogs-app-dev:
 	$(COGS)

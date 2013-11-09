@@ -8,10 +8,11 @@ var defaults = {
     }
   },
   world: {
-    gravity: 100,
+    gravity: 100, // amount of gravity applied per second
     jumpPower: 30,
-    kickAngle: 0.785, // radians
-    updateRate: 30 // per second
+    kickPower: 30,
+    // kickAngle: 0.785, // radians
+    fps: 30
   }
 };
 

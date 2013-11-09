@@ -20,7 +20,8 @@
     "hiredis": "x",
     "express": "x",
     "herit": "x",
-    "express-namespace": "x"
+    "express-namespace": "x",
+    "backbone": "x"
   },
   "devDependencies": {
     "cogs": "x",

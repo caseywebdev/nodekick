@@ -11,18 +11,14 @@
   var io = window.io;
 
   var app = window.app = {
-    socket: io.connect(),
-
     socketReady: function () {
-      app.socket.on('users', app.drawUsers);
+      app.socket.on('step', app.drawUsers);
     },
 
-    domReady: function () {
-
-    },
+    domReady: function () {},
 
     drawUsers: function (users) {
-      // update canvas...
+      console.log('drawing users...');
     }
   };
 
