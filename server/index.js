@@ -33,6 +33,7 @@ app.use(express.cookieSession(config.session));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static('public'));
+app.use(require('./middleware/template-helpers'));
 
 // passport setup
 // will replace this with redis
