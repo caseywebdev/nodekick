@@ -17,7 +17,6 @@
     "passport-twitter": "x",
     "socket.io": "x",
     "redis": "x",
-    "hiredis": "x",
     "express": "x",
     "herit": "x",
     "express-namespace": "x",
