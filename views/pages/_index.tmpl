@@ -18,7 +18,7 @@
     <div>
       <% if (o.req.user) { %>
         <img src="<%- o.req.user.get('avatar') %>">
-        <%- o.req.user.get('displayName') %>
+        <%- o.req.user.get('username') %>
         <a href='/auth/sign-out'>Sign Out</a>
       <% } else { %>
         <a href="/auth/twitter">Sign in with Twitter</a>
