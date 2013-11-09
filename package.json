@@ -11,6 +11,7 @@
     "url": "git@github.com:nko4/team-us.git"
   },
   "dependencies": {
+    "bower": "x",
     "nko": "x",
     "underscore": "x",
     "passport": "x",
@@ -27,6 +28,9 @@
     "watchy": "x",
     "stylus": "x",
     "nib": "x"
+  },
+  "scripts": {
+    "postinstall" : "node_modules/.bin/bower install"
   },
   "engines": {
     "node": "0.10.x"
