@@ -15,12 +15,15 @@
   </head>
 
   <body>
-    <% if (o.req.user) { %>
-      Welcome back, <img src="<%= o.req.user.pic %>"> <%= o.req.user.sn %><br>
-      <a href='/auth/sign-out'>Sign Out</a>
-    <% } else { %>
-      <a href="/auth/twitter">Sign in with Twitter</a>
-    <% } %>
+    <div>
+      <% if (o.req.user) { %>
+        <img src="<%- o.req.user.get('avatar') %>">
+        <%- o.req.user.get('displayName') %>
+        <a href='/auth/sign-out'>Sign Out</a>
+      <% } else { %>
+        <a href="/auth/twitter">Sign in with Twitter</a>
+      <% } %>
+    </div>
     <canvas id='stage' class='desktop-only' width='1000' height='800' style="border: solid 1px #000;"></canvas>
     <div class='mobile-only js-move-ack move-ack'></div>
 

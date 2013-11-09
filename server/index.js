@@ -49,15 +49,13 @@ passport.use(new TwitterStrategy(config.twitter,
     // if (err) { return done(err); }
     console.log(token, profile, done);
     var users = app.world.users;
-    var user = users.get(profile.id);
-    if (user) return done(null, user);
-    users.add(user = new User({
+    users.add({
       id: profile.id,
       username: profile.username,
       displayName: profile.displayName,
-      photos: profile.photos[0].value
-    }));
-    done(null, user);
+      avatar: profile.photos[0].value
+    }, {merge: true});
+    done(null, users.get(profile.id));
   }
 ));
 
@@ -70,9 +68,9 @@ passport.deserializeUser(function (id, done) {
   var user = users.get(id);
   if (user) return done(null, user);
   db.findUser(id, function (er, user) {
-    user = new User(user);
+    if (er) return done(er);
     users.add(user);
-    done(er, user);
+    done(null, users.get(user));
   });
 });
 
