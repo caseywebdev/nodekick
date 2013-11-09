@@ -20,6 +20,8 @@ if (!window.NodeKick)
       this.donatelloSprite.addEventListener('load', function (evt) { self.imageLoaded.call(self) });
       this.donatelloSprite.src = 'images/donatello-sprite.png';
 
+      this.diveSpriteInverted = document.getElementById('dive-invert');
+
       console.log('bong');
     },
 
@@ -28,10 +30,20 @@ if (!window.NodeKick)
 
       this.imageAssetCount++;
 
-      if (this.imageAssetCount === 2)
+      if (this.imageAssetCount === 2) {
+        this.createInvertedCopies();
         this.isLoaded = true;
+      }
 
     },
+
+    createInvertedCopies: function() {
+
+      var c = this.diveSpriteInverted.getContext('2d');
+      c.scale(-1, 1);
+      c.drawImage(this.diveSprite, -this.diveSpriteInverted.width, 0, this.diveSpriteInverted.width, this.diveSpriteInverted.height);
+
+    }
 
   };
 

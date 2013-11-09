@@ -9,6 +9,8 @@ if (!window.NodeKick)
     spriteHeight: 200,
     spriteWidth: 100,
     spriteBottomPadding: 15,
+    drawServerOrigin: true,
+    drawBoundingBox: true,
 
     init: function() {
       this.canvas = window.document.getElementById('stage');
@@ -31,20 +33,34 @@ if (!window.NodeKick)
       
       _.each(users, function(user) {
 
-        var x = user.x;
+        var x = user.x - (this.spriteWidth / 2);
         var y = this.floorY + user.y - this.spriteHeight + this.spriteBottomPadding;
+        var serverOrigin = { x: x + (this.spriteWidth / 2), y: y + this.spriteHeight };
 
-        //console.log('x, y', x, y);
+        if (this.drawBoundingBox)
+          this.c.strokeRect(x, y, 100, 200);
+        if (this.drawServerOrigin)
+          this.c.fillRect(serverOrigin.x, serverOrigin.y, 5, 5);
 
-        var spriteX = 0;
-        this.c.strokeRect(x, y, 100, 200);
-        var spriteX = 0;
-        if (user.state == 'jump')
-          spriteX = 200;
-        else if (user.state == 'kick')
-          spriteX = 400;
+        if (user.dir === 1) {
+          var spriteX = 0;
+          if (user.state == 'jump')
+            spriteX = 200;
+          else if (user.state == 'kick')
+            spriteX = 400;
+          this.c.drawImage(window.NodeKick.Assets.diveSprite, spriteX, 0, 200, 400, x, y, 100, 200);
+        }
+        else {
+          var spriteX = 0;
+          if (user.state == 'jump')
+            spriteX = 200;
+          else if (user.state == 'stand')
+            spriteX = 400;
+          //console.log('spriteX', spriteX);
+          this.c.drawImage(window.NodeKick.Assets.diveSpriteInverted, spriteX, 0, 200, 400, x, y, 100, 200);
+        }
 
-        this.c.drawImage(window.NodeKick.Assets.diveSprite, spriteX, 0, 200, 400, x, y, 100, 200);
+
 
       }, this);
 
