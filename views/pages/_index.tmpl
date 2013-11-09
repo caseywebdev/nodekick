@@ -3,19 +3,21 @@
 <html>
 
   <head>
+    <meta
+      name='viewport'
+      content='width=device-width,initial-scale=1.0,user-scalable=no'
+    >
+    <meta name='apple-mobile-web-app-capable' content='yes'>
     <title>NodeKick</title>
-    <link href='/index.css' type='text/stylesheet'>
+    <link href='/index.css' rel='stylesheet'>
     <script src='/socket.io/socket.io.js'></script>
     <script src='/index.js'></script>
   </head>
 
   <body>
-    <h1>Yo</h1>
-
-    <a href="/auth/twitter">LOG IN TO TWITTER!!!</a>
-
-    <canvas id="stage" style="border: solid 1px #000;" width="1000" height="800">
-    </canvas>
+    <a href='/auth/twitter'>Log in with Twitter to Play</a>
+    <canvas id='stage' class='desktop-only' width='1000' height='800'></canvas>
+    <div class='mobile-only swipe-ack js-up'></div>
 
     <script>
       window.onload = load;
