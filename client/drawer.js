@@ -5,12 +5,14 @@ if (!window.NodeKick)
   
   var Drawer = window.NodeKick.Drawer = {
 
-    floorY: 700,
+    floorY: 590,
     spriteHeight: 200,
     spriteWidth: 100,
     spriteBottomPadding: 15,
-    drawServerOrigin: true,
-    drawBoundingBox: true,
+
+    drawServerOrigin: false,
+    drawBoundingBox: false,
+    drawFloorLine: false,
 
     init: function() {
       this.canvas = window.document.getElementById('stage');
@@ -22,10 +24,13 @@ if (!window.NodeKick)
 
     drawBackground: function() {
       this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
-      this.c.beginPath();
-      this.c.moveTo(0, this.floorY);
-      this.c.lineTo(this.canvas.width, this.floorY);
-      this.c.stroke();
+
+      if (this.drawFloorLine) {
+        this.c.beginPath();
+        this.c.moveTo(0, this.floorY);
+        this.c.lineTo(this.canvas.width, this.floorY);
+        this.c.stroke();
+      }
     },
 
     drawUsers: function(users) {
