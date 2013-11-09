@@ -15,7 +15,11 @@
   </head>
 
   <body>
-    <a href='/auth/twitter'>Log in with Twitter to Play</a>
+    <% if (o.req.user) { %>
+      Welcome back, <img src="<%= o.req.user.pic %>"> <%= o.req.user.sn %>
+    <% } else { %>
+      <a href="/auth/twitter">Sign in with Twitter</a>
+    <% } %>
     <canvas id='stage' class='desktop-only' width='1000' height='800'></canvas>
     <div class='mobile-only swipe-ack js-up'></div>
 
