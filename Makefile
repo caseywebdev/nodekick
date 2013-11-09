@@ -10,7 +10,7 @@ server:
 	node server
 
 server-w:
-	$(WATCHY) -w server -W 10 -- node server
+	$(WATCHY) -w server -W 0.25 -- node server
 
 cogs-app-dev:
 	$(COGS)

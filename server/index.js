@@ -5,16 +5,26 @@ var config = require('./config');
 var express = require('express');
 var fs = require('fs');
 var _ = require('underscore')._;
+var World = require('./models/world');
+var io = require('socket.io');
 
 // express setup
 require('express-namespace');
 var app = module.exports = express();
+var server = app.listen(config.port);
+
+// start socket.io
+app.io = io.listen(server);
 app.use(express.compress());
 app.use(express.urlencoded());
 app.use(express.json());
 app.use(express.cookieParser());
 app.use(express.cookieSession(config.session));
 app.use(express.static('public'));
+
+// add game state, app.world
+app.world = new World();
+app.world.start();
 
 // controllers
 var files = fs.readdirSync(__dirname + '/controllers');
@@ -34,8 +44,10 @@ if (process.getuid() === 0) {
   });
 }
 
-// start game
-var server = app.listen(config.port);
-
 // signal hooks
-process.on('SIGTERM', _.bind(server.close, server));
+process.on('SIGTERM', function () {
+  console.log('received SIGTERM');
+  app.world.stop();
+  server.close();
+  setTimeout(process.exit.bind(process.exit), 100);
+});
