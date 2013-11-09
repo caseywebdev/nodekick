@@ -4,10 +4,13 @@ WATCHY=$(BIN)watchy
 SERVER=node server
 
 dev:
-	$(MAKE) -j nginx server-w cogs-w
+	$(MAKE) -j nginx redis server-w cogs-w
 
 nginx:
 	mkdir -p log &&	sudo nginx >> log/nginx.log 2>&1
+
+redis:
+	mkdir -p log &&	redis-server /usr/local/etc/redis.conf >> log/redis.log 2>&1
 
 server:
 	node server
