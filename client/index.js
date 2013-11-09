@@ -111,7 +111,6 @@
   $(app.domReady);
 
   function drawLoop() {
-    console.log('draw loop');
     window.requestAnimationFrame(drawLoop);
     app.draw();
   }
