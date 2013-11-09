@@ -28,14 +28,14 @@
         boxes: {
           r: {
             s: [
-              { x: 0, y: 0, w: 100, h: 200 },
+              //{ x: 0, y: 0, w: 100, h: 200 },
               { x: 40, y: 15, w: 20, h: 25 },
               { x: 20, y: 45, w: 50, h: 55 },
               { x: 25, y: 100, w: 42.5, h: 45 },
               { x: 15, y: 147.5, w: 65, h: 35 }
             ],
             j: [
-              { x: 0, y: 0, w: 100, h: 200 },
+              //{ x: 0, y: 0, w: 100, h: 200 },
               { x: 45, y: 20, w: 25, h: 27.5 },
               { x: 32.5, y: 52.5, w: 32.5, h: 50 },
               { x: 45, y: 100, w: 12.5, h: 87.5 },
@@ -43,7 +43,7 @@
               { x: 25, y: 135, w: 37.5, h: 10 }
             ],
             k: [
-              { x: 0, y: 0, w: 100, h: 200 },
+              //{ x: 0, y: 0, w: 100, h: 200 },
               { x: 40, y: 40, w: 20, h: 30 },
               { x: 22.5, y: 65, w: 25, h: 12.5 },
               { x: 10, y: 80, w: 35, h: 20 },
@@ -56,14 +56,14 @@
           },
           l: {
             s: [
-              { x: 0, y: 0, w: 100, h: 200 },
+              //{ x: 0, y: 0, w: 100, h: 200 },
               { x: 40, y: 15, w: 20, h: 25 },
               { x: 30, y: 45, w: 50, h: 55 },
               { x: 32.5, y: 100, w: 42.5, h: 45 },
               { x: 20, y: 147.5, w: 65, h: 35 }
             ],
             j: [
-              { x: 0, y: 0, w: 100, h: 200 },
+              //{ x: 0, y: 0, w: 100, h: 200 },
               { x: 30, y: 20, w: 25, h: 27.5 },
               { x: 35, y: 52.5, w: 32.5, h: 50 },
               { x: 42.5, y: 100, w: 12.5, h: 87.5 },
@@ -71,7 +71,7 @@
               { x: 37.5, y: 135, w: 37.5, h: 10 }
             ],
             k: [
-              { x: 0, y: 0, w: 100, h: 200 },
+              //{ x: 0, y: 0, w: 100, h: 200 },
               { x: 40, y: 40, w: 20, h: 30 },
               { x: 52.5, y: 65, w: 25, h: 12.5 },
               { x: 55, y: 80, w: 35, h: 20 },
@@ -169,10 +169,23 @@
         }
       }
 
-      function isHit(foot, rest) {
+      function isDeath(foot, otherPlayers) {
         var footPoint = toPoints(foot);
-        console.log(foot);
-        console.log(footPoint);
+        _.each(otherPlayers, function(player) {
+          _.each(player, function(box) {
+            if(hasCollision(footPoint, toPoints(box))) {
+              console.log("death");
+            }
+          });
+        });
+      }
+
+      function hasCollision(points1, points2) {
+        if (points1.right < points2.left) return false;
+        if (points1.left > points2.right) return false;
+        if (points1.bottom < points2.top) return false;
+        if (points1.top > points2.bottom) return false;
+        return true
       }
 
       function toPoints(box) {
@@ -188,7 +201,13 @@
       var allBoxes = { };
 
       function drawBoxes(c, originX, originY, boxes) {
-        allBoxes[c] = boxes;
+        var clonedBoxes = JSON.parse(JSON.stringify(boxes));
+        _.each(clonedBoxes, function(clonedBox) {
+          clonedBox.x += originX;
+          clonedBox.y += originY;
+        });
+
+        allBoxes[c] = clonedBoxes;
         $("." + c).remove();
         _.each(boxes, function(box) {
           var div = $("<div></div>");
@@ -196,8 +215,8 @@
             currentMovingClass = c;
           });
           div.mousemove(function(e) {
-            var diffX = currentMousePos.top - lastMousePos.top;
-            var diffY = currentMousePos.left - lastMousePos.left;
+            var diffY = currentMousePos.top - lastMousePos.top;
+            var diffX = currentMousePos.left - lastMousePos.left;
             if(currentMovingClass) {
               _.each(allBoxes[currentMovingClass], function(playerBox) {
                 playerBox.y = playerBox.y + diffY;
@@ -207,8 +226,8 @@
               $("." + currentMovingClass).each(function() {
                 var element = $(this);
                 var pos = element.position();
-                element.css({ top: pos.top + diffX });
-                element.css({ left: pos.left + diffY });
+                element.css({ top: pos.top + diffY });
+                element.css({ left: pos.left + diffX });
                 var theRest = [ ];
                 for(var b in allBoxes) {
                   if(b != c) {
@@ -216,7 +235,7 @@
                   }
                 }
 
-                if(c === "lk" || c == "rk") { isHit(_.last(allBoxes[c]), theRest); }
+                if(c === "lk" || c == "rk") { isDeath(_.last(allBoxes[c]), theRest); }
               });
             }
           });
