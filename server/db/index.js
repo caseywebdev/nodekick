@@ -13,7 +13,7 @@ module.exports = {
     });
   },
   createUser: function (user, cb) {
-    client.hset(hkey, user.id, JSON.stringify(user.toRedis()), function (er) {
+    client.hset(hkey, user.id, JSON.stringify(user.toUserData()), function (er) {
       if (er) cb(er);
       cb(null, user.id);
     });

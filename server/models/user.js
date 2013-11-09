@@ -37,7 +37,7 @@ var User = module.exports = Backbone.Model.extend({
   toFrame: function () {
     return this.pick('id', 'x', 'y', 'dir', 'state');
   },
-  toRedis: function () {
+  toUserData: function () {
     return this.pick('id', 'username', 'displayName', 'avatar');
   },
 

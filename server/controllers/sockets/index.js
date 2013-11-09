@@ -4,14 +4,28 @@ var _ = require('underscore');
 
 module.exports = function (app) {
   var clients = app.wss.clients;
-  app.world.on('step', function (users) {
-    var message = JSON.stringify({
-      id: _.uniqueId(),
-      name: 'step',
-      data: users
-    });
-    _.each(clients, function (client) { client.send(message); });
+
+  var wsMsg = function (name, obj) {
+    return JSON.stringify({id: _.uniqueId(), name: name, data: obj});
+  };
+
+  var broadcast = function (name, data) {
+    _.invoke(clients, 'send', wsMsg(name, data));
+  };
+
+  // send all user data
+  app.wss.on('connection', function (ws) {
+    ws.send(wsMsg('userData', app.world.getUsers()));
   });
+  app.world.on('userData', function (users) {
+    broadcast('userData', users);
+  });
+
+  // send user frames
+  app.world.on('step', function (users) {
+    broadcast('step', users);
+  });
+
   process.on('SIGTERM', _.partial(_.invoke, clients, 'close'));
 };
 

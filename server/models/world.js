@@ -6,7 +6,15 @@ var User = require('./user');
 
 var World = module.exports = Backbone.Model.extend({
   initialize: function () {
+    var world = this;
     this.users = new User.Collection();
+    this.users.on('add', function (user, users) {
+      console.log('user ' + user.get('username') + ' joined!');
+      world.trigger('userData', world.getUsers());
+    });
+  },
+  getUsers: function () {
+    return this.users.invoke('toUserData');
   },
   // control flow
   step: function () {

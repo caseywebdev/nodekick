@@ -15,9 +15,12 @@
   var $ = window.jQuery;
   var config = window.config;
   var live = window.live;
+  var _ = window._;
+  var NodeKick = window.NodeKick;
 
   var app = window.app = {
-    users: {},
+    users: [],
+    usersById: {},
 
     domReady: function () {
       $('html').addClass(config.mobile ? 'js-mobile' : 'js-desktop');
@@ -25,11 +28,13 @@
       window.NodeKick.Assets.init();
     },
 
-    draw: function() {
+    draw: function () {
 
       if (!NodeKick.Drawer.canvas || !NodeKick.Assets.isLoaded) {
         console.log('assets not yet loaded');
-        return; //DOM is not yet loaded or image assets have not loaded, so no need to draw yet!
+        // DOM is not yet loaded or image assets have not loaded,
+        // so no need to draw yet!
+        return;
       }
 
       NodeKick.Drawer.drawBackground();
@@ -37,6 +42,14 @@
     },
 
     updateUsers: function (users) { app.users = users; },
+
+    updateUserData: function (users) {
+      _.reduce(users, function (usersById, user) {
+        usersById[user.id] = user;
+        return usersById;
+      }, app.usersById);
+
+    },
 
     move: function (dir) {
       $.post('/move/' + dir);
@@ -49,7 +62,9 @@
   };
 
   if (!config.mobile) {
-    live.connect('ws://' + location.host).on('step', app.updateUsers);
+    live.connect('ws://' + location.host)
+      .on('step', app.updateUsers)
+      .on('userData', app.updateUserData);
   }
 
   (function () {
