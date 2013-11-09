@@ -20,8 +20,7 @@
     "hiredis": "x",
     "express": "x",
     "herit": "x",
-    "express-namespace": "x",
-    "connect": "x"
+    "express-namespace": "x"
   },
   "devDependencies": {
     "cogs": "x",
