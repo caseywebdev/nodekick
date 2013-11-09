@@ -1,6 +1,7 @@
 BIN=node_modules/.bin/
 COGS=$(BIN)cogs
 WATCHY=$(BIN)watchy
+BOWER=$(BIN)bower
 SERVER=node server
 
 dev:
@@ -18,13 +19,11 @@ server:
 server-w:
 	$(WATCHY) -w server -W 0.25 -- node server
 
-cogs-app-dev:
-	$(COGS)
-
 cogs-w:
 	$(COGS) -w client,css
 
 compress:
+	$(BOWER) install
 	$(COGS) -c
 
 .PHONY: server

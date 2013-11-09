@@ -21,16 +21,18 @@
     "express": "x",
     "express-namespace": "x",
     "backbone": "x",
-    "underscore-express": "x"
+    "cogs": "x",
+    "underscore-express": "x",
+    "stylus": "x",
+    "nib": "x",
+    "csso": "x",
+    "uglify-js": "x"
   },
   "devDependencies": {
-    "cogs": "x",
-    "watchy": "x",
-    "stylus": "x",
-    "nib": "x"
+    "watchy": "x"
   },
   "scripts": {
-    "postinstall" : "node_modules/.bin/bower install"
+    "postinstall" : "make compress"
   },
   "engines": {
     "node": "0.10.x"
