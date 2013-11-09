@@ -7,7 +7,6 @@ var User = require('./user');
 var World = module.exports = Backbone.Model.extend({
   initialize: function () {
     this.users = new User.Collection();
-    console.log(this.users);
   },
   // control flow
   step: function () {
