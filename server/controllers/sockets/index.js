@@ -5,7 +5,7 @@ var _ = require('underscore');
 
 module.exports = function (app) {
   app.io.sockets.on('connection', function (socket) {
-    sockets[socket.id] = socket;
+    sockets[socket.id] = socket.volatile;
     console.log(socket.handshake);
 
     socket.on('disconnect', function () {
