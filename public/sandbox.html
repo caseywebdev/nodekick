@@ -9,6 +9,8 @@
     </div>
     <div id="player" style="width: 50px; height: 50px; border: solid 1px silver"></div>
     <br/>
+    <div id="currentX"></div>
+    <div id="currentY"></div>
     <input type="button" id="kickLeft" value="kick left" />
     <input type="button" id="jump" value="jump" />
     <input type="button" id="kickRight" value="kick right" />
@@ -87,6 +89,8 @@
           lastMousePos.left = currentMousePos.left;
           currentMousePos.top = event.pageY;
           currentMousePos.left = event.pageX;
+          $("#currentX").html(event.pageX);
+          $("#currentY").html(event.pageY);
         });
 
         $(document).mouseup(function(event) {

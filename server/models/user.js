@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
 var config = require('../config');
+var _ = require('underscore');
 
 var User = module.exports = Backbone.Model.extend({
   // attributes
@@ -61,6 +62,45 @@ var User = module.exports = Backbone.Model.extend({
     });
   },
 
+  foot: function () {
+    if(!this.isKicking()) { return null; }
+    var kf = this.toFrame();
+    var kickerFoot = _.last(this.boxes());
+    return kickerFoot;
+  },
+  
+  boxes: function() {
+    var kf = this.toFrame();
+    var boxesForUser = JSON.parse(
+        JSON.stringify(
+          config.world.boxes[kf.dir][kf.state]));
+    _.each(boxesForUser, function(box) {
+      box.x += kf.x;
+      box.x2 += kf.x;
+      box.y += kf.y;
+      box.y2 += kf.y;
+    });
+    return boxesForUser;
+  },
+
+  recordHit: function(foot) {
+    var footPoint = foot;
+    var _this = this;
+    _.each(this.boxes(), function(box) {
+      if(_this.hasCollision(footPoint, box)) {
+        _this.set({ "state": "dying" });
+      }
+    });
+  },
+
+  hasCollision: function(points1, points2) {
+    if (points1.x2 < points2.x) return false;
+    if (points1.x > points2.x2) return false;
+    if (points1.y2 < points2.y) return false;
+    if (points1.y > points2.y2) return false;
+    return true
+  },
+
   isDead: function () { return this.get('state') === 'dying'; },
   isStanding: function () { return this.get('state') === 'standing'; },
   isJumping: function () { return this.get('state') === 'jumping'; },
@@ -73,5 +113,27 @@ var User = module.exports = Backbone.Model.extend({
 });
 
 User.Collection = Backbone.Collection.extend({
-  model: User
+  model: User,
+  checkCollisions: function() {
+    var kickers = _.filter(this.models, function(model) {
+      return model.isKicking();
+    });
+
+    var models = this.models;
+    
+    _.each(kickers, function(kicker) {
+      _.each(models, function(other) {
+        if(kicker !== other) {
+          other.recordHit(kicker.foot());
+        }
+      });
+    });
+  },
+  removeDeadPlayers: function() {
+    var deadPlayers = _.filter(this.models, function(model) {
+      return model.isDead();
+    });
+
+    this.remove(deadPlayers);
+  }
 });
