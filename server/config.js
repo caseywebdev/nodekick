@@ -11,7 +11,7 @@ var defaults = {
     gravity: 3000, // amount of gravity applied per second
     jumpPower: 1500,
     kickPower: 700,
-    fps: 30
+    fps: 60
   }
 };
 
