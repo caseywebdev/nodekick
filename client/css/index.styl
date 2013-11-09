@@ -1,0 +1,18 @@
+@import 'nib'
+
+global-reset()
+
+.body
+  text-size-adjust 100%
+
+.js-mobile .desktop-only
+  display none
+
+.js-desktop .mobile-only
+  display none
+
+.swipe-ack
+  width 200px
+  height 400px
+  &.js-up
+    background url('/images/kick-sprite.png')
