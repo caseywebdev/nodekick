@@ -12,11 +12,11 @@ var World = module.exports = Backbone.Model.extend({
   // control flow
   step: function () {
     var now = Date.now();
-    this.dt = (now - this.lastStep) / 1000;
+    var dt = (now - this.lastStep) / 1000;
     this.lastStep = now;
     this.users.invoke('step', this);
     // this.users.checkCollisions();
-    this.trigger('step', this.users.invoke('toFrame'));
+    this.trigger('step', this.users.invoke('toFrame', dt));
   },
   start: function () {
     if (this.running) {

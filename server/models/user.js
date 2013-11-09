@@ -16,8 +16,7 @@ var User = module.exports = Backbone.Model.extend({
     state: 's'
   },
 
-  step: function (world) {
-    var dt = world.dt;
+  step: function (dt) {
     if (this.isJumping()) {
       // apply gravity
       var yv = this.get('yv') - config.gravity * dt;
