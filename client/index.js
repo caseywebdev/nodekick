@@ -13,6 +13,7 @@
   'use strict';
 
   var $ = window.jQuery;
+  var _ = window._;
   var config = window.config;
   var io = window.io;
 
@@ -31,7 +32,7 @@
     },
 
     draw: function() {
-      
+
       if (!NodeKick.Drawer.canvas || !NodeKick.Assets.isLoaded) {
         console.log('assets not yet loaded');
         return; //DOM is not yet loaded or image assets have not loaded, so no need to draw yet!
@@ -42,8 +43,10 @@
     },
 
     updateUsers: function (users) {
-      _.each(users, function(user) {
-        //Update the server-side user to the client-side state
+      _.each(users, function (user) {
+        var obj = app.users[user.id];
+        if (!obj) obj = app.users[user.id] = {};
+        _.extend(obj, user);
       });
     },
 

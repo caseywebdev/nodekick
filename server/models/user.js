@@ -6,14 +6,14 @@ var User = module.exports = Backbone.Model.extend({
   //   handle
   //   x, y
   //   dir (-1, 1)
-  //   state (j, k, s, d)
+  //   state (jumping, kicking, standing, dying)
   defaults: {
     x: 0,
     y: -1000,
     xv: 0,
     yv: 0,
     dir: 1,
-    state: 'j'
+    state: 'jumping'
   },
 
   step: function (dt) {
@@ -32,17 +32,15 @@ var User = module.exports = Backbone.Model.extend({
     }
 
     if (this.get('y') > 0) {
-      this.set({ y: 0, yv: 0, xv: 0, state: 's' });
+      this.set({ y: 0, yv: 0, xv: 0, state: 'standing' });
     }
   },
   toFrame: function () {
-    return {
-      u: this.id,
-      x: this.get('x'),
-      y: this.get('y'),
-      d: this.get('dir'),
-      s: this.get('state')
-    };
+    console.log('' + this.id, this.get('dir'));
+    return this.pick('id', 'x', 'y', 'dir', 'state');
+  },
+  toRedis: function () {
+    return this.pick('id', 'username', 'displayName', 'avatar');
   },
 
   moveLeft: function () { this._kick(-1); },
@@ -51,7 +49,7 @@ var User = module.exports = Backbone.Model.extend({
     if (this.canChangeDir()) this.set('dir', dir);
     if (!this.canKick()) return;
     this.set({
-      state: 'k',
+      state: 'kicking',
       xv: dir * config.world.kickPower,
       yv: config.world.kickPower
     });
@@ -60,15 +58,15 @@ var User = module.exports = Backbone.Model.extend({
   moveUp: function () {
     if (!this.canJump()) return;
     this.set({
-      state: 'j',
+      state: 'jumping',
       yv: -config.world.jumpPower
     });
   },
 
-  isDead: function () { return this.get('state') === 'd'; },
-  isStanding: function () { return this.get('state') === 's'; },
-  isJumping: function () { return this.get('state') === 'j'; },
-  isKicking: function () { return this.get('state') === 'k'; },
+  isDead: function () { return this.get('state') === 'dying'; },
+  isStanding: function () { return this.get('state') === 'standing'; },
+  isJumping: function () { return this.get('state') === 'jumping'; },
+  isKicking: function () { return this.get('state') === 'kicking'; },
 
   canJump: function () { return this.isStanding(); },
   canKick: function () { return this.isJumping(); },
