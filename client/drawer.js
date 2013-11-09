@@ -1,9 +1,10 @@
 if (!window.NodeKick)
   window.NodeKick = {};
 
-(function() {
-  
-  var Drawer = window.NodeKick.Drawer = {
+(function () {
+  var _ = window._;
+
+  window.NodeKick.Drawer = {
 
     floorY: 590,
     spriteHeight: 200,
@@ -14,7 +15,10 @@ if (!window.NodeKick)
     drawBoundingBox: false,
     drawFloorLine: false,
 
-    init: function() {
+    avatars: {},
+    avatarSize: 30,
+
+    init: function () {
       this.canvas = window.document.getElementById('stage');
       this.c = this.canvas.getContext('2d');
 
@@ -22,7 +26,7 @@ if (!window.NodeKick)
       this.c.strokeStyle = '#0F0';
     },
 
-    drawBackground: function() {
+    drawBackground: function () {
       this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
       if (this.drawFloorLine) {
@@ -33,10 +37,21 @@ if (!window.NodeKick)
       }
     },
 
-    drawUsers: function(users) {
+    drawAvatar: function (user, x, y) {
+      var userData = window.app.usersById[user.id];
+      var avatar = this.avatars[user.id];
+      if (!avatar) {
+        avatar = this.avatars[user.id] = new Image();
+        avatar.onload = function () { avatar.loaded = true; console.log('asdf') };
+        avatar.src = userData.avatar;
+        avatar.width = this.avatarSize;
+        avatar.height = this.avatarSize;
+      }
+      if (avatar.loaded) this.c.drawImage(avatar, x, y, this.avatarSize, this.avatarSize);
+    },
 
-      
-      _.each(users, function(user) {
+    drawUsers: function (users) {
+      _.each(users, function (user) {
 
         var x = user.x - (this.spriteWidth / 2);
         var y = this.floorY + user.y - this.spriteHeight + this.spriteBottomPadding;
@@ -65,7 +80,9 @@ if (!window.NodeKick)
           this.c.drawImage(window.NodeKick.Assets.diveSpriteInverted, spriteX, 0, 200, 400, x, y, 100, 200);
         }
 
-
+        this.drawAvatar(user, serverOrigin.x, serverOrigin.y - 180);
+        this.c.fillRect(serverOrigin.x, this.floorY + 50, 5, 5);
+        this.c.fillRect(serverOrigin.x, serverOrigin.y - 180, 5, 5);
 
       }, this);
 
