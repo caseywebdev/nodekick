@@ -2,6 +2,7 @@
 //= require jquery-mobile-events/jquery-mobile-events
 //= require underscore/underscore
 //= require backbone/backbone
+//= require live
 //= require config
 //= require request-animation-frame-polyfill
 //= require player
@@ -12,17 +13,11 @@
   'use strict';
 
   var $ = window.jQuery;
-  var _ = window._;
   var config = window.config;
-  var io = window.io;
+  var live = window.live;
 
   var app = window.app = {
-
     users: {},
-
-    socketReady: function () {
-      app.socket.on('step', app.updateUsers);
-    },
 
     domReady: function () {
       $('html').addClass(config.mobile ? 'js-mobile' : 'js-desktop');
@@ -54,8 +49,7 @@
   };
 
   if (!config.mobile) {
-    app.socket = io.connect();
-    app.socket.on('connect', app.socketReady);
+    live.connect('ws://' + location.host).on('step', app.updateUsers);
   }
 
   (function () {

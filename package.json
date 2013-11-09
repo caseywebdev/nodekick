@@ -16,7 +16,6 @@
     "underscore": "x",
     "passport": "x",
     "passport-twitter": "x",
-    "socket.io": "x",
     "redis": "x",
     "express": "x",
     "express-namespace": "x",
@@ -26,7 +25,8 @@
     "stylus": "x",
     "nib": "x",
     "csso": "x",
-    "uglify-js": "x"
+    "uglify-js": "x",
+    "ws": "x"
   },
   "devDependencies": {
     "watchy": "x"

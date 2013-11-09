@@ -1,21 +1,17 @@
 'use strict';
 
-var sockets = {};
 var _ = require('underscore');
 
 module.exports = function (app) {
-  app.io.sockets.on('connection', function (socket) {
-    sockets[socket.id] = socket.volatile;
-    console.log(socket.handshake);
-
-    socket.on('disconnect', function () {
-      delete sockets[socket.id];
-    });
-  });
-
+  var clients = app.wss.clients;
   app.world.on('step', function (users) {
-    _.invoke(sockets, 'emit', 'step', users);
+    var message = JSON.stringify({
+      id: _.uniqueId(),
+      name: 'step',
+      data: users
+    });
+    _.each(clients, function (client) { client.send(message); });
   });
+  process.on('SIGTERM', _.partial(_.invoke, clients, 'close'));
 };
 
-process.on('SIGTERM', _.partial(_.invoke, sockets, 'disconnect'));

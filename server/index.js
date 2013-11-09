@@ -6,8 +6,7 @@ var express = require('express');
 var fs = require('fs');
 var _ = require('underscore')._;
 var World = require('./models/world');
-var User = require('./models/user');
-var io = require('socket.io');
+var WebSocketServer = require('ws').Server;
 var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
 var db = require('./db');
@@ -18,13 +17,7 @@ var app = module.exports = express();
 var server = app.listen(config.port);
 
 // start socket.io
-app.io = io.listen(server);
-app.io.set('log level', 1);
-app.io.set('transports', ['websocket', 'flashsocket']);
-app.io.set('flash policy port', -1);
-app.io.enable('browser client minification');
-app.io.enable('browser client etag');
-app.io.enable('browser client gzip');
+app.wss = new WebSocketServer({server: server});
 
 // Set view engine up for static pages and email.
 app.set('view engine', 'tmpl');
