@@ -5,7 +5,6 @@
 //= require config
 //= require request-animation-frame-polyfill
 //= require player
-//= require player-collection
 //= require drawer
 //= require assets
 
@@ -19,7 +18,7 @@
 
   var app = window.app = {
 
-    users: window.NodeKick.PlayerCollection,
+    users: {},
 
     socketReady: function () {
       app.socket.on('step', app.updateUsers);
@@ -42,13 +41,7 @@
       NodeKick.Drawer.drawUsers(this.users);
     },
 
-    updateUsers: function (users) {
-      _.each(users, function (user) {
-        var obj = app.users[user.id];
-        if (!obj) obj = app.users[user.id] = {};
-        _.extend(obj, user);
-      });
-    },
+    updateUsers: function (users) { app.users = users; },
 
     move: function (dir) {
       $.post('/move/' + dir);
