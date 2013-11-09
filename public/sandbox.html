@@ -1,25 +1,28 @@
-
 <html>
   <head>
     <title>NodeKick</title>
+    <script src="http://codeorigin.jquery.com/jquery-2.0.3.js"></script>
   </head>
   <body>
-    <div id="stage" style="width: 320px; height: 320px; border: solid 1px silver; margin-top: 100px">
+    <div id="stage" style="width: 320px; height: 320px; margin-top: 100px">
     </div>
     <div id="player" style="width: 50px; height: 50px; border: solid 1px silver"></div>
     <br/>
+    <input type="button" id="kickLeft" value="kick left" />
     <input type="button" id="jump" value="jump" />
-    <script src="http://codeorigin.jquery.com/jquery-2.0.3.js"></script>
+    <input type="button" id="kickRight" value="kick right" />
     <script>
       $(function() {
         $("#jump").click(function() { jump(player); });
-        setInterval(tick, 1000.0 / fps);
+        $("#kickRight").click(function() { kickRight(player); });
+        $("#kickLeft").click(function() { kickLeft(player); });
+        setInterval(tick, 1000.0/fps);
       });
 
       function setSquare(x, y) {
         var pos = $("#stage").position();
-        var playerHeight = 50;
-        pos.top = ($("#stage").height() + $("#stage").offset().top) - y - playerHeight;
+        var height = 50;
+        pos.top = ($("#stage").height() + $("#stage").offset().top) - y - height;
         $("#player").css({ position: "absolute", top: pos.top, left: pos.left + x });
       }
 
@@ -27,8 +30,15 @@
       var ticks = 0.0;
       var gravity = 100;
       var dy = 40;
+      var dkick = 700;
 
-      var player = { x: 0, y: 0, dy: 0, s: "s" };
+      var player = {
+        x: 0,
+        y: 0,
+        dy: 0,
+        s: "s",
+        d: "l"
+      };
 
       function applyGravity(player) {
         if(player.s !== "j") return;
@@ -43,6 +53,37 @@
         }
       }
 
+      function applyKick(player) {
+        if(player.s !== "k") return;
+
+        var d = (dkick * (1.0 / fps));
+        if(player.d === "r") player.x += d;
+
+        else if(player.d === "l") player.x -= d;
+
+        player.y -= d;
+
+        if(player.y < 0) {
+          player.y = 0;
+          player.dy = 0;
+          player.s = "s";
+        }
+      }
+
+      function kickRight(player) {
+        if(player.s === "j") {
+          player.d = "r";
+          player.s = "k";
+        }
+      }
+
+      function kickLeft(player) {
+        if(player.s === "j") {
+          player.d = "l";
+          player.s = "k";
+        }
+      }
+
       function jump(player) {
         if(player.s === "s") {
           player.dy = dy;
@@ -53,9 +94,9 @@
       function tick() {
         ticks += 1;
         applyGravity(player);
+        applyKick(player);
         setSquare(player.x, player.y);
       }
-
     </script>
   </body>
 </html>
