@@ -1,4 +1,3 @@
-
 <html>
   <head>
     <title>NodeKick</title>
@@ -121,15 +120,17 @@
 
       var fps = 33.0;
       var ticks = 0.0;
-      var gravity = 100;
-      var dy = 40;
-      var dkick = 700;
+      var gravity = 3000;
+      var dy = 1200;
+      var dkick = 400;
 
       function applyGravity(player) {
         if(player.s !== "j") return;
 
         player.dy -= (gravity * (1.0 / fps));
-        player.y += player.dy;
+        player.y += player.dy * (1.0 / fps);
+
+        console.log(player.y);
 
         if(player.y < 0) {
           player.y = 0;
