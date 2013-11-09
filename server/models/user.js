@@ -19,7 +19,7 @@ var User = module.exports = Backbone.Model.extend({
   step: function (dt) {
     if (this.isJumping()) {
       // apply gravity
-      var yv = this.get('yv') - config.gravity * dt;
+      var yv = this.get('yv') + config.gravity * dt;
       this.set({
         y: this.get('y') + yv * dt,
         yv: yv
@@ -30,7 +30,7 @@ var User = module.exports = Backbone.Model.extend({
         y: this.get('y') + this.get('yv') * dt
       });
     }
-    if (this.get('y') < 0) {
+    if (this.get('y') > 0) {
       this.set({y: 0, yv: 0, xv: 0, state: 's'});
     }
   },
@@ -52,7 +52,7 @@ var User = module.exports = Backbone.Model.extend({
     this.set({
       state: 'k',
       xv: dir * config.world.kickPower,
-      yv: -config.world.kickPower
+      yv: config.world.kickPower
     });
   },
 
@@ -60,7 +60,7 @@ var User = module.exports = Backbone.Model.extend({
     if (!this.canJump()) return;
     this.set({
       state: 'j',
-      yv: config.world.jumpPower
+      yv: -config.world.jumpPower
     });
   },
 
