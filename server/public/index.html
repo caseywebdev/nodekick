@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <h1>Yo</h1>
+
+    <canvas id="stage" style="border: solid 1px #000;" width="1000" height="800">
+    </canvas>
+
+    <img src="images/nodekick-sprite.png" id="dive-sprite" />
+
+    <script>
+      window.onload = load;
+      var diveSprite, canvas, c;
+
+      function load() {
+
+	diveSprite = document.getElementById('dive-sprite');
+        diveSprite.onload = diveLoaded;
+
+        canvas = document.getElementById('stage');
+        c = canvas.getContext('2d');
+
+        c.fillStyle = '#F00';
+        c.fillRect(0, 0, 100, 100);
+      }
+
+      function diveLoaded() {
+        
+        var sprite = new diveSprite();
+        sprite.image = diveSprite;
+
+        setTimeout(function() {
+
+          switch (sprite.state) {
+            case: 'stand':
+              sprite.state = 'jump';
+              break;
+            case: 'jump':
+              sprite.state = 'kick';
+              break;
+            case: 'kick':
+              sprite.state = 'stand';
+              break;
+          }          
+        sprite.draw();
+
+        }, 1000);
+
+      }
+
+      function diveSprite() {
+        state = 'stand';
+      }
+
+      diveSprite.prototype.draw = function() {
+      }
+    </script>
+
+
+  </body>
+</html>
