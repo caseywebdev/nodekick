@@ -19,6 +19,12 @@ var server = app.listen(config.port);
 // start socket.io
 app.io = io.listen(server);
 app.io.set('log level', 0);
+
+// Set view engine up for static pages and email.
+app.set('view engine', 'tmpl');
+require('underscore-express')(app);
+
+// Middleware
 app.use(express.compress());
 app.use(express.urlencoded());
 app.use(express.json());
@@ -63,10 +69,9 @@ app.world.start();
 
 // controllers
 var files = fs.readdirSync(__dirname + '/controllers');
-var controllers = _.without(files);
-_.each(controllers, function (controller) {
-  if (controller[0] === '.') return;
-  require('./controllers/' + controller)(app);
+_.each(files, function (file) {
+  if (file[0] === '.') return;
+  require('./controllers/' + file)(app);
 });
 
 // system settings

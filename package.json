@@ -18,9 +18,9 @@
     "socket.io": "x",
     "redis": "x",
     "express": "x",
-    "herit": "x",
     "express-namespace": "x",
-    "backbone": "x"
+    "backbone": "x",
+    "underscore-express": "x"
   },
   "devDependencies": {
     "cogs": "x",

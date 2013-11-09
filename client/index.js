@@ -1,6 +1,7 @@
 //= require jquery/jquery
 //= require jquery-mobile-events/jquery-mobile-events
 //= require underscore/underscore
+//= require backbone/backbone
 //= require config
 
 (function () {
@@ -15,14 +16,67 @@
       app.socket.on('step', app.drawUsers);
     },
 
-    domReady: function () {},
+    domReady: function () {
+      $('html').addClass(config.mobile ? 'js-mobile' : 'js-desktop');
+    },
 
     drawUsers: function (users) {
       console.log('drawing users...');
-    }
+    },
+
+    bindSwipes: function () {
+      var x0, y0, dx, dy;
+      $(document).on({
+        touchstart: function (ev) {
+          ev = ev.originalEvent;
+          if (ev.touches.length !== 1) return;
+          var touch = ev.touches[0];
+          x0 = touch.screenX;
+          y0 = touch.screenY;
+        },
+        touchmove: function (ev) {
+          ev.preventDefault();
+          ev = ev.originalEvent;
+          if (ev.touches.length !== 1 || dx !== null || dy !== null) return;
+          var touch = ev.touches[0];
+          dx = touch.screenX - x0;
+          dy = touch.screenY - y0;
+          var rightLeft = dx > 0 ? 'right' : 'left';
+          var downUp = dy > 0 ? 'down' : 'up';
+          var val = Math.abs(dx) > Math.abs(dy) ? rightLeft : downUp;
+          app.move(val === 'down' ? rightLeft : val);
+        },
+        touchend: function (ev) {
+          if (!ev.originalEvent.touches.length) dx = dy = null;
+        }
+      });
+    },
+
+    bindKeys: function () {
+      $(document).on('keydown', function (e) {
+        switch (e.which) {
+        case 37:
+        case 65:
+          app.move('left');
+          break;
+        case 38:
+        case 87:
+          app.move('up');
+          break;
+        case 39:
+        case 68:
+          app.move('right');
+        }
+      });
+    },
+
+    move: function (dir) { $.post('/move/' + dir); }
   };
 
-  if (!config.mobile) {
+  if (config.mobile) {
+    app.bindSwipes();
+  } else {
+    app.bindKeys();
     app.socket = io.connect();
     app.socket.on('connect', app.socketReady);
   }
