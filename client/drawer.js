@@ -54,7 +54,7 @@ if (!window.NodeKick)
           var spriteX = 0;
           if (user.state == 'jump')
             spriteX = 200;
-          else if (user.state == 'stand')
+          else if (user.state == 'standing')
             spriteX = 400;
           //console.log('spriteX', spriteX);
           this.c.drawImage(window.NodeKick.Assets.diveSpriteInverted, spriteX, 0, 200, 400, x, y, 100, 200);
