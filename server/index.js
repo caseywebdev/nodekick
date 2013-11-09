@@ -15,6 +15,7 @@ var server = app.listen(config.port);
 
 // start socket.io
 app.io = io.listen(server);
+app.io.set('log level', 0);
 app.use(express.compress());
 app.use(express.urlencoded());
 app.use(express.json());
