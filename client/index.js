@@ -3,6 +3,11 @@
 //= require underscore/underscore
 //= require backbone/backbone
 //= require config
+//= require request-animation-frame-polyfill
+//= require player
+//= require player-collection
+//= require drawer
+//= require assets
 
 (function () {
   'use strict';
@@ -12,16 +17,34 @@
   var io = window.io;
 
   var app = window.app = {
+
+    users: window.NodeKick.PlayerCollection,
+
     socketReady: function () {
-      app.socket.on('step', app.drawUsers);
+      app.socket.on('step', app.updateUsers);
     },
 
     domReady: function () {
       $('html').addClass(config.mobile ? 'js-mobile' : 'js-desktop');
+      NodeKick.Drawer.init();
+      window.NodeKick.Assets.init();
     },
 
-    drawUsers: function (users) {
-      console.log('drawing users...');
+    draw: function() {
+      
+      if (!NodeKick.Drawer.canvas || !NodeKick.Assets.isLoaded) {
+        console.log('assets not yet loaded');
+        return; //DOM is not yet loaded or image assets have not loaded, so no need to draw yet!
+      }
+
+      NodeKick.Drawer.drawBackground();
+      NodeKick.Drawer.drawUsers(this.users);
+    },
+
+    updateUsers: function (users) {
+      _.each(users, function(user) {
+        //Update the server-side user to the client-side state
+      });
     },
 
     move: function (dir) {
@@ -82,4 +105,40 @@
   })();
 
   $(app.domReady);
+
+  function drawLoop() {
+    console.log('draw loop');
+    requestAnimationFrame(function() { drawLoop(); });
+    app.draw();
+  }
+
+  drawLoop();
+
+  /* ====== TEMP: REMOVE WHEN WE HAVE LIVE SOCKET PEOPLE ======== */
+
+  console.log('stuff', window.NodeKick, app)
+
+  var player1 = new window.NodeKick.Player('bob');
+  player1.x = 100;
+  player1.y = 100;
+  player1.state = 'stand';
+
+  console.log('the player', player1);
+
+  var player2 = new window.NodeKick.Player('fred');
+  player2.x = 500;
+  player2.y = 300;
+  player2.state = 'jump';
+
+  app.users[player1.handle] = player1;
+  app.users[player2.handle] = player2;
+
+  setInterval(function() {
+    player1.x += 10;
+  }, 100);
+
+
+  /* ============================================================ */
+
+
 })();

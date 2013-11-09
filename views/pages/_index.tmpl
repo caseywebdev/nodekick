@@ -24,69 +24,6 @@
     <canvas id='stage' class='desktop-only' width='1000' height='800'></canvas>
     <div class='mobile-only js-move-ack move-ack'></div>
 
-    <script>
-      window.onload = load;
-      var diveImage, canvas, c;
-
-      diveImage = new Image();
-      diveImage.addEventListener('load', diveLoaded);
-      diveImage.src = 'images/kick-sprite.png';
-
-      function load() {
-        canvas = document.getElementById('stage');
-        c = canvas.getContext('2d');
-
-        c.fillStyle = '#F00';
-        c.fillRect(0, 0, 100, 100);
-        c.strokeStyle = '#F00';
-      }
-
-      function diveLoaded() {
-
-        console.log('dive loaded');
-
-        var sprite = new DiveSprite();
-        sprite.image = diveImage;
-
-        setInterval(function() {
-
-          switch (sprite.state) {
-            case 'stand':
-              sprite.state = 'jump';
-              break;
-            case 'jump':
-              sprite.state = 'kick';
-              break;
-            case 'kick':
-              sprite.state = 'stand';
-              break;
-          }
-          c.clearRect(0, 0, canvas.width, canvas.height);
-          sprite.draw();
-
-        }, 1000);
-
-      }
-
-      function DiveSprite() {
-        this.state = 'stand';
-      }
-
-      DiveSprite.prototype.draw = function() {
-        console.log('drawing');
-
-        c.strokeRect(0, 0, 200, 400);
-        var spriteX = 0;
-        if (this.state == 'jump')
-          spriteX = 200;
-        else if (this.state == 'kick')
-          spriteX = 400;
-
-        c.drawImage(diveImage, spriteX, 0, 200, 400, 0, 0, 200, 400);
-
-      }
-    </script>
-
 
   </body>
 </html>
