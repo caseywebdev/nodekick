@@ -32,7 +32,7 @@ app.use(express.cookieParser());
 app.use(express.cookieSession(config.session));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/../public'));
 app.use(require('./middleware/template-helpers'));
 
 // passport setup
