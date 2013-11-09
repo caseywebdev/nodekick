@@ -44,15 +44,15 @@ if (!window.NodeKick)
 
         if (user.dir === 1) {
           var spriteX = 0;
-          if (user.state == 'jump')
+          if (user.state == 'jumping')
             spriteX = 200;
-          else if (user.state == 'kick')
+          else if (user.state == 'kicking')
             spriteX = 400;
           this.c.drawImage(window.NodeKick.Assets.diveSprite, spriteX, 0, 200, 400, x, y, 100, 200);
         }
         else {
           var spriteX = 0;
-          if (user.state == 'jump')
+          if (user.state == 'jumping')
             spriteX = 200;
           else if (user.state == 'standing')
             spriteX = 400;
