@@ -1,7 +1,9 @@
+
 <html>
   <head>
     <title>NodeKick</title>
     <script src="http://codeorigin.jquery.com/jquery-2.0.3.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
   </head>
   <body>
     <div id="stage" style="width: 320px; height: 320px; margin-top: 100px">
@@ -11,11 +13,102 @@
     <input type="button" id="kickLeft" value="kick left" />
     <input type="button" id="jump" value="jump" />
     <input type="button" id="kickRight" value="kick right" />
+    <hr />
+    <input type="text" id="originX" value="300" />
+    <input type="text" id="originY" value="20" /><br />
+    <input type="button" id="standBoxR" value="stand box right" /><br />
+    <input type="button" id="jumpBoxR" value="jump box right" /><br />
+    <input type="button" id="kickBoxR" value="kick box right" /><br />
+    <input type="button" id="standBoxL" value="stand box left" /><br />
+    <input type="button" id="jumpBoxL" value="jump box left" /><br />
+    <input type="button" id="kickBoxL" value="kick box left" /><br />
     <script>
+      var player = {
+        x: 0, y: 0, dy: 0, s: "s", d: "l",
+        boxes: {
+          r: {
+            s: [
+              { x: 0, y: 0, w: 100, h: 200 },
+              { x: 40, y: 15, w: 20, h: 25 },
+              { x: 20, y: 45, w: 50, h: 55 },
+              { x: 25, y: 100, w: 42.5, h: 45 },
+              { x: 15, y: 147.5, w: 65, h: 35 }
+            ],
+            j: [
+              { x: 0, y: 0, w: 100, h: 200 },
+              { x: 45, y: 20, w: 25, h: 27.5 },
+              { x: 32.5, y: 52.5, w: 32.5, h: 50 },
+              { x: 45, y: 100, w: 12.5, h: 87.5 },
+              { x: 57.5, y: 115, w: 17.5, h: 17.5 },
+              { x: 25, y: 135, w: 37.5, h: 10 }
+            ],
+            k: [
+              { x: 0, y: 0, w: 100, h: 200 },
+              { x: 40, y: 40, w: 20, h: 30 },
+              { x: 22.5, y: 65, w: 25, h: 12.5 },
+              { x: 10, y: 80, w: 35, h: 20 },
+              { x: 15, y: 100, w: 65, h: 12.5 },
+              { x: 20, y: 110, w: 50, h: 12.5 },
+              { x: 42.5, y: 125, w: 15, h: 30 },
+              { x: 60, y: 150, w: 10, h: 17.5 },
+              { x: 75, y: 165, w: 22.5, h: 22.5 }
+            ]
+          },
+          l: {
+            s: [
+              { x: 0, y: 0, w: 100, h: 200 },
+              { x: 40, y: 15, w: 20, h: 25 },
+              { x: 30, y: 45, w: 50, h: 55 },
+              { x: 32.5, y: 100, w: 42.5, h: 45 },
+              { x: 20, y: 147.5, w: 65, h: 35 }
+            ],
+            j: [
+              { x: 0, y: 0, w: 100, h: 200 },
+              { x: 30, y: 20, w: 25, h: 27.5 },
+              { x: 35, y: 52.5, w: 32.5, h: 50 },
+              { x: 42.5, y: 100, w: 12.5, h: 87.5 },
+              { x: 25, y: 115, w: 17.5, h: 17.5 },
+              { x: 37.5, y: 135, w: 37.5, h: 10 }
+            ],
+            k: [
+              { x: 0, y: 0, w: 100, h: 200 },
+              { x: 40, y: 40, w: 20, h: 30 },
+              { x: 52.5, y: 65, w: 25, h: 12.5 },
+              { x: 55, y: 80, w: 35, h: 20 },
+              { x: 20, y: 100, w: 65, h: 12.5 },
+              { x: 30, y: 110, w: 50, h: 12.5 },
+              { x: 42.5, y: 125, w: 15, h: 30 },
+              { x: 30, y: 150, w: 10, h: 17.5 },
+              { x: 2.5, y: 165, w: 22.5, h: 22.5 }
+            ]
+          }
+        }
+      };
+
+      var currentMousePos = { };
+      var lastMousePos = { };
+
       $(function() {
+        $(document).mousemove(function(event) {
+          lastMousePos.top = currentMousePos.top;
+          lastMousePos.left = currentMousePos.left;
+          currentMousePos.top = event.pageY;
+          currentMousePos.left = event.pageX;
+        });
+
+        $(document).mouseup(function(event) {
+          currentMovingClass = null;
+        });
+
         $("#jump").click(function() { jump(player); });
         $("#kickRight").click(function() { kickRight(player); });
         $("#kickLeft").click(function() { kickLeft(player); });
+        $("#standBoxR").click(function() { drawBoxes("rs", parseInt($("#originX").val()), parseInt($("#originY").val()), player.boxes.r.s); });
+        $("#jumpBoxR").click(function() { drawBoxes("rj", parseInt($("#originX").val()), parseInt($("#originY").val()), player.boxes.r.j); });
+        $("#kickBoxR").click(function() { drawBoxes("rk", parseInt($("#originX").val()), parseInt($("#originY").val()), player.boxes.r.k); });
+        $("#standBoxL").click(function() { drawBoxes("ls", parseInt($("#originX").val()) + 300, parseInt($("#originY").val()), player.boxes.l.s); });
+        $("#jumpBoxL").click(function() { drawBoxes("lj", parseInt($("#originX").val()) + 300, parseInt($("#originY").val()), player.boxes.l.j); });
+        $("#kickBoxL").click(function() { drawBoxes("lk", parseInt($("#originX").val()) + 300, parseInt($("#originY").val()), player.boxes.l.k); });
         setInterval(tick, 1000.0/fps);
       });
 
@@ -31,14 +124,6 @@
       var gravity = 100;
       var dy = 40;
       var dkick = 700;
-
-      var player = {
-        x: 0,
-        y: 0,
-        dy: 0,
-        s: "s",
-        d: "l"
-      };
 
       function applyGravity(player) {
         if(player.s !== "j") return;
@@ -82,6 +167,65 @@
           player.d = "l";
           player.s = "k";
         }
+      }
+
+      function isHit(foot, rest) {
+        var footPoint = toPoints(foot);
+        console.log(foot);
+        console.log(footPoint);
+      }
+
+      function toPoints(box) {
+        return {
+          top: box.y,
+          left: box.x,
+          right: box.x + box.w, 
+          bottom: box.y + box.h
+        };
+      }
+
+      var currentMovingClass = null;
+      var allBoxes = { };
+
+      function drawBoxes(c, originX, originY, boxes) {
+        allBoxes[c] = boxes;
+        $("." + c).remove();
+        _.each(boxes, function(box) {
+          var div = $("<div></div>");
+          div.mousedown(function() {
+            currentMovingClass = c;
+          });
+          div.mousemove(function(e) {
+            var diffX = currentMousePos.top - lastMousePos.top;
+            var diffY = currentMousePos.left - lastMousePos.left;
+            if(currentMovingClass) {
+              _.each(allBoxes[currentMovingClass], function(playerBox) {
+                playerBox.y = playerBox.y + diffY;
+                playerBox.x = playerBox.x + diffX;
+              });
+
+              $("." + currentMovingClass).each(function() {
+                var element = $(this);
+                var pos = element.position();
+                element.css({ top: pos.top + diffX });
+                element.css({ left: pos.left + diffY });
+                var theRest = [ ];
+                for(var b in allBoxes) {
+                  if(b != c) {
+                    theRest.push(allBoxes[b]);
+                  }
+                }
+
+                if(c === "lk" || c == "rk") { isHit(_.last(allBoxes[c]), theRest); }
+              });
+            }
+          });
+          div.addClass(c);
+          div.css({
+            border: "solid 1px black",
+            position: "absolute", top: originY + box.y, left: originX + box.x, width: box.w + "px", height: box.h + "px" });
+          $("body").append(div);
+        });
       }
 
       function jump(player) {
