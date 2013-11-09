@@ -7,6 +7,9 @@ var fs = require('fs');
 var _ = require('underscore')._;
 var World = require('./models/world');
 var io = require('socket.io');
+var passport = require('passport');
+var TwitterStrategy = require('passport-twitter').Strategy;
+var db = require('./db');
 
 // express setup
 require('express-namespace');
@@ -21,7 +24,38 @@ app.use(express.urlencoded());
 app.use(express.json());
 app.use(express.cookieParser());
 app.use(express.cookieSession(config.session));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.static('public'));
+
+// passport setup
+// will replace this with redis
+
+passport.use(new TwitterStrategy(config.twitter,
+  function (token, tokenSecret, profile, done) {
+    // if (err) { return done(err); }
+    console.log(token, profile, done);
+    var user = {
+      sn: profile.username,
+      pic: profile._json.profile_image_url
+    };
+    done(null, user);
+  }
+));
+
+passport.serializeUser(function (user, done) {
+  db.createUser(user, function (err) {
+    if (err) return done(err);
+    done(null, user.sn);
+  });
+});
+
+passport.deserializeUser(function (sn, done) {
+  db.findUser(sn, function (err, user) {
+    if (err) return done(err);
+    done(null, user);
+  });
+});
 
 // add game state, app.world
 app.world = new World();
