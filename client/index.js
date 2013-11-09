@@ -121,21 +121,21 @@
 
   var player1 = new window.NodeKick.Player('bob');
   player1.x = 100;
-  player1.y = 100;
+  player1.y = 0;
   player1.state = 'stand';
 
   console.log('the player', player1);
 
   var player2 = new window.NodeKick.Player('fred');
   player2.x = 500;
-  player2.y = 300;
+  player2.y = -300;
   player2.state = 'jump';
 
   app.users[player1.handle] = player1;
   app.users[player2.handle] = player2;
 
   setInterval(function() {
-    player1.x += 10;
+    player2.x += 10;
   }, 100);
 
 
