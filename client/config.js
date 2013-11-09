@@ -4,6 +4,6 @@
   var mobileUserAgentRe = /iPod|iPhone|iPad|Android/i;
 
   window.config = {
-    mobile: navigator.userAgent.test(mobileUserAgentRe)
+    mobile: mobileUserAgentRe.test(navigator.userAgent)
   };
 })();

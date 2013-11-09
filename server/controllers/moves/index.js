@@ -3,10 +3,8 @@ module.exports = function (app) {
     // Signed in necessary.
     var auth = require('../auth/authorize');
 
-    app.post('/left', auth, function (req, res) {
-      res.end(200);
-    });
-    // app.post('/right', auth, right);
-    // app.post('/up', auth, up);
+    app.post('/left', auth, require('./left'));
+    app.post('/right', auth, require('./right'));
+    app.post('/up', auth, require('./up'));
   });
 };
