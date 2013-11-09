@@ -30,13 +30,11 @@ var User = module.exports = Backbone.Model.extend({
         y: this.get('y') + this.get('yv') * dt
       });
     }
-
     if (this.get('y') > 0) {
       this.set({ y: 0, yv: 0, xv: 0, state: 'standing' });
     }
   },
   toFrame: function () {
-    console.log('' + this.id, this.get('dir'));
     return this.pick('id', 'x', 'y', 'dir', 'state');
   },
   toRedis: function () {

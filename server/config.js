@@ -10,6 +10,7 @@ var defaults = {
   world: {
     gravity: 3000, // amount of gravity applied per second
     jumpPower: 1200,
+    kickPower: 1500,
     fps: 30
   }
 };
