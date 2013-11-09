@@ -29,10 +29,7 @@
       var $ack = $('.js-move-ack');
       $ack.removeClass('js-up js-left js-right').addClass('js-flash js-' + dir);
       $ack.height();
-      _.defer(function () {
-
-        $ack.removeClass('js-flash');
-      });
+      $ack.removeClass('js-flash');
     }
   };
 
