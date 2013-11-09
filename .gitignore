@@ -3,3 +3,4 @@
 *.swp
 /public/index.js
 /public/index.css
+/bower_components

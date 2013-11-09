@@ -1,0 +1,61 @@
+
+<html>
+  <head>
+    <title>NodeKick</title>
+  </head>
+  <body>
+    <div id="stage" style="width: 320px; height: 320px; border: solid 1px silver; margin-top: 100px">
+    </div>
+    <div id="player" style="width: 50px; height: 50px; border: solid 1px silver"></div>
+    <br/>
+    <input type="button" id="jump" value="jump" />
+    <script src="http://codeorigin.jquery.com/jquery-2.0.3.js"></script>
+    <script>
+      $(function() {
+        $("#jump").click(function() { jump(player); });
+        setInterval(tick, 1000.0 / fps);
+      });
+
+      function setSquare(x, y) {
+        var pos = $("#stage").position();
+        var playerHeight = 50;
+        pos.top = ($("#stage").height() + $("#stage").offset().top) - y - playerHeight;
+        $("#player").css({ position: "absolute", top: pos.top, left: pos.left + x });
+      }
+
+      var fps = 33.0;
+      var ticks = 0.0;
+      var gravity = 100;
+      var dy = 40;
+
+      var player = { x: 0, y: 0, dy: 0, s: "s" };
+
+      function applyGravity(player) {
+        if(player.s !== "j") return;
+
+        player.dy -= (gravity * (1.0 / fps));
+        player.y += player.dy;
+
+        if(player.y < 0) {
+          player.y = 0;
+          player.dy = 0;
+          player.s = "s";
+        }
+      }
+
+      function jump(player) {
+        if(player.s === "s") {
+          player.dy = dy;
+          player.s = "j";
+        }
+      }
+
+      function tick() {
+        ticks += 1;
+        applyGravity(player);
+        setSquare(player.x, player.y);
+      }
+
+    </script>
+  </body>
+</html>

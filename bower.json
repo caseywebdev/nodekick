@@ -1,0 +1,8 @@
+{
+  "name": "nko4-team-us",
+  "dependencies": {
+    "jquery": "x",
+    "jquery-mobile-events": "x"
+  },
+  "version": "0.0.0"
+}

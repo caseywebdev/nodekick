@@ -18,7 +18,8 @@
     "socket.io": "x",
     "redis": "x",
     "hiredis": "x",
-    "express": "x"
+    "express": "x",
+    "herit": "x"
   },
   "devDependencies": {
     "cogs": "x",
