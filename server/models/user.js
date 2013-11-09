@@ -8,7 +8,7 @@ var User = module.exports = Backbone.Model.extend({
   //   dir (-1, 1)
   //   state (j, k, s, d)
   defaults: {
-    x: 10,
+    x: 0,
     y: 0,
     xv: 0,
     yv: 0,
