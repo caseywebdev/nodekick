@@ -6,6 +6,7 @@ var express = require('express');
 var fs = require('fs');
 var _ = require('underscore')._;
 var World = require('./models/world');
+var User = require('./models/user');
 var io = require('socket.io');
 var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
@@ -42,25 +43,31 @@ passport.use(new TwitterStrategy(config.twitter,
   function (token, tokenSecret, profile, done) {
     // if (err) { return done(err); }
     console.log(token, profile, done);
-    var user = {
-      sn: profile.username,
-      pic: profile._json.profile_image_url
-    };
+    var users = app.world.users;
+    var user = users.get(profile.id);
+    if (user) return done(null, user);
+    users.add(user = new User({
+      id: profile.id,
+      username: profile.username,
+      displayName: profile.displayName,
+      photos: profile.photos[0].value
+    }));
     done(null, user);
   }
 ));
 
 passport.serializeUser(function (user, done) {
-  db.createUser(user, function (err) {
-    if (err) return done(err);
-    done(null, user.sn);
-  });
+  db.createUser(user, function (er) { done(er, user.id); });
 });
 
-passport.deserializeUser(function (sn, done) {
-  db.findUser(sn, function (err, user) {
-    if (err) return done(err);
-    done(null, user);
+passport.deserializeUser(function (id, done) {
+  var users = app.world.users;
+  var user = users.get(id);
+  if (user) return done(null, user);
+  db.findUser(id, function (er, user) {
+    user = new User(user);
+    users.add(user);
+    done(er, user);
   });
 });
 

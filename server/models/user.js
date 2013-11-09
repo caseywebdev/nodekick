@@ -9,11 +9,11 @@ var User = module.exports = Backbone.Model.extend({
   //   state (j, k, s, d)
   defaults: {
     x: 0,
-    y: 0,
+    y: -1000,
     xv: 0,
     yv: 0,
     dir: 1,
-    state: 's'
+    state: 'j'
   },
 
   step: function (dt) {

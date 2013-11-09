@@ -4,17 +4,17 @@ var client = redis.createClient();
 client.on('error', console.error.bind(console));
 
 module.exports = {
-  findUser: function (sn, cb) {
-    client.hget('nk:users', sn, function (err, userJSON) {
-      if (err) cb(err);
+  findUser: function (id, cb) {
+    client.hget('nodekick:users', id, function (er, userJSON) {
+      if (er) cb(er);
       cb(null, JSON.parse(userJSON));
     });
   },
   createUser: function (user, cb) {
-    client.hset('nk:users', user.sn, JSON.stringify(user), function (err) {
-      if (err) cb(err);
+    client.hset('nodekick:users', user.id, JSON.stringify(user), function (er) {
+      if (er) cb(er);
       console.log('created user', user);
-      cb(null, user.sn);
+      cb(null, user.id);
     });
   }
 };

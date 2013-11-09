@@ -14,14 +14,22 @@ global-reset()
 .move-ack
   width 200px
   height 400px
-  transition opacity 1s ease-in-out
+  background url('/images/kick-sprite.png')
   opacity 0
+  &.js-transition
+    transition-duration .25s
+    transition-timing-function ease-in-out
+    transition-property opacity transform
   &.js-flash
     opacity 1
-  &.js-left
-  &.js-right
+    &.js-up
+      transform translateY(25px)
+    &.js-left
+      transform translate(25px, -25px) scaleX(-1)
+    &.js-right
+      transform translate(-25px, -25px)
   &.js-up
-    background url('/images/kick-sprite.png')
+    background-position -200px 0
   &.js-left
     background-position 200px 0
     transform scaleX(-1)

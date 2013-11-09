@@ -50,9 +50,10 @@
     move: function (dir) {
       $.post('/move/' + dir);
       var $ack = $('.js-move-ack');
-      $ack.removeClass('js-up js-left js-right').addClass('js-flash js-' + dir);
-      $ack.height();
-      $ack.removeClass('js-flash');
+      $ack.removeClass('js-transition js-up js-left js-right')
+        .addClass('js-flash js-' + dir)
+        .height();
+      $ack.addClass('js-transition').removeClass('js-flash');
     }
   };
 
