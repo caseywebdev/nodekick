@@ -85,7 +85,38 @@
       var $alert = $('<li>');
       $alert.addClass('alert');
       $alert.addClass(message.type);
-      $alert.text(message.text);
+      var text = message.text;
+      switch (message.type) {
+      case 'streak':
+        var streak = message.user.streak;
+        if (streak == 3) {
+          text = 'killing streak';
+        } else if (streak == 6) {
+          text = 'rampage';
+        } else if (streak == 9) {
+          text = 'dominating';
+        } else if (streak == 12) {
+          text = 'unstoppable';
+        } else if (streak >= 15) {
+          text = 'godlike';
+        } else return;
+        break;
+      case 'headshot':
+        break;
+      case 'deathfromabove':
+        break;
+      case 'multikill':
+        var multis = message.user.multis;
+        if (multis == 2) {
+          text = 'double kill';
+        } else if (multis == 3) {
+          text = 'triple kill';
+        } else if (multis >= 4) {
+          text = 'monster kill';
+        }
+        break;
+      }
+      $alert.text(text);
       $('.alerts').append($alert);
       setTimeout(function () {
         $alert.remove();
