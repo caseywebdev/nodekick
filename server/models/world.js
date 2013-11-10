@@ -3,18 +3,14 @@
 var config = require('../config');
 var Backbone = require('backbone');
 var User = require('./user');
+var db = require('../db');
 
 var World = module.exports = Backbone.Model.extend({
   initialize: function () {
-    var world = this;
     this.users = new User.Collection();
-    this.users.on('add', function (user, users) {
-      console.log('user ' + user.get('username') + ' joined!');
-      world.trigger('userData', world.getUsers());
+    this.users.on('kill', function (kill) {
+      db.registerKill(kill.killer);
     });
-  },
-  getUsers: function () {
-    return this.users.invoke('toUserData');
   },
   // control flow
   step: function () {

@@ -15,10 +15,10 @@ module.exports = function (app) {
 
   // send all user data
   app.wss.on('connection', function (ws) {
-    ws.send(wsMsg('userData', app.world.getUsers()));
+    ws.send(wsMsg('userData', app.world.users.invoke('toUserData')));
   });
-  app.world.on('userData', function (users) {
-    broadcast('userData', users);
+  app.world.users.on('add', function (user) {
+    broadcast('userData', [user.toUserData()]);
   });
 
   // send user frames
