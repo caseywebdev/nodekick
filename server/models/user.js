@@ -96,7 +96,7 @@ var User = module.exports = Backbone.Model.extend({
     var kickerFoot = _.last(this.boxes());
     return kickerFoot;
   },
-  
+
   boxes: function() {
     var kf = this.toFrame();
     var boxesForUser = JSON.parse(
@@ -155,9 +155,10 @@ User.Collection = Backbone.Collection.extend({
         this.add(model);
       },
       remove: function (model) {
-        this.timeouts[model.id] = setTimeout(this.remove.bind(this, model), 60 * 1000);
+        this.timeouts[model.id] =
+          setTimeout(this.remove.bind(this, model), 5 * 60 * 1000);
       }
-    })
+    });
   },
   checkCollisions: function () {
     var kickers = _.filter(this.models, function (model) {
@@ -169,7 +170,7 @@ User.Collection = Backbone.Collection.extend({
     });
 
     var toKill = [];
-    
+
     _.each(kickers, function (kicker) {
       _.each(notDeadPlayers, function (other) {
         if (kicker !== other && other.recordHit(kicker.foot())) {
