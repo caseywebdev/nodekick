@@ -12,11 +12,12 @@ if (!window.NodeKick)
     spriteBottomPadding: 15,
     parallaxLocationX: 0,
     parallaxLocationY: 0,
-    isDaytime: true,
+    isDaytime: false,
 
     drawServerOrigin: false,
     drawBoundingBox: false,
     drawFloorLine: false,
+    drawGuidelines: false,
 
     avatars: {},
     avatarSize: 30,
@@ -89,17 +90,33 @@ if (!window.NodeKick)
         this.c.lineTo(this.canvas.width, this.floorY);
         this.c.stroke();
       }
+
+      if (this.drawGuidelines) {
+        for (var i = 0; i < 1300; i = i + 100) {
+          this.c.beginPath();
+          this.c.moveTo(i, 0);
+          this.c.lineTo(i, this.canvas.height);
+          this.c.stroke();
+
+          this.c.beginPath();
+          this.c.moveTo(0, i);
+          this.c.lineTo(this.canvas.width, i);
+          this.c.stroke();
+
+          for (var j = 0; j < 13; j++)
+          this.c.fillText('(' + i + ', ' + (j * 100) + ')', i + 2, (j * 100) + 9);
+        }
+      }
     },
 
     drawAvatar: function (user, x, y) {
-      var userData = window.app.usersById[user.id];
       var avatar = this.avatars[user.id];
       if (!avatar) {
         avatar = this.avatars[user.id] = new Image();
         avatar.onload = function () {
           avatar.loaded = true;
         };
-        avatar.src = userData.avatar;
+        avatar.src = '/avatars/' + user.id;
       }
       if (avatar.loaded) {
         x = x - this.avatarSize / 2;
@@ -109,25 +126,54 @@ if (!window.NodeKick)
     },
 
     deathImage: function(sprite, spriteX, x, y, deathCooldown) {
+      console.log('death image for location ', x, y);
       var deathCanvas = window.document.getElementById('deathCanvas');
-      var c = deathCanvas.getContext('2d');
-      c.clearRect(0, 0, 100, 200);
-      c.drawImage(sprite, spriteX, 0, 200, 400, 0, 0, 100, 200);
-      var image = c.getImageData(0, 0, 100, 200);
+      var deathContext = deathCanvas.getContext('2d');
+      deathContext.clearRect(0, 0, 100, 200);
+      deathContext.drawImage(sprite, spriteX, 0, 200, 400, 0, 0, 100, 200);
+      var stageSource = this.c.getImageData(x, y, 100, 200);
+      var image = deathContext.getImageData(0, 0, 100, 200);
       var length = image.data.length;
       var maxDeathCooldown = 1.0;
 
       var alphaPercentage = deathCooldown / maxDeathCooldown;
 
-      for(var i = 3; i < length; i = i + 4) {
-        image.data[i-1] = image.data[i-1] + 150;
-        image.data[i-2] = image.data[i-2] + 150;
-        image.data[i-3] = image.data[i-3] + 150;
+      
+      for(var i = 3; i < length; i += 4) {
 
-        if(image.data[i] > 0) { image.data[i] *= alphaPercentage; }
+        if(image.data[i] > 0 && image.data[i - 1] > 0 && image.data[i - 2] > 0 && image.data[i - 3] > 0) {
+          image.data[i-1] = image.data[i-1] + 150;
+          image.data[i-2] = image.data[i-2] + 150;
+          image.data[i-3] = image.data[i-3] + 150;
+          image.data[i] *= alphaPercentage;
+
+        }
+      }
+      
+      deathContext.putImageData(stageSource, 0, 0);
+
+
+
+      var newData = deathContext.getImageData(0, 0, 100, 200);
+
+
+      for(var i = 3; i < length; i += 4) {
+
+        if(image.data[i] > 0 && image.data[i - 1] > 0 && image.data[i - 2] > 0 && image.data[i - 3] > 0) {
+          newData.data[i-1] = image.data[i-1];
+          newData.data[i-2] = image.data[i-2];
+          newData.data[i-3] = image.data[i-3];
+          newData.data[i] = image.data[i];
+        }
       }
 
-      this.c.putImageData(image, x, y);
+
+      //deathContext.putImageData(image, 0, 0);
+      this.c.putImageData(newData, x, y);
+
+      var anotherCanvas = document.getElementById('anotherCanvas');
+      var anotherContext = anotherCanvas.getContext('2d');
+      anotherContext.putImageData(image, 0, 0);
     },
 
     drawUser: function(user) {

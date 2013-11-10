@@ -1,17 +1,29 @@
 (function () {
+  'use strict';
+
+  var _ = window._;
   var Backbone = window.Backbone;
-  // var _ = window._;
-  // var $ = window.$;
 
   var ScoreView = window.ScoreView = Backbone.View.extend({
     template: window.jst.score,
     className: 'score',
     initialize: function () {
-      this.listenTo(this.model, 'change', this.render);
+      console.log(this.model.id);
+      this.listenTo(this.model, 'change:score', this.updateScore);
     },
     render: function () {
-      this.$el.html(this.template(this.model));
+      this.$el.html(this.template(this.model.attributes));
       return this;
+    },
+    updateScore: function () {
+      var $kills = this.$('.js-kills');
+      $kills
+        .text(this.model.get('score') || 0)
+        .removeClass('js-ease')
+        .addClass('js-changed');
+      _.defer(function () {
+        $kills.addClass('js-ease').removeClass('js-changed');
+      });
     }
   });
 

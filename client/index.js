@@ -39,7 +39,16 @@
       $('html').addClass(config.mobile ? 'js-mobile' : 'js-desktop');
       new window.ScoresListView({collection: app.scores});
       NodeKick.Drawer.init();
-      window.NodeKick.Assets.init();
+      NodeKick.Assets.init();
+      app.setUpMoveAck();
+    },
+
+    setUpMoveAck: function () {
+      if (!app.currentUserId) return;
+      var available = NodeKick.Assets.availableSprites;
+      var name = available[app.currentUserId % available.length];
+      var url = '/images/' + name + '-sprite.png';
+      $('.js-move-ack').css('backgroundImage', "url('" + url + "')");
     },
 
     draw: function () {
@@ -52,7 +61,24 @@
       }
 
       NodeKick.Drawer.drawBackground();
-      NodeKick.Drawer.drawUsers(this.users, 19291404);
+      NodeKick.Drawer.drawUsers(this.users, 19291404); //this.currentUserId
+    },
+
+    messageQueue: [],
+    messageRate: 800,
+    onMessage: function (message) {
+      if (app.currentMessage) {
+        app.messageQueue.push(message);
+      } else {
+        app.currentMessage = message;
+        app.showMessage(message);
+        clearInterval(app.messageInterval);
+        app.messageInterval = setInterval(function () {
+          var msg = app.currentMessage = app.messageQueue.shift();
+          if (!msg) return clearInterval(app.messageInterval);
+          app.showMessage(msg);
+        }, app.messageRate);
+      }
     },
 
     showMessage: function (message) {
@@ -91,7 +117,7 @@
   if (!config.mobile) {
     live.connect('ws://' + location.host)
       .on('step', app.updateUsers)
-      .on('message', app.showMessage)
+      .on('message', app.onMessage)
       .on('scores', app.updateScoreboard);
   }
 

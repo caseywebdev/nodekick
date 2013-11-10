@@ -8,13 +8,15 @@ var defaults = {
     }
   },
   world: {
-    left: 50, //considered dead if you're less than this, regardless of your Y location,
-    right: 1250, //considered dead if you're greater than this, regardless of your Y location,
+    left: 70, //considered dead if you're less than this, regardless of your Y location,
+    right: 1220, //considered dead if you're greater than this, regardless of your Y location,
     leftEdge: 100, //if your x less than this when your y is 0, you die
     rightEdge: 1200, //if your x greater than this when your y is 0, you die
     gravity: 3000, // amount of gravity applied per second
     jumpPower: 1500,
     kickPower: 700,
+    multiTime: 2000,
+    minStreak: 3,
     fps: 60,
     boxes: {
       "1": {

@@ -1,4 +1,7 @@
-@import 'nib'
+//= requireSelf
+//= requireTree .
+
+@import 'config'
 
 global-reset()
 
@@ -39,7 +42,6 @@ a
   margin auto
   width 200px
   height 400px
-  background url('/images/dive-sprite.png')
   opacity 0
   &.js-transition
     transition-duration .25s
@@ -76,14 +78,14 @@ a
 .sign-in-with-twitter
 .user-info
 .nko-vote-container
-  background #fff
-  border-bottom-left-radius 5px
-  box-shadow 0 1px 3px rgba(0, 0, 0, .75)
   overflow auto
+  margin-top 5px
+  border-radius left 5px
+  box-shadow 0 1px 3px rgba(0, 0, 0, .75)
+  background #fff
 
 .nko-vote-container
   display inline-block
-  margin-top 5px
   border-radius left 5px
   padding 5px
   text-align right
@@ -114,15 +116,12 @@ a
       color #666
 
 @keyframes message
-  0%
-    transform translateY(0) scale(1)
-    opacity 1
   2%
     transform scale(3)
+    opacity 1
   100%
     transform translateY(-200px) scale(.5)
     opacity 0
-
 
 .alerts
   position: fixed

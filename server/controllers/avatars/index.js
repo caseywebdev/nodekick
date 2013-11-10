@@ -8,7 +8,6 @@ module.exports = function (app) {
       if (err || !user) return res.send(404);
       agent.get(user.avatar).end(function (err, imgRes) {
         if (err || imgRes.status >= 400) return res.send(404);
-        // res.set();
         var headers = _.pick(imgRes.headers, 'content-type', 'etag', 'expires', 'content-length');
         res.set(headers);
         imgRes.pipe(res);
