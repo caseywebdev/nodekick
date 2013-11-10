@@ -23,7 +23,8 @@ var User = module.exports = Backbone.Model.extend({
       yv: 5,
       dir: direction,
       state: 'jumping',
-      deathCooldown: 2
+      deathCooldown: 1,
+      deathState: 'standing'
     };
   },
 
@@ -49,7 +50,7 @@ var User = module.exports = Backbone.Model.extend({
     }
 
     if (this.isOffMap()) {
-      this.set({ state: 'dying' });
+      this.set({ state: 'dying', deathState: 'kicking' });
     }
   },
 
@@ -64,7 +65,7 @@ var User = module.exports = Backbone.Model.extend({
   },
 
   toFrame: function () {
-    return this.pick('id', 'x', 'y', 'dir', 'state', 'deathCooldown');
+    return this.pick('id', 'x', 'y', 'dir', 'state', 'deathCooldown', 'deathState');
   },
   toUserData: function () {
     return this.pick('id', 'username', 'displayName', 'avatar');
@@ -169,7 +170,7 @@ User.Collection = Backbone.Collection.extend({
     var users = this;
     _.each(toKill, function (kill) {
       users.trigger('kill', kill);
-      kill.killed.set({ state: "dying" });
+      kill.killed.set({ deathState: kill.killed.get("state"), state: "dying" });
     });
   },
   removeDeadPlayers: function(dt) {

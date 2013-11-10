@@ -57,14 +57,19 @@ if (!window.NodeKick)
     deathImage: function(sprite, spriteX, x, y, deathCooldown) {
       var deathCanvas = window.document.getElementById('deathCanvas');
       var c = deathCanvas.getContext('2d');
+      c.clearRect(0, 0, 100, 200);
       c.drawImage(sprite, spriteX, 0, 200, 400, 0, 0, 100, 200);
       var image = c.getImageData(0, 0, 100, 200);
       var length = image.data.length;
-      var maxDeathCooldown = 2.0;
+      var maxDeathCooldown = 1.0;
 
       var alphaPercentage = deathCooldown / maxDeathCooldown;
 
       for(var i = 3; i < length; i = i + 4) {
+        image.data[i-1] = image.data[i-1] + 150;
+        image.data[i-2] = image.data[i-2] + 150;
+        image.data[i-3] = image.data[i-3] + 150;
+
         if(image.data[i] > 0) { image.data[i] *= alphaPercentage; }
       }
 
@@ -86,13 +91,13 @@ if (!window.NodeKick)
 
         if (user.dir === 1) {
           spriteX = 0;
-          if (user.state == 'jumping')
-            spriteX = 200;
-          else if (user.state == 'kicking')
-            spriteX = 400;
+          if (user.state == 'jumping') spriteX = 200;
+          else if (user.state == 'kicking') spriteX = 400;
 
           if(user.state == "dying") {
-            console.log(user);
+            spriteX = 400;
+            if (user.deathState == 'jumping') spriteX = 200;
+            else if (user.deathState == 'standing') spriteX = 0;
             this.deathImage(window.NodeKick.Assets.diveSprite, spriteX, x, y, deathCooldown);
           } else {
             this.c.drawImage(window.NodeKick.Assets.diveSprite, spriteX, 0, 200, 400, x, y, 100, 200);
@@ -100,13 +105,13 @@ if (!window.NodeKick)
         }
         else {
           spriteX = 0;
-          if (user.state == 'jumping')
-            spriteX = 200;
-          else if (user.state == 'standing')
-            spriteX = 400;
+          if (user.state == 'jumping') spriteX = 200;
+          else if (user.state == 'standing') spriteX = 400;
 
           if(user.state == "dying") {
-            console.log(user);
+            spriteX = 0;
+            if (user.deathState == 'jumping') spriteX = 200;
+            else if (user.deathState == 'standing') spriteX = 400;
             this.deathImage(window.NodeKick.Assets.diveSpriteInverted, spriteX, x, y, deathCooldown);
           } else {
             this.c.drawImage(window.NodeKick.Assets.diveSpriteInverted, spriteX, 0, 200, 400, x, y, 100, 200);
