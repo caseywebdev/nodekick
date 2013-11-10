@@ -7,7 +7,6 @@
     template: window.jst.score,
     className: 'score',
     initialize: function () {
-      console.log(this.model.id);
       this.listenTo(this.model, 'change:score', this.updateScore);
     },
     render: function () {
