@@ -25,8 +25,17 @@ var User = module.exports = Backbone.Model.extend({
       state: 'jumping',
       deathCooldown: 1,
       deathState: 'standing',
-      streak: 0
+      streak: 0,
+      touchedGround: false
     };
+  },
+
+  hasTouchedGround: function() {
+    return this.get("touchedGround");
+  },
+
+  hasKilledFromAbove: function () {
+    return this.set({ touchedGround: true });
   },
 
   increaseStreak: function() {
@@ -55,7 +64,7 @@ var User = module.exports = Backbone.Model.extend({
     }
 
     if (this.get('y') >= 0 && !this.isOffMap()) {
-      this.set({ y: 0, yv: 0, xv: 0, state: 'standing' });
+      this.set({ y: 0, yv: 0, xv: 0, state: 'standing', touchedGround: true });
     }
 
     if (this.isOffMap()) {
@@ -194,9 +203,11 @@ User.Collection = Backbone.Collection.extend({
           collisionResults.push({
             killer: kicker,
             killed: other,
-            headShot: other.isHeadShot(kicker.foot())
+            headShot: other.isHeadShot(kicker.foot()),
+            deathFromAbove: !kicker.hasTouchedGround()
           });
 
+          if(!kicker.hasTouchedGround()) kicker.hasKilledFromAbove();
           kicker.increaseStreak();
           other.resetStreak();
         }
@@ -243,6 +254,14 @@ User.Collection = Backbone.Collection.extend({
         users.trigger('message', {
           type: 'multikill',
           text: 'multikill',
+          user: kill.killer.toFrame()
+        });
+      }
+
+      if(!kill.killer.deathFromAbove) {
+        users.trigger('message', {
+          type: 'deathfromabove',
+          text: 'deathfromabove',
           user: kill.killer.toFrame()
         });
       }
