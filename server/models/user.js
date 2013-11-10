@@ -96,7 +96,7 @@ var User = module.exports = Backbone.Model.extend({
     var kickerFoot = _.last(this.boxes());
     return kickerFoot;
   },
-  
+
   boxes: function() {
     var kf = this.toFrame();
     var boxesForUser = JSON.parse(
@@ -109,6 +109,10 @@ var User = module.exports = Backbone.Model.extend({
       box.y2 += kf.y;
     });
     return boxesForUser;
+  },
+
+  isHeadShot: function(foot) {
+    return this.hasCollision(foot, _.first(this.boxes()));
   },
 
   recordHit: function(foot) {
@@ -155,9 +159,10 @@ User.Collection = Backbone.Collection.extend({
         this.add(model);
       },
       remove: function (model) {
-        this.timeouts[model.id] = setTimeout(this.remove.bind(this, model), 60 * 1000);
+        this.timeouts[model.id] =
+          setTimeout(this.remove.bind(this, model), 5 * 60 * 1000);
       }
-    })
+    });
   },
   checkCollisions: function () {
     var kickers = _.filter(this.models, function (model) {
@@ -169,13 +174,15 @@ User.Collection = Backbone.Collection.extend({
     });
 
     var toKill = [];
-    
+
     _.each(kickers, function (kicker) {
       _.each(notDeadPlayers, function (other) {
         if (kicker !== other && other.recordHit(kicker.foot())) {
+          var headShot = other.isHeadShot(kicker.foot());
           toKill.push({
             killer: kicker,
-            killed: other
+            killed: other,
+            headShot: headShot
           });
         }
       });
@@ -184,6 +191,9 @@ User.Collection = Backbone.Collection.extend({
     var users = this;
     _.each(toKill, function (kill) {
       users.trigger('kill', kill);
+      if(kill.headShot) {
+        users.trigger('message', { type: 'headshot', text: 'headshot' });
+      }
       kill.killed.set({ deathState: kill.killed.get("state"), state: "dying" });
     });
   },

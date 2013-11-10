@@ -2,7 +2,7 @@
 //= require jquery-mobile-events/jquery-mobile-events
 //= require underscore/underscore
 //= require backbone/backbone
-//= requireTree jst
+//= requireTree ../views/jst
 //= require scoreboard
 //= require live
 //= require config
@@ -37,7 +37,7 @@
 
     draw: function () {
 
-      if (!NodeKick.Drawer.canvas || !NodeKick.Assets.isLoaded) {
+      if (!NodeKick.Drawer.canvas || !NodeKick.Assets.isLoaded()) {
         console.log('assets not yet loaded');
         // DOM is not yet loaded or image assets have not loaded,
         // so no need to draw yet!
@@ -47,6 +47,8 @@
       NodeKick.Drawer.drawBackground();
       NodeKick.Drawer.drawUsers(this.users);
     },
+
+    showMessage: function (message) { console.log(message)  },
 
     updateUsers: function (users) { app.users = users; },
     updateScoreboard: function (scores) {
@@ -70,6 +72,7 @@
   if (!config.mobile) {
     live.connect('ws://' + location.host)
       .on('step', app.updateUsers)
+      .on('message', app.showMessage)
       .on('scores', app.updateScoreboard);
   }
 

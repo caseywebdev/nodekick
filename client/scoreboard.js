@@ -26,8 +26,7 @@
       this.views = {};
     },
     addModel: function (model) {
-      var view = this.views[model.id] = new ScoreView({model: model});
-      this.$el.append(view.render().el);
+      (this.views[model.id] = new ScoreView({model: model})).render();
     },
     removeModel: function (model) {
       this.views[model.id].remove();
