@@ -82,6 +82,7 @@ if (!window.NodeKick)
       var deathCooldown = user.deathCooldown;
       var spriteX;
       var serverOrigin = { x: x + (this.spriteWidth / 2), y: y + this.spriteHeight };
+      var sprite = window.NodeKick.Assets.getSprite(user);
 
       if (this.drawBoundingBox)
         this.c.strokeRect(x, y, 100, 200);
@@ -97,9 +98,9 @@ if (!window.NodeKick)
           spriteX = 400;
           if (user.deathState == 'jumping') spriteX = 200;
           else if (user.deathState == 'standing') spriteX = 0;
-          this.deathImage(window.NodeKick.Assets.diveSprite, spriteX, x, y, deathCooldown);
+          this.deathImage(sprite, spriteX, x, y, deathCooldown);
         } else {
-          this.c.drawImage(window.NodeKick.Assets.diveSprite, spriteX, 0, 200, 400, x, y, 100, 200);
+          this.c.drawImage(sprite, spriteX, 0, 200, 400, x, y, 100, 200);
         }
       }
       else {
@@ -111,9 +112,9 @@ if (!window.NodeKick)
           spriteX = 0;
           if (user.deathState == 'jumping') spriteX = 200;
           else if (user.deathState == 'standing') spriteX = 400;
-          this.deathImage(window.NodeKick.Assets.diveSpriteInverted, spriteX, x, y, deathCooldown);
+          this.deathImage(sprite.inverted, spriteX, x, y, deathCooldown);
         } else {
-          this.c.drawImage(window.NodeKick.Assets.diveSpriteInverted, spriteX, 0, 200, 400, x, y, 100, 200);
+          this.c.drawImage(sprite.inverted, spriteX, 0, 200, 400, x, y, 100, 200);
         }
       }
     },

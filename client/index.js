@@ -37,7 +37,7 @@
 
     draw: function () {
 
-      if (!NodeKick.Drawer.canvas || !NodeKick.Assets.isLoaded) {
+      if (!NodeKick.Drawer.canvas || !NodeKick.Assets.isLoaded()) {
         console.log('assets not yet loaded');
         // DOM is not yet loaded or image assets have not loaded,
         // so no need to draw yet!
