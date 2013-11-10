@@ -26,6 +26,10 @@ module.exports = function (app) {
     broadcast('message', message);
   });
 
+  app.world.users.on('death', function (message) {
+    broadcast('death', message);
+  });
+
   app.world.users.on('add', function (user) {
     app.world.getScores(function (er, scores) {
       if (er) throw er;

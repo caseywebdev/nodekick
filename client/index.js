@@ -3,6 +3,7 @@
 //= require underscore/underscore
 //= require backbone/backbone
 //= require request-animation-frame-polyfill
+//= require soundmanager/script/soundmanager2
 //= require live
 //= require config
 //= requireSelf
@@ -11,6 +12,8 @@
 //= require scoreboard
 //= require drawer
 //= require assets
+//= require sounds
+
 
 (function () {
   'use strict';
@@ -20,6 +23,13 @@
   var live = window.live;
   var _ = window._;
   var Backbone = window.Backbone;
+
+  // setInterval(function () {
+  //   app.showMessage({
+  //     type: 'killstreak',
+  //     text: 'headshot'
+  //   });
+  // }, 3000);
 
   var app = window.app = {
     users: [],
@@ -52,7 +62,6 @@
         // so no need to draw yet!
         return;
       }
-
       app.Drawer.drawBackground();
       app.Drawer.drawUsers(app.world.users, app.currentUserId);
     },
@@ -74,6 +83,14 @@
       }
     },
 
+    onDeath: function (message) {
+      //play death sound?
+    },
+
+    playSound: function(sound) {
+      if(window.NodeKick.Sounds) window.NodeKick.Sounds[sound].play();
+    },
+
     showMessage: function (message) {
       var $alert = $('<li>');
       $alert.addClass('alert');
@@ -83,28 +100,38 @@
       case 'streak':
         var streak = message.user.streak;
         if (streak == 3) {
+          this.playSound("killingstreak");
           text = 'killing streak';
-        } else if (streak == 4) {
-          text = 'rampage!!';
-        } else if (streak == 5) {
-          text = 'dominating!!!';
         } else if (streak == 6) {
-          text = 'unstoppable!!!!';
-        } else if (streak >= 7) {
+          this.playSound("rampage");
+          text = 'rampage!';
+        } else if (streak == 9) {
+          this.playSound("dominating");
+          text = 'dominating!!';
+        } else if (streak == 12) {
+          this.playSound("unstoppable");
+          text = 'unstoppable!!!';
+        } else if (streak >= 15) {
+          this.playSound("godlike");
           text = 'godlike!!!!';
         } else return;
         break;
       case 'headshot':
+        this.playSound('headshot');
         break;
       case 'deathfromabove':
+          this.playSound("deathfromabove");
         break;
       case 'multikill':
         var multis = message.user.multis;
         if (multis == 2) {
+          this.playSound("doublekill");
           text = 'double kill!';
         } else if (multis == 3) {
+          this.playSound("triplekill");
           text = 'triple kill!!';
         } else if (multis >= 4) {
+          this.playSound("monsterkill");
           text = 'monster kill!!!';
         }
         break;
@@ -117,6 +144,7 @@
       setTimeout(function () {
         $alert.remove();
       }, 4000);
+      console.log(message);
     },
 
     updateWorld: function (world) {
@@ -145,6 +173,7 @@
     live.connect('ws://' + location.host)
       .on('step', app.updateWorld)
       .on('message', app.onMessage)
+      .on('death', app.onDeath)
       .on('scores', app.updateScoreboard);
   }
 
