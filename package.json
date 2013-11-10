@@ -27,7 +27,8 @@
     "csso": "x",
     "uglify-js": "x",
     "ws": "x",
-    "async": "x"
+    "async": "x",
+    "superagent": "x"
   },
   "devDependencies": {
     "watchy": "x"
