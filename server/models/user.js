@@ -146,6 +146,7 @@ var User = module.exports = Backbone.Model.extend({
   },
 
   recordHit: function(foot) {
+    if(this.isDead()) return false;
     var footPoint = foot;
     var _this = this;
     var didDie = false;
@@ -254,10 +255,10 @@ User.Collection = Backbone.Collection.extend({
         });
       }
 
-      if(!kill.killer.deathFromAbove) {
+      if(kill.deathFromAbove) {
         users.trigger('message', {
           type: 'deathfromabove',
-          text: 'deathfromabove',
+          text: 'death from above',
           user: kill.killer.toFrame()
         });
       }

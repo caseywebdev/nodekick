@@ -12,7 +12,7 @@ module.exports = {
   findUser: function (id, cb) {
     client.hget(usersKey, id, function (er, userJSON) {
       if (er) cb(er);
-      cb(null, JSON.parse(userJSON));
+      cb(null, userJSON && JSON.parse(userJSON));
     });
   },
   createUser: function (user, cb) {
