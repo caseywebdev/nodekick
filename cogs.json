@@ -1,6 +1,6 @@
 {
   "paths": [
-    "views/jst",
+    "client/jst",
     "node_modules",
     "bower_components",
     "client"
