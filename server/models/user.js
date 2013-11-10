@@ -257,7 +257,7 @@ User.Collection = Backbone.Collection.extend({
       if(!kill.killer.deathFromAbove) {
         users.trigger('message', {
           type: 'deathfromabove',
-          text: 'deathfromabove',
+          text: 'death from above',
           user: kill.killer.toFrame()
         });
       }
