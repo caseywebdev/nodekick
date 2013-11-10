@@ -4,7 +4,7 @@ var defaults = {
   session: {
     secret: 'sonny has a nice scarf',
     cookie: {
-      maxAge: 60 * 60 * 1000
+      maxAge: 1000 * 60 * 60 * 24 * 365 * 10
     }
   },
   world: {
