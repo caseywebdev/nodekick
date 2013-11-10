@@ -4,7 +4,7 @@
   // var $ = window.$;
 
   var ScoreView = window.ScoreView = Backbone.View.extend({
-    template: window.jst['jst/score'],
+    template: window.jst.score,
     className: 'score',
     initialize: function () {
       this.listenTo(this.model, 'change', this.render);

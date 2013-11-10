@@ -2,7 +2,7 @@
 //= require jquery-mobile-events/jquery-mobile-events
 //= require underscore/underscore
 //= require backbone/backbone
-//= requireTree jst
+//= requireTree ../views/jst
 //= require scoreboard
 //= require live
 //= require config
