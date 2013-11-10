@@ -40,6 +40,11 @@
       new window.ScoresListView({collection: app.scores});
       NodeKick.Drawer.init();
       window.NodeKick.Assets.init();
+      // setInterval(function () {
+      //   var msg = window.app.messageQueue.shift();
+      //   if (!msg) return;
+      //   window.app.showMessage(msg);
+      // }, 500);
     },
 
     draw: function () {
@@ -53,6 +58,23 @@
 
       NodeKick.Drawer.drawBackground();
       NodeKick.Drawer.drawUsers(this.users);
+    },
+
+    messageQueue: [],
+    messageRate: 800,
+    onMessage: function (message) {
+      if (app.currentMessage) {
+        app.messageQueue.push(message);
+      } else {
+        app.currentMessage = message;
+        app.showMessage(message);
+        clearInterval(app.messageInterval);
+        app.messageInterval = setInterval(function () {
+          var msg = app.currentMessage = app.messageQueue.shift();
+          if (!msg) return clearInterval(app.messageInterval);
+          app.showMessage(msg);
+        }, app.messageRate);
+      }
     },
 
     showMessage: function (message) {
@@ -89,7 +111,7 @@
   if (!config.mobile) {
     live.connect('ws://' + location.host)
       .on('step', app.updateUsers)
-      .on('message', app.showMessage)
+      .on('message', app.onMessage)
       .on('scores', app.updateScoreboard);
   }
 
