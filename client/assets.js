@@ -1,5 +1,4 @@
 (function () {
-  if (!window.NodeKick) window.NodeKick = {};
 
   var _ = window._;
   var SPRITES = ['donatello', 'dive', 'redacted'];
@@ -9,7 +8,7 @@
     'background-nighttime.png',
     'cloud-sprite.png'];
 
-  var Assets = window.NodeKick.Assets = {
+  var Assets = window.app.Assets = {
     availableSprites: ['donatello', 'dive', 'redacted'],
     sprites: {},
     backgroundImages: {},

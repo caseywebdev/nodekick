@@ -17,10 +17,10 @@ server:
 	node server
 
 server-w:
-	$(WATCHY) -w server -W 0.25 -- node server
+	$(WATCHY) -w server,models -W 0.25 -- node server
 
 cogs-w:
-	$(COGS) -w client,views
+	$(COGS) -w client,models,views
 
 compress:
 	$(BOWER) install

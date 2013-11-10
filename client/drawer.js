@@ -1,10 +1,7 @@
-if (!window.NodeKick)
-  window.NodeKick = {};
-
 (function () {
   var _ = window._;
 
-  window.NodeKick.Drawer = {
+  window.app.Drawer = {
 
     floorY: 570,
     spriteHeight: 200,
@@ -35,26 +32,24 @@ if (!window.NodeKick)
     },
 
 
-    parallax: function (user) {
+    parallax: function (users, user) {
       var x;
       var y;
-      var users = window.app.users;
       if (user) {
-        x = user.x;
-        y = user.y;
-      } else if (!users || users.length === 0) {
+        x = user.get('x');
+        y = user.get('y');
+      } else if (users.length === 0) {
         x = 575;
         y = 570;
       } else {
-        var sum = _.reduce(users, function (sum, user) {
-          return {x: sum.x + user.x, y: sum.y + user.y};
+        var sum = users.reduce(function (sum, user) {
+          return {x: sum.x + user.get('x'), y: sum.y + user.get('y')};
         }, {x: 0, y: 0});
         x = sum.x / users.length;
         y = sum.y / users.length;
       }
       this.parallaxLocationX = -1 * x / 45;
       this.parallaxLocationY = -1 * y / 45;
-
     },
 
     createClouds: function() {
@@ -78,9 +73,9 @@ if (!window.NodeKick)
       });
     },
 
-    fakeTransition: function() {
+    fakeTransition: function () {
       var self = this;
-      setInterval(function() {
+      setInterval(function () {
         self.isDaytime = !self.isDaytime;
         self.createClouds();
       }, this.lengthOfDay)
@@ -91,18 +86,18 @@ if (!window.NodeKick)
 
       var backNear, backDistant;
       if (this.isDaytime) {
-        backNear = window.NodeKick.Assets.backgroundImages['background-daytime.png'];
-        backDistant = window.NodeKick.Assets.backgroundImages['background-daytime-distant.png'];
+        backNear = window.app.Assets.backgroundImages['background-daytime.png'];
+        backDistant = window.app.Assets.backgroundImages['background-daytime-distant.png'];
       }
       else {
-        backNear = window.NodeKick.Assets.backgroundImages['background-nighttime.png'];
-        backDistant = window.NodeKick.Assets.backgroundImages['background-nighttime-distant.png'];      
+        backNear = window.app.Assets.backgroundImages['background-nighttime.png'];
+        backDistant = window.app.Assets.backgroundImages['background-nighttime-distant.png'];
       }
       this.c.drawImage(backDistant, this.parallaxLocationX, this.parallaxLocationY, this.canvas.width + 50, this.canvas.height + 50);
       this.c.drawImage(backNear, 0, this.parallaxLocationY / 5, this.canvas.width, this.canvas.height);
 
       if (this.isDaytime) {
-        var cloudSprite = window.NodeKick.Assets.backgroundImages['cloud-sprite.png'];
+        var cloudSprite = window.app.Assets.backgroundImages['cloud-sprite.png'];
 
         _.each(this.clouds, function(cloud) {
           cloud.x -= cloud.speed;
@@ -112,8 +107,8 @@ if (!window.NodeKick)
 
           //this.c.strokeRect(cloud.x, cloud.y, cloud.width, cloud.height);
         }, this);
-        
-        
+
+
       }
 
       if (this.drawFloorLine) {
@@ -169,7 +164,7 @@ if (!window.NodeKick)
 
       var alphaPercentage = deathCooldown / maxDeathCooldown;
 
-      
+
       for(var i = 3; i < length; i += 4) {
 
         if(image.data[i] > 0 && image.data[i - 1] > 0 && image.data[i - 2] > 0 && image.data[i - 3] > 0) {
@@ -180,7 +175,7 @@ if (!window.NodeKick)
 
         }
       }
-      
+
       deathContext.putImageData(stageSource, 0, 0);
 
 
@@ -208,27 +203,27 @@ if (!window.NodeKick)
     },
 
     drawUser: function(user) {
-      var x = user.x - (this.spriteWidth / 2);
-      var y = this.floorY + user.y - this.spriteHeight + this.spriteBottomPadding;
+      var x = user.get('x') - (this.spriteWidth / 2);
+      var y = this.floorY + user.get('y') - this.spriteHeight + this.spriteBottomPadding;
       var deathCooldown = user.deathCooldown;
       var spriteX;
       var serverOrigin = { x: x + (this.spriteWidth / 2), y: y + this.spriteHeight };
-      var sprite = window.NodeKick.Assets.getSprite(user);
+      var sprite = window.app.Assets.getSprite(user);
 
       if (this.drawBoundingBox)
         this.c.strokeRect(x, y, 100, 200);
       if (this.drawServerOrigin)
         this.c.fillRect(serverOrigin.x, serverOrigin.y, 5, 5);
 
-      if (user.dir === 1) {
+      if (user.get('dir') === 1) {
         spriteX = 0;
-        if (user.state == 'jumping') spriteX = 200;
-        else if (user.state == 'kicking') spriteX = 400;
+        if (user.isJumping()) spriteX = 200;
+        else if (user.isKicking()) spriteX = 400;
 
-        if(user.state == "dying") {
+        if(user.isDead()) {
           spriteX = 400;
-          if (user.deathState == 'jumping') spriteX = 200;
-          else if (user.deathState == 'standing') spriteX = 0;
+          if (user.get('deathState') == 'jumping') spriteX = 200;
+          else if (user.get('deathState') == 'standing') spriteX = 0;
           this.deathImage(sprite, spriteX, x, y, deathCooldown);
         } else {
           this.c.drawImage(sprite, spriteX, 0, 200, 400, x, y, 100, 200);
@@ -236,13 +231,13 @@ if (!window.NodeKick)
       }
       else {
         spriteX = 0;
-        if (user.state == 'jumping') spriteX = 200;
-        else if (user.state == 'standing') spriteX = 400;
+        if (user.isJumping()) spriteX = 200;
+        else if (user.isStanding()) spriteX = 400;
 
-        if(user.state == "dying") {
+        if(user.isDead()) {
           spriteX = 0;
-          if (user.deathState == 'jumping') spriteX = 200;
-          else if (user.deathState == 'standing') spriteX = 400;
+          if (user.get('deathState') == 'jumping') spriteX = 200;
+          else if (user.get('deathState') == 'standing') spriteX = 400;
           this.deathImage(sprite.inverted, spriteX, x, y, deathCooldown);
         } else {
           this.c.drawImage(sprite.inverted, spriteX, 0, 200, 400, x, y, 100, 200);
@@ -251,14 +246,14 @@ if (!window.NodeKick)
     },
 
     drawUsers: function(users, currentUserId) {
-      this.parallax(_.find(users, function(user) { return user.id == currentUserId}));
-      var deadUsers = _.filter(users, function(user) { return user.state == "dying"; });
-      var liveUsers = _.filter(users, function(user) { return user.state != "dying"; });
-      _.each(deadUsers, function (user) { this.drawUser(user); }, this);
-      _.each(liveUsers, function (user) { this.drawUser(user); }, this);
-      _.each(users, function (user) {
-        var x = user.x - (this.spriteWidth / 2);
-        var y = this.floorY + user.y - this.spriteHeight + this.spriteBottomPadding;
+      this.parallax(users, users.get(currentUserId));
+      var deadUsers = users.where({state: 'dead'});
+      var liveUsers = users.difference(deadUsers);
+      _.each(deadUsers, _.bind(this.drawUser, this));
+      _.each(liveUsers, _.bind(this.drawUser, this));
+      users.each(function (user) {
+        var x = user.get('x') - (this.spriteWidth / 2);
+        var y = this.floorY + user.get('y') - this.spriteHeight + this.spriteBottomPadding;
         var serverOrigin = { x: x + (this.spriteWidth / 2), y: y + this.spriteHeight };
         this.drawAvatar(user, serverOrigin.x, this.floorY + 50);
       }, this);

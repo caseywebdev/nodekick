@@ -17,6 +17,7 @@ module.exports = function (app) {
   app.wss.on('connection', function (ws) {
     app.world.getScores(function (er, scores) {
       if (er) throw er;
+      ws.send(wsMsg('step', app.world.toStep()));
       ws.send(wsMsg('scores', scores));
     });
   });
@@ -36,9 +37,10 @@ module.exports = function (app) {
   });
 
   // send user frames
-  app.world.on('step', function (users) {
-    broadcast('step', users);
-  });
+  app.world.users.on(
+    'add remove change:state change:dir',
+    _.debounce(function () { broadcast('step', app.world.toStep()); })
+  );
 
   process.on('SIGTERM', _.partial(_.invoke, clients, 'close'));
 };
