@@ -20,6 +20,7 @@
       var world = this;
       this.users.on('kill', function (kill) {
         world.bulletTime();
+        if (!node) return;
         db.registerKill(kill.killer);
         world.getScores(function (er, scores) {
           world.trigger('scores', scores);

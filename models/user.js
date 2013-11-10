@@ -17,6 +17,11 @@
     //   state (jumping, kicking, standing, dead)
     initialize: function () {
       this.triggerMulti = _.debounce(this.triggerMulti, config.world.multiTime);
+      this.on('change:state', function () {
+        if (!this.get('diedAt') && this.isDead()) {
+          this.set('deathTicks', 60);
+        }
+      });
     },
     defaults: function () {
       var randomX = _.random(config.world.leftEdge, config.world.rightEdge);
@@ -85,12 +90,9 @@
         this.set({ y: 0, yv: 0, xv: 0, state: 'standing', touchedGround: true });
       }
 
-      if (this.missedGround()) {
+      if (this.missedGround() || this.offStage()) {
         this.set({ state: 'dead', deathState: 'kicking' });
-      }
-
-      if(this.offStage()) {
-        this.set({ state: 'dead', deathState: 'kicking' });
+        this.resetStreak();
       }
     },
 
@@ -113,7 +115,7 @@
     },
 
     toFrame: function () {
-      return this.pick('id', 'x', 'y', 'dir', 'state', 'deathCooldown', 'deathState');
+      return this.pick('id', 'x', 'y', 'dir', 'state', 'deathCooldown', 'deathState', 'deathTicks');
     },
     toUserData: function () {
       return this.pick('id', 'username', 'displayName', 'avatar');
