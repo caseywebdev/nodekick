@@ -21,6 +21,13 @@
   var NodeKick = window.NodeKick;
   var Backbone = window.Backbone;
 
+  // setInterval(function () {
+  //   app.showMessage({
+  //     type: 'killstreak',
+  //     text: 'headshot'
+  //   });
+  // }, 3000);
+
   var app = window.app = {
     users: [],
     usersById: {},
@@ -48,7 +55,17 @@
       NodeKick.Drawer.drawUsers(this.users);
     },
 
-    showMessage: function (message) { console.log(message)  },
+    showMessage: function (message) {
+      var $alert = $('<li>');
+      $alert.addClass('alert');
+      $alert.addClass(message.type);
+      $alert.text(message.text);
+      $('.alerts').append($alert);
+      setTimeout(function () {
+        $alert.remove();
+      }, 4000);
+      console.log(message);
+    },
 
     updateUsers: function (users) { app.users = users; },
     updateScoreboard: function (scores) {

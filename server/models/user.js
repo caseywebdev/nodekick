@@ -223,38 +223,22 @@ User.Collection = Backbone.Collection.extend({
 
     return collisionResults;
   },
-  broadcastMessages: function(collisionResults) {
+  broadcastMessages: function (collisionResults) {
     var users = this;
 
     _.each(collisionResults, function (kill) {
-      if(kill.headShot) {
+      if (kill.headShot) {
         users.trigger('message', {
           type: 'headshot',
-          text: 'headshot'
-        });
-      }
-
-      if(kill.killer.get("streak") == 2) {
-        users.trigger('message', {
-          type: 'doublekill',
-          text: 'doublekill',
+          text: 'headshot',
           user: kill.killer.toFrame()
         });
       }
-
-      if(kill.killer.get("streak") == 3) {
+      if (kill.killer.get("streak") >= 1) {
         users.trigger('message', {
-          type: 'triplekill',
-          text: 'triplekill',
-          user: kill.killer.toFrame()
-        });
-      }
-
-      if(kill.killer.get("streak") >= 4) {
-        users.trigger('message', {
-          type: 'multikill',
-          text: 'multikill',
-          user: kill.killer.toFrame()
+          type: 'streak',
+          text: 'multi kill',
+          user: kill.killer.toJSON
         });
       }
 
@@ -269,16 +253,16 @@ User.Collection = Backbone.Collection.extend({
 
     return collisionResults;
   },
-  removeDeadPlayers: function(dt) {
-    var deadPlayers = _.filter(this.models, function(model) {
+  removeDeadPlayers: function (dt) {
+    var deadPlayers = _.filter(this.models, function (model) {
       return model.isDead();
     });
 
-    _.each(deadPlayers, function(player) {
+    _.each(deadPlayers, function (player) {
       player.set({ deathCooldown: player.get("deathCooldown") - dt });
     });
 
-    var deadAndCooldownComplete = _.filter(deadPlayers, function(model) {
+    var deadAndCooldownComplete = _.filter(deadPlayers, function (model) {
       return model.get("deathCooldown") < 0;
     });
 

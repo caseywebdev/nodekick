@@ -117,3 +117,27 @@ a
       margin-bottom 5px
       color #666
 
+@keyframes message
+  0%
+    transform translateY(0) scale(1)
+    opacity 1
+    letter-spacing 0.1em
+  2%
+    transform scale(3)
+    letter-spacing 0.2em
+  100%
+    transform translateY(-200px) scale(.5)
+    opacity 0
+    letter-spacing 0em
+
+
+.alerts
+  position: fixed
+  bottom: 70%
+  width: 100%
+  font-size: 4em
+  font-weight 900
+  text-transform uppercase
+  font-family 'Piedra' cursive;
+  .alert
+    animation message 5s
