@@ -14,13 +14,22 @@
   </head>
 
   <body>
-    <div>
+    <div class='sign-in-info'>
       <% if (o.req.user) { %>
-        <img src="<%- o.req.user.get('avatar') %>">
-        <%- o.req.user.get('username') %>
-        <a href='/auth/sign-out'>Sign Out</a>
+        <a href='https://twitter.com/<%- o.req.user.get('username') %>'>
+          <img src='<%- o.req.user.get('avatar') %>' class='avatar'>
+        </a>
+        <div class='username-and-sign-out'>
+          <a
+            href='https://twitter.com/<%- o.req.user.get('username') %>'
+            class='username'
+          >@<%- o.req.user.get('username') %></a>
+          <a href='/auth/sign-out' class='sign-out'>Sign Out</a>
+        </div>
       <% } else { %>
-        <a href="/auth/twitter">Sign in with Twitter</a>
+        <a href='/auth/twitter'>
+          <img src='/images/sign-in-with-twitter.png' class='twitter'>
+        </a>
       <% } %>
     </div>
     <canvas id='stage' class='desktop-only' width='1280' height='1000' style="border: solid 1px #000; background-image: url(images/background-final-destination.jpg);background-size: 100%;"></canvas>
