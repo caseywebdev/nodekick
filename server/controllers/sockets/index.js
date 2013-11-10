@@ -21,7 +21,7 @@ module.exports = function (app) {
     });
   });
 
-  app.world.users.on('message', function(message) {
+  app.world.users.on('message', function (message) {
     broadcast('message', message);
   });
 

@@ -8,6 +8,8 @@ var defaults = {
     }
   },
   world: {
+    left: 50, //considered dead if you're less than this, regardless of your Y location,
+    right: 1250, //considered dead if you're greater than this, regardless of your Y location,
     leftEdge: 100, //if your x less than this when your y is 0, you die
     rightEdge: 1200, //if your x greater than this when your y is 0, you die
     gravity: 3000, // amount of gravity applied per second
