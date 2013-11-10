@@ -1,6 +1,6 @@
 var _ = require('underscore');
-var User = require('../server/models/user.js');
-var World = require('../server/models/world.js');
+var User = require('../models/user.js');
+var World = require('../models/world.js');
 
 describe('game stuff', function() {
   it('user jumps', function() {
