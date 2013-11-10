@@ -1,11 +1,13 @@
 {
   "paths": [
+    "client/jst",
     "node_modules",
     "bower_components",
     "client"
   ],
   "options": {
-    "processors.styl.options.nib": true
+    "processors.styl.options.nib": true,
+    "processors.tmpl.options.variable": "o"
   },
   "targets": {
     "client/index.js": "public",

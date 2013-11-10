@@ -23,7 +23,8 @@ var User = module.exports = Backbone.Model.extend({
       yv: 5,
       dir: direction,
       state: 'jumping',
-      deathCooldown: 5
+      deathCooldown: 1,
+      deathState: 'standing'
     };
   },
 
@@ -49,7 +50,7 @@ var User = module.exports = Backbone.Model.extend({
     }
 
     if (this.isOffMap()) {
-      this.set({ state: 'dying' });
+      this.set({ state: 'dying', deathState: 'kicking' });
     }
   },
 
@@ -64,7 +65,7 @@ var User = module.exports = Backbone.Model.extend({
   },
 
   toFrame: function () {
-    return this.pick('id', 'x', 'y', 'dir', 'state');
+    return this.pick('id', 'x', 'y', 'dir', 'state', 'deathCooldown', 'deathState');
   },
   toUserData: function () {
     return this.pick('id', 'username', 'displayName', 'avatar');
@@ -144,6 +145,20 @@ var User = module.exports = Backbone.Model.extend({
 
 User.Collection = Backbone.Collection.extend({
   model: User,
+  initialize: function (__, options) {
+    if (options && options.recent) return;
+    this.recent = new User.Collection(this.models, {recent: true});
+    this.recent.timeouts = {};
+    this.recent.listenTo(this, {
+      add: function (model) {
+        clearTimeout(this.timeouts[model.id]);
+        this.add(model);
+      },
+      remove: function (model) {
+        this.timeouts[model.id] = setTimeout(this.remove.bind(this, model), 60 * 1000);
+      }
+    })
+  },
   checkCollisions: function () {
     var kickers = _.filter(this.models, function (model) {
       return model.isKicking();
@@ -169,7 +184,7 @@ User.Collection = Backbone.Collection.extend({
     var users = this;
     _.each(toKill, function (kill) {
       users.trigger('kill', kill);
-      kill.killed.set({ state: "dying" });
+      kill.killed.set({ deathState: kill.killed.get("state"), state: "dying" });
     });
   },
   removeDeadPlayers: function(dt) {

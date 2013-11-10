@@ -11,10 +11,13 @@ var World = module.exports = Backbone.Model.extend({
     var world = this;
     this.users.on('kill', function (kill) {
       db.registerKill(kill.killer);
-      db.getScores(function (er, scores) {
+      world.getScores(function (er, scores) {
         world.trigger('scores', scores);
       });
     });
+  },
+  getScores: function (cb) {
+    db.getScores(this.users.recent.invoke('toUserData'), cb);
   },
   // control flow
   step: function () {
