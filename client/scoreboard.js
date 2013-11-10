@@ -18,7 +18,7 @@
     updateScore: function () {
       var $kills = this.$('.js-kills');
       $kills
-        .text(this.model.get('score'))
+        .text(this.model.get('score') || 0)
         .removeClass('js-ease')
         .addClass('js-changed');
       _.defer(function () {
