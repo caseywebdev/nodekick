@@ -39,12 +39,16 @@
       $('html').addClass(config.mobile ? 'js-mobile' : 'js-desktop');
       new window.ScoresListView({collection: app.scores});
       NodeKick.Drawer.init();
-      window.NodeKick.Assets.init();
-      // setInterval(function () {
-      //   var msg = window.app.messageQueue.shift();
-      //   if (!msg) return;
-      //   window.app.showMessage(msg);
-      // }, 500);
+      NodeKick.Assets.init();
+      app.setUpMoveAck();
+    },
+
+    setUpMoveAck: function () {
+      if (!app.currentUserId) return;
+      var available = NodeKick.Assets.availableSprites;
+      var name = available[app.currentUserId % available.length];
+      var url = '/images/' + name + '-sprite.png';
+      $('.js-move-ack').css('backgroundImage', "url('" + url + "')");
     },
 
     draw: function () {

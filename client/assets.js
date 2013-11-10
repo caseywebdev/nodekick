@@ -2,9 +2,9 @@
   if (!window.NodeKick) window.NodeKick = {};
 
   var _ = window._;
-  var SPRITES = ['donatello', 'dive', 'redacted'];
-  
+
   var Assets = window.NodeKick.Assets = {
+    availableSprites: ['donatello', 'dive', 'redacted'],
     sprites: {},
     isLoaded: function () {
       if (_.isEmpty(this.sprites)) return false;
@@ -14,7 +14,7 @@
       return _.values(this.sprites)[~~user.id % 3];
     },
     init: function () {
-      _.each(SPRITES, function (spriteName) {
+      _.each(this.availableSprites, function (spriteName) {
         var sprite = this.sprites[spriteName] = new Image();
         sprite.addEventListener('load', function () {
           console.log('sprite loaded: ' + spriteName, sprite);
