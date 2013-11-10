@@ -22,6 +22,11 @@
     users: [],
     usersById: {},
 
+    updateScoreboard: function (scores) {
+      // var $scoreboard = $('#scoreboard');
+      console.log('scoreboard: ', scores);
+    },
+
     domReady: function () {
       $('html').addClass(config.mobile ? 'js-mobile' : 'js-desktop');
       NodeKick.Drawer.init();
@@ -64,7 +69,8 @@
   if (!config.mobile) {
     live.connect('ws://' + location.host)
       .on('step', app.updateUsers)
-      .on('userData', app.updateUserData);
+      .on('userData', app.updateUserData)
+      .on('scores', app.updateScoreboard);
   }
 
   (function () {

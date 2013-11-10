@@ -8,8 +8,12 @@ var db = require('../db');
 var World = module.exports = Backbone.Model.extend({
   initialize: function () {
     this.users = new User.Collection();
+    var world = this;
     this.users.on('kill', function (kill) {
       db.registerKill(kill.killer);
+      db.getScores(function (er, scores) {
+        world.trigger('scores', scores);
+      });
     });
   },
   // control flow

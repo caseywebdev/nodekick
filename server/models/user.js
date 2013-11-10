@@ -145,25 +145,23 @@ var User = module.exports = Backbone.Model.extend({
 User.Collection = Backbone.Collection.extend({
   model: User,
   checkCollisions: function () {
-    var kickers = _.filter(this.models, function(model) {
+    var kickers = _.filter(this.models, function (model) {
       return model.isKicking();
     });
 
-    var notDeadPlayers = _.filter(this.models, function(model) {
+    var notDeadPlayers = _.filter(this.models, function (model) {
       return !model.isDead();
     });
 
     var toKill = [];
     
-    _.each(kickers, function(kicker) {
-      _.each(notDeadPlayers, function(other) {
-        if(kicker !== other) {
-          if(other.recordHit(kicker.foot())) {
-            toKill.push({
-              killer: kicker,
-              killed: other
-            });
-          }
+    _.each(kickers, function (kicker) {
+      _.each(notDeadPlayers, function (other) {
+        if (kicker !== other && other.recordHit(kicker.foot())) {
+          toKill.push({
+            killer: kicker,
+            killed: other
+          });
         }
       });
     });
