@@ -4,10 +4,12 @@ var defaults = {
   session: {
     secret: 'sonny has a nice scarf',
     cookie: {
-      maxAge: 60 * 60 * 1000
+      maxAge: 1000 * 60 * 60 * 24 * 365 * 10
     }
   },
   world: {
+    leftEdge: 100, //if your x less than this when your y is 0, you die
+    rightEdge: 1100, //if your x greater than this when your y is 0, you die
     gravity: 3000, // amount of gravity applied per second
     jumpPower: 1500,
     kickPower: 700,

@@ -9,10 +9,10 @@ var User = module.exports = Backbone.Model.extend({
   //   dir (-1, 1)
   //   state (jumping, kicking, standing, dying)
   defaults: {
-    x: 0,
-    y: -1000,
+    x: 400,
+    y: -600,
     xv: 0,
-    yv: 0,
+    yv: 5,
     dir: 1,
     state: 'jumping'
   },
@@ -32,9 +32,23 @@ var User = module.exports = Backbone.Model.extend({
       });
     }
     if (this.get('y') >= 0) {
-      this.set({y: 0, yv: 0, xv: 0, state: 'standing'});
+      this.set({ y: 0, yv: 0, xv: 0, state: 'standing' });
+    }
+    if (this.isOffMap()) {
+      this.set({ state: 'dying' });
     }
   },
+
+  isOffMap: function() {
+    if(!this.isStanding()) return false;
+
+    if(this.get("x") <= config.world.leftEdge) return true;
+
+    if(this.get("x") >= config.world.rightEdge) return true;
+
+    return false;
+  },
+
   toFrame: function () {
     return this.pick('id', 'x', 'y', 'dir', 'state');
   },
@@ -119,10 +133,12 @@ User.Collection = Backbone.Collection.extend({
       return model.isKicking();
     });
 
-    var models = this.models;
+    var notDeadPlayers = _.filter(this.models, function(model) {
+      return !model.isDead();
+    });
     
     _.each(kickers, function(kicker) {
-      _.each(models, function(other) {
+      _.each(notDeadPlayers, function(other) {
         if(kicker !== other) {
           other.recordHit(kicker.foot());
         }
