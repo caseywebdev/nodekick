@@ -11,7 +11,13 @@
     border-radius right 5px
     box-shadow 0 1px 3px rgba(0, 0, 0, .75)
     background #fff
-    line-height 48px
+    &.js-ease
+      transition-property color transform
+      transition-duration .5s
+      transition-timing-function ease-in-out
+    &.js-changed
+      transform scale(1.5)
+      color #f80
     .avatar
       float left
       width 48px
@@ -24,10 +30,4 @@
       line-height 48px
       text-align right
       vertical-align bottom
-      &.js-ease
-        transition-property color transform
-        transition-duration .5s
-        transition-timing-function ease-in-out
-      &.js-changed
-        color #f80
-        transform scale(2)
+      line-height 48px

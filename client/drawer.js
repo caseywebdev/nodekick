@@ -12,7 +12,8 @@ if (!window.NodeKick)
     spriteBottomPadding: 15,
     parallaxLocationX: 0,
     parallaxLocationY: 0,
-    isDaytime: false,
+    isDaytime: true,
+    lengthOfDay: 60000,
 
     drawServerOrigin: false,
     drawBoundingBox: false,
@@ -29,44 +30,60 @@ if (!window.NodeKick)
       this.c.fillStyle = '#F00';
       this.c.strokeStyle = '#0F0';
 
-      //this.fakeParallax();
-      //this.fakeTransition();
+      this.createClouds();
+      this.fakeTransition();
     },
 
-    /*fakeParallax: function() {
-      var self = this;
-      var parallaxDirection = -1;
-      setInterval(function() {
 
-        self.paralaxLocation += (1 * parallaxDirection);
+    parallax: function (user) {
+      var x;
+      var y;
+      var users = window.app.users;
+      if (user) {
+        x = user.x;
+        y = user.y;
+      } else if (!users || users.length === 0) {
+        x = 575;
+        y = 570;
+      } else {
+        var sum = _.reduce(users, function (sum, user) {
+          return {x: sum.x + user.x, y: sum.y + user.y};
+        }, {x: 0, y: 0});
+        x = sum.x / users.length;
+        y = sum.y / users.length;
+      }
+      this.parallaxLocationX = -1 * x / 45;
+      this.parallaxLocationY = -1 * y / 45;
 
-        if (self.paralaxLocation <= -50)
-          parallaxDirection = 1;
-        else if (self.paralaxLocation >= 0)
-          parallaxDirection = -1;
+    },
 
-      }, 30);
-    },*/
+    createClouds: function() {
+      this.clouds = [];
 
-    parallax: function(user) {
+      this.clouds.push({
+        x: Math.random() * 1200,
+        y: Math.random() * 150,
+        width: 250,
+        height: 250,
+        sprite: 0,
+        speed: .2
+      });
 
-      if (!user)
-        return;
-
-      //console.log('user', user);
-      var self = this;
-      var parallaxDirection = -1;
-
-      this.parallaxLocationX = -1 * user.x / 45;
-      this.parallaxLocationY = -1 * user.y / 45;
-
+      this.cloudSpriteLocations = [];
+      this.cloudSpriteLocations.push({
+        x: 0,
+        y: 0,
+        width: 450,
+        height: 250
+      });
     },
 
     fakeTransition: function() {
       var self = this;
       setInterval(function() {
         self.isDaytime = !self.isDaytime;
-      }, 60000)
+        self.createClouds();
+      }, this.lengthOfDay)
     },
 
     drawBackground: function () {
@@ -83,6 +100,21 @@ if (!window.NodeKick)
       }
       this.c.drawImage(backDistant, this.parallaxLocationX, this.parallaxLocationY, this.canvas.width + 50, this.canvas.height + 50);
       this.c.drawImage(backNear, 0, this.parallaxLocationY / 5, this.canvas.width, this.canvas.height);
+
+      if (this.isDaytime) {
+        var cloudSprite = window.NodeKick.Assets.backgroundImages['cloud-sprite.png'];
+
+        _.each(this.clouds, function(cloud) {
+          cloud.x -= cloud.speed;
+          //this.c.drawImage(cloudSprite, cloud.x, cloud.y, cloud.width, cloud.height, 0, 0, 200, 250);
+          var spriteInfo = this.cloudSpriteLocations[cloud.sprite];
+          this.c.drawImage(cloudSprite, spriteInfo.x, spriteInfo.y, spriteInfo.width, spriteInfo.height, cloud.x, cloud.y, cloud.width, cloud.height);
+
+          //this.c.strokeRect(cloud.x, cloud.y, cloud.width, cloud.height);
+        }, this);
+        
+        
+      }
 
       if (this.drawFloorLine) {
         this.c.beginPath();

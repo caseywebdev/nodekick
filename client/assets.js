@@ -3,7 +3,11 @@
 
   var _ = window._;
   var SPRITES = ['donatello', 'dive', 'redacted'];
-  var BACKGROUNDS = ['background-daytime.png', 'background-daytime-distant.png', 'background-nighttime-distant.png', 'background-nighttime.png'];
+  var BACKGROUNDS = ['background-daytime.png', 
+    'background-daytime-distant.png', 
+    'background-nighttime-distant.png', 
+    'background-nighttime.png',
+    'cloud-sprite.png'];
 
   var Assets = window.NodeKick.Assets = {
     availableSprites: ['donatello', 'dive', 'redacted'],

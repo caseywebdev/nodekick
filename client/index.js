@@ -105,15 +105,15 @@
           text = 'killing streak';
         } else if (streak == 6) {
           this.playSound("rampage");
-          text = 'rampage';
+          text = 'rampage!';
         } else if (streak == 9) {
-          this.playSound("dominating");
+          this.playSound("dominating!!");
           text = 'dominating';
         } else if (streak == 12) {
-          this.playSound("unstoppable");
+          this.playSound("unstoppable!!!");
           text = 'unstoppable';
         } else if (streak >= 15) {
-          this.playSound("godlike");
+          this.playSound("godlike!!!!");
           text = 'godlike';
         } else return;
         break;
@@ -127,12 +127,12 @@
         var multis = message.user.multis;
         if (multis == 2) {
           this.playSound("doublekill");
-          text = 'double kill';
+          text = 'double kill!';
         } else if (multis == 3) {
           this.playSound("triplekill");
-          text = 'triple kill';
+          text = 'triple kill!!';
         } else if (multis >= 4) {
-          this.playSound("monsterkill");
+          this.playSound("monsterkill!!!");
           text = 'monster kill';
         }
         break;

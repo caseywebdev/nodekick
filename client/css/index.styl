@@ -27,6 +27,17 @@ a
   &:hover
     text-decoration underline
 
+.keys
+  margin-top 5px
+  font-size 20px
+  font-family 'Piedra' cursive
+  text-transform uppercase
+  text-shadow 0 1px 3px rgba(0, 0, 0, .75)
+  span
+    margin-left 12px
+    margin-right 4px
+    color #bbb
+
 .js-mobile .desktop-only
   display none
 
@@ -115,6 +126,24 @@ a
       margin-bottom 5px
       color #666
 
+#stage
+  width 1280px
+  position absolute
+  left 50%
+  margin-left -640px
+  z-index -200
+
+.callout
+  position absolute
+  bottom 20px
+  left 50%
+  width 1280px
+  margin-left -640px
+  font-size 1.2em
+  color #ddd
+  text-shadow 0 2px 2px rgba(0, 0, 0, .75)
+  //  style="font-size: 20px; margin-top: 20px;"
+
 @keyframes message
   2%
     transform scale(3)
@@ -130,7 +159,7 @@ a
   font-size: 4em
   font-weight 900
   text-transform uppercase
-  font-family 'Piedra' cursive;
+  font-family 'Piedra' cursive
   text-shadow 0 1px 3px rgba(0, 0, 0, .75)
   color #900
 
