@@ -10,6 +10,8 @@ if (!window.NodeKick)
     spriteHeight: 200,
     spriteWidth: 100,
     spriteBottomPadding: 15,
+    paralaxLocation: 0,
+    isDaytime: false,
 
     drawServerOrigin: false,
     drawBoundingBox: false,
@@ -24,10 +26,47 @@ if (!window.NodeKick)
 
       this.c.fillStyle = '#F00';
       this.c.strokeStyle = '#0F0';
+
+      this.fakeParallax();
+      this.fakeTransition();
+    },
+
+    fakeParallax: function() {
+      var self = this;
+      var parallaxDirection = -1;
+      setInterval(function() {
+
+        self.paralaxLocation += (1 * parallaxDirection);
+
+        if (self.paralaxLocation <= -50)
+          parallaxDirection = 1;
+        else if (self.paralaxLocation >= 0)
+          parallaxDirection = -1;
+
+      }, 30);
+    },
+
+    fakeTransition: function() {
+      var self = this;
+      setInterval(function() {
+        self.isDaytime = !self.isDaytime;
+      }, 60000)
     },
 
     drawBackground: function () {
       this.c.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+      var backNear, backDistant;
+      if (this.isDaytime) {
+        backNear = window.NodeKick.Assets.backgroundImages['background-daytime.png'];
+        backDistant = window.NodeKick.Assets.backgroundImages['background-daytime-distant.png'];
+      }
+      else {
+        backNear = window.NodeKick.Assets.backgroundImages['background-nighttime.png'];
+        backDistant = window.NodeKick.Assets.backgroundImages['background-nighttime-distant.png'];      
+      }
+      this.c.drawImage(backDistant, this.paralaxLocation, 0, this.canvas.width + 50, this.canvas.height + 50);
+      this.c.drawImage(backNear, 0, 0, this.canvas.width, this.canvas.height);
 
       if (this.drawFloorLine) {
         this.c.beginPath();

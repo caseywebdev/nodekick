@@ -3,12 +3,14 @@
 
   var _ = window._;
   var SPRITES = ['donatello', 'dive', 'redacted'];
+  var BACKGROUNDS = ['background-daytime.png', 'background-daytime-distant.png', 'background-nighttime-distant.png', 'background-nighttime.png'];
   
   var Assets = window.NodeKick.Assets = {
     sprites: {},
+    backgroundImages: {},
     isLoaded: function () {
       if (_.isEmpty(this.sprites)) return false;
-      return _(this.sprites).pluck('isLoaded').every(_.identity);
+      return _(this.sprites).pluck('isLoaded').every(_.identity) && _(this.backgroundImages).pluck('isLoaded').every(_.identity);
     },
     getSprite: function (user) {
       return _.values(this.sprites)[~~user.id % 3];
@@ -27,6 +29,16 @@
         });
         sprite.src = '/images/' + spriteName + '-sprite.png';
       }, this);
+
+      _.each(BACKGROUNDS, function(backgroundImageName) {
+        var image = this.backgroundImages[backgroundImageName] = new Image();
+        image.addEventListener('load', function() {
+          image.isLoaded = true;
+        })
+        image.src = '/images/' + backgroundImageName;
+
+      }, this);
+
     },
   };
 })();
