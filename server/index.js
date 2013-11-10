@@ -19,6 +19,16 @@ var server = app.listen(config.port);
 // start socket.io
 app.wss = new WebSocketServer({server: server});
 
+// Store the base URL for the url normalizer.
+app.set('url', config.url);
+
+// All lower case and no trailing slashes allowed.
+app.enable('case sensitive routing');
+app.enable('strict routing');
+
+// Don't show x-powered-by header for fewers bytes and increased security.
+app.disable('x-powered-by');
+
 // Set view engine up for static pages and email.
 app.set('view engine', 'tmpl');
 require('underscore-express')(app);
@@ -33,6 +43,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(__dirname + '/../public'));
 app.use(require('./middleware/template-helpers'));
+app.use(require('./middleware/url-normalizer'));
 
 // passport setup
 // will replace this with redis
