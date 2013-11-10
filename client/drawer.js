@@ -208,7 +208,7 @@
       var deathTicks = user.get('deathTicks');
       var deathCooldown = deathTicks != null ? Math.max(0, deathTicks / 60) : 1;
       if (deathTicks) user.set('deathTicks', --deathTicks);
-      console.log(deathCooldown);
+      // console.log(deathCooldown);
       var spriteX;
       var serverOrigin = { x: x + (this.spriteWidth / 2), y: y + this.spriteHeight };
       var sprite = window.app.Assets.getSprite(user);
