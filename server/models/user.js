@@ -23,7 +23,8 @@ var User = module.exports = Backbone.Model.extend({
       yv: 5,
       dir: direction,
       state: 'jumping',
-      deathCooldown: 5
+      deathCooldown: 5,
+      firstInput: true
     };
   },
 
@@ -73,6 +74,10 @@ var User = module.exports = Backbone.Model.extend({
   moveLeft: function () { this._kick(-1); },
   moveRight: function () { this._kick(1); },
   _kick: function (dir) {
+    if(this.get("firstInput")) {
+      this.set({ firstInput: false });
+      return;
+    }
     if (this.canChangeDir()) this.set('dir', dir);
     if (!this.canKick()) return;
     this.set({
@@ -83,6 +88,10 @@ var User = module.exports = Backbone.Model.extend({
   },
 
   moveUp: function () {
+    if(this.get("firstInput")) {
+      this.set({ firstInput: false });
+      return;
+    }
     if (!this.canJump()) return;
     this.set({
       state: 'jumping',
