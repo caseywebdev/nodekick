@@ -21,13 +21,6 @@
   var NodeKick = window.NodeKick;
   var Backbone = window.Backbone;
 
-  // setInterval(function () {
-  //   app.showMessage({
-  //     type: 'killstreak',
-  //     text: 'headshot'
-  //   });
-  // }, 3000);
-
   var app = window.app = {
     users: [],
     usersById: {},
