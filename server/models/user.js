@@ -111,6 +111,10 @@ var User = module.exports = Backbone.Model.extend({
     return boxesForUser;
   },
 
+  isHeadShot: function(foot) {
+    return this.hasCollision(foot, _.first(this.boxes()));
+  },
+
   recordHit: function(foot) {
     var footPoint = foot;
     var _this = this;
@@ -174,7 +178,7 @@ User.Collection = Backbone.Collection.extend({
     _.each(kickers, function (kicker) {
       _.each(notDeadPlayers, function (other) {
         if (kicker !== other && other.recordHit(kicker.foot())) {
-          var headShot = true;
+          var headShot = other.isHeadShot(kicker.foot());
           toKill.push({
             killer: kicker,
             killed: other,
