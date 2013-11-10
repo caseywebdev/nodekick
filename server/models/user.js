@@ -24,8 +24,17 @@ var User = module.exports = Backbone.Model.extend({
       dir: direction,
       state: 'jumping',
       deathCooldown: 1,
-      deathState: 'standing'
+      deathState: 'standing',
+      streak: 0
     };
+  },
+
+  increaseStreak: function() {
+    this.set({ streak: this.get("streak") + 1 });
+  },
+
+  resetStreak: function() {
+    this.set({ streak: 0 });
   },
 
   step: function (dt) {
@@ -165,7 +174,8 @@ User.Collection = Backbone.Collection.extend({
     });
   },
   step: function () {
-    this.checkCollisions();
+    var collisionResults = this.checkCollisions();
+    this.broadcastMessages(collisionResults);
   },
   checkCollisions: function() {
     var kickers = _.filter(this.models, function (model) {
@@ -176,28 +186,69 @@ User.Collection = Backbone.Collection.extend({
       return !model.isDead();
     });
 
-    var toKill = [];
+    var collisionResults = [];
 
     _.each(kickers, function (kicker) {
       _.each(notDeadPlayers, function (other) {
         if (kicker !== other && other.recordHit(kicker.foot())) {
-          toKill.push({
+          collisionResults.push({
             killer: kicker,
             killed: other,
             headShot: other.isHeadShot(kicker.foot())
           });
+
+          kicker.increaseStreak();
+          other.resetStreak();
         }
       });
     });
 
     var users = this;
-    _.each(toKill, function (kill) {
+
+    _.each(collisionResults, function (kill) {
       users.trigger('kill', kill);
-      if(kill.headShot) {
-        users.trigger('message', { type: 'headshot', text: 'headshot' });
-      }
       kill.killed.set({ deathState: kill.killed.get("state"), state: "dying" });
     });
+
+    return collisionResults;
+  },
+  broadcastMessages: function(collisionResults) {
+    var users = this;
+
+    _.each(collisionResults, function (kill) {
+      if(kill.headShot) {
+        users.trigger('message', {
+          type: 'headshot',
+          text: 'headshot'
+        });
+      }
+
+      if(kill.killer.get("streak") == 2) {
+        users.trigger('message', {
+          type: 'doublekill',
+          text: 'doublekill',
+          user: kill.killer.toFrame()
+        });
+      }
+
+      if(kill.killer.get("streak") == 3) {
+        users.trigger('message', {
+          type: 'triplekill',
+          text: 'triplekill',
+          user: kill.killer.toFrame()
+        });
+      }
+
+      if(kill.killer.get("streak") >= 4) {
+        users.trigger('message', {
+          type: 'multikill',
+          text: 'multikill',
+          user: kill.killer.toFrame()
+        });
+      }
+    });
+
+    return collisionResults;
   },
   removeDeadPlayers: function(dt) {
     var deadPlayers = _.filter(this.models, function(model) {
