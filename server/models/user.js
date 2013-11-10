@@ -145,6 +145,20 @@ var User = module.exports = Backbone.Model.extend({
 
 User.Collection = Backbone.Collection.extend({
   model: User,
+  initialize: function (__, options) {
+    if (options && options.recent) return;
+    this.recent = new User.Collection(this.models, {recent: true});
+    this.recent.timeouts = {};
+    this.recent.listenTo(this, {
+      add: function (model) {
+        clearTimeout(this.timeouts[model.id]);
+        this.add(model);
+      },
+      remove: function (model) {
+        this.timeouts[model.id] = setTimeout(this.remove.bind(this, model), 60 * 1000);
+      }
+    })
+  },
   checkCollisions: function () {
     var kickers = _.filter(this.models, function (model) {
       return model.isKicking();

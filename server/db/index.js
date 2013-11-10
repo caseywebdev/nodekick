@@ -1,6 +1,7 @@
 var redis = require('redis');
 var client = redis.createClient();
 var _ = require('underscore');
+var async = require('async');
 
 client.on('error', console.error.bind(console));
 
@@ -27,7 +28,16 @@ module.exports = {
       if (cb) cb(er, score);
     });
   },
-  getScores: function (cb) {
+  getScores: function (users, cb) {
+    async.map(users, function (user, cb) {
+      client.zscore(scoresKey, user.id, cb);
+    }, function (er, results) {
+      if (er) return cb(er);
+      _.each(users, function (user, i) { user.score = results[i]; });
+      cb(null, users);
+    });
+  },
+  highScores: function (cb) {
     client.zrevrange(scoresKey, 0, 20, 'WITHSCORES', function (er, scores) {
       if (er) return cb(er);
       var ids = _.filter(scores, function (_, i) { return i % 2 === 0; });

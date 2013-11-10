@@ -26,7 +26,8 @@
     "nib": "x",
     "csso": "x",
     "uglify-js": "x",
-    "ws": "x"
+    "ws": "x",
+    "async": "x"
   },
   "devDependencies": {
     "watchy": "x"

@@ -24,11 +24,9 @@
   var app = window.app = {
     users: [],
     usersById: {},
-    scores: new Backbone.Collection(),
-
-    updateScoreboard: function (scores) {
-      app.scores.set(scores);
-    },
+    scores: new Backbone.Collection(null, {
+      comparator: function (user) { return -~~user.get('score'); }
+    }),
 
     domReady: function () {
       $('html').addClass(config.mobile ? 'js-mobile' : 'js-desktop');
@@ -51,13 +49,13 @@
     },
 
     updateUsers: function (users) { app.users = users; },
+    updateScoreboard: function (scores) { console.log(scores); app.scores.set(scores); },
 
     updateUserData: function (users) {
       _.reduce(users, function (usersById, user) {
         usersById[user.id] = user;
         return usersById;
       }, app.usersById);
-
     },
 
     move: function (dir) {
