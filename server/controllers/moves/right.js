@@ -1,4 +1,4 @@
 module.exports = function (req, res) {
-  req.user.moveRight();
+  if (req.app.world.users.get(req.user)) req.user.moveRight();
   res.send(204);
 };

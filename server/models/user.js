@@ -8,16 +8,28 @@ var User = module.exports = Backbone.Model.extend({
   //   x, y
   //   dir (-1, 1)
   //   state (jumping, kicking, standing, dying)
-  defaults: {
-    x: 400,
-    y: -600,
-    xv: 0,
-    yv: 5,
-    dir: 1,
-    state: 'jumping'
+  defaults: function() {
+    var randomX = _.random(config.world.leftEdge, config.world.rightEdge);
+    var direction = 1;
+
+    if(randomX > ((config.world.rightEdge - config.world.leftEdge) / 2)) {
+      direction = -1;
+    }
+
+    return {
+      x: randomX,
+      y: -600,
+      xv: 0,
+      yv: 5,
+      dir: direction,
+      state: 'jumping',
+      deathCooldown: 5
+    };
   },
 
   step: function (dt) {
+    if(this.isDead()) return;
+
     if (this.isJumping()) {
       // apply gravity
       var yv = this.get('yv') + config.world.gravity * dt;
@@ -31,9 +43,11 @@ var User = module.exports = Backbone.Model.extend({
         y: this.get('y') + this.get('yv') * dt
       });
     }
-    if (this.get('y') >= 0) {
+
+    if (this.get('y') >= 0 && !this.isOffMap()) {
       this.set({ y: 0, yv: 0, xv: 0, state: 'standing' });
     }
+
     if (this.isOffMap()) {
       this.set({ state: 'dying' });
     }
@@ -130,36 +144,47 @@ var User = module.exports = Backbone.Model.extend({
 
 User.Collection = Backbone.Collection.extend({
   model: User,
-  checkCollisions: function() {
-    var kickers = _.filter(this.models, function(model) {
+  checkCollisions: function () {
+    var kickers = _.filter(this.models, function (model) {
       return model.isKicking();
     });
 
-    var notDeadPlayers = _.filter(this.models, function(model) {
+    var notDeadPlayers = _.filter(this.models, function (model) {
       return !model.isDead();
     });
 
     var toKill = [];
     
-    _.each(kickers, function(kicker) {
-      _.each(notDeadPlayers, function(other) {
-        if(kicker !== other) {
-          if(other.recordHit(kicker.foot())) {
-            toKill.push(other);
-          }
+    _.each(kickers, function (kicker) {
+      _.each(notDeadPlayers, function (other) {
+        if (kicker !== other && other.recordHit(kicker.foot())) {
+          toKill.push({
+            killer: kicker,
+            killed: other
+          });
         }
       });
     });
 
-    _.each(toKill, function(kill) {
-      kill.set({ state: "dying" });
+    var users = this;
+    _.each(toKill, function (kill) {
+      users.trigger('kill', kill);
+      kill.killed.set({ state: "dying" });
     });
   },
-  removeDeadPlayers: function() {
+  removeDeadPlayers: function(dt) {
     var deadPlayers = _.filter(this.models, function(model) {
       return model.isDead();
     });
 
-    this.remove(deadPlayers);
+    _.each(deadPlayers, function(player) {
+      player.set({ deathCooldown: player.get("deathCooldown") - dt });
+    });
+
+    var deadAndCooldownComplete = _.filter(deadPlayers, function(model) {
+      return model.get("deathCooldown") < 0;
+    });
+
+    this.remove(deadAndCooldownComplete);
   }
 });

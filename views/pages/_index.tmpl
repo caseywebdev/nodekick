@@ -14,8 +14,8 @@
   </head>
 
   <body>
-    <div class='sign-in-info'>
       <% if (o.req.user) { %>
+      <div class='user-info'>
         <a href='https://twitter.com/<%- o.req.user.get('username') %>'>
           <img src='<%- o.req.user.get('avatar') %>' class='avatar'>
         </a>
@@ -26,13 +26,16 @@
           >@<%- o.req.user.get('username') %></a>
           <a href='/auth/sign-out' class='sign-out'>Sign Out</a>
         </div>
-      <% } else { %>
-        <a href='/auth/twitter'>
-          <img src='/images/sign-in-with-twitter.png' class='twitter'>
-        </a>
-      <% } %>
+      </div>
+    <% } else { %>
+    <div class='sign-in-with-twitter'>
+      <a href='/auth/twitter'>
+        <img src='/images/sign-in-with-twitter.png' class='twitter'>
+      </a>
     </div>
-    <canvas id='stage' class='desktop-only' width='1280' height='1000' style="border: solid 1px #000; background-image: url(images/background-final-destination.jpg);background-size: 100%;"></canvas>
+    <% } %>
+    <div id='scoreboard'></div>
+    <canvas id='stage' class='desktop-only' width='1280' height='1000'></canvas>
     <div class='mobile-only js-move-ack move-ack'></div>
 
     <div style="display: none;"> <!-- Scratch canvases -->

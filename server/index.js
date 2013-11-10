@@ -6,6 +6,7 @@ var express = require('express');
 var fs = require('fs');
 var _ = require('underscore')._;
 var World = require('./models/world');
+var User = require('./models/user');
 var WebSocketServer = require('ws').Server;
 var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
@@ -53,13 +54,13 @@ passport.use(new TwitterStrategy(config.twitter,
     // if (err) { return done(err); }
     console.log(token, profile, done);
     var users = app.world.users;
-    users.add({
+    var user = users.get(profile.id);
+    done(null, user || new User({
       id: profile.id,
       username: profile.username,
       displayName: profile.displayName,
       avatar: profile.photos[0].value
-    }, {merge: true});
-    done(null, users.get(profile.id));
+    }));
   }
 ));
 
@@ -73,8 +74,7 @@ passport.deserializeUser(function (id, done) {
   if (user) return done(null, user);
   db.findUser(id, function (er, user) {
     if (er) return done(er);
-    users.add(user);
-    done(null, users.get(user));
+    done(null, new User(user));
   });
 });
 
