@@ -1,7 +1,6 @@
 (function () {
   'use strict';
 
-  var _ = window._;
   var Backbone = window.Backbone;
 
   var ScoreView = window.ScoreView = Backbone.View.extend({
@@ -16,13 +15,11 @@
       return this;
     },
     updateScore: function () {
-      var $kills = this.$('.js-kills');
-      $kills
-        .text(this.model.get('score') || 0)
-        .removeClass('js-ease')
-        .addClass('js-changed');
-      _.defer(function () {
-        $kills.addClass('js-ease').removeClass('js-changed');
+      this.$('.js-kills').text(this.model.get('score') || 0);
+      var $el = this.$el;
+      $el.removeClass('js-ease').addClass('js-changed');
+      window.requestAnimationFrame(function () {
+        $el.addClass('js-ease').removeClass('js-changed');
       });
     }
   });
