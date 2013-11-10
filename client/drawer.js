@@ -82,7 +82,10 @@ if (!window.NodeKick)
         var y = this.floorY + user.y - this.spriteHeight + this.spriteBottomPadding;
         var deathCooldown = user.deathCooldown;
         var spriteX;
-        var serverOrigin = { x: x + (this.spriteWidth / 2), y: y + this.spriteHeight };
+        var serverOrigin = {
+          x: x + (this.spriteWidth / 2),
+          y: y + this.spriteHeight
+        };
 
         if (this.drawBoundingBox)
           this.c.strokeRect(x, y, 100, 200);

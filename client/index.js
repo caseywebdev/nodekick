@@ -2,6 +2,8 @@
 //= require jquery-mobile-events/jquery-mobile-events
 //= require underscore/underscore
 //= require backbone/backbone
+//= requireTree jst
+//= require scoreboard
 //= require live
 //= require config
 //= require request-animation-frame-polyfill
@@ -17,18 +19,20 @@
   var live = window.live;
   var _ = window._;
   var NodeKick = window.NodeKick;
+  var Backbone = window.Backbone;
 
   var app = window.app = {
     users: [],
     usersById: {},
+    scores: new Backbone.Collection(),
 
     updateScoreboard: function (scores) {
-      // var $scoreboard = $('#scoreboard');
-      console.log('scoreboard: ', scores);
+      app.scores.set(scores);
     },
 
     domReady: function () {
       $('html').addClass(config.mobile ? 'js-mobile' : 'js-desktop');
+      new window.ScoresListView({collection: app.scores});
       NodeKick.Drawer.init();
       window.NodeKick.Assets.init();
     },
