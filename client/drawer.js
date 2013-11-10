@@ -76,52 +76,57 @@ if (!window.NodeKick)
       this.c.putImageData(image, x, y);
     },
 
-    drawUsers: function (users) {
+    drawUser: function(user) {
+      var x = user.x - (this.spriteWidth / 2);
+      var y = this.floorY + user.y - this.spriteHeight + this.spriteBottomPadding;
+      var deathCooldown = user.deathCooldown;
+      var spriteX;
+      var serverOrigin = { x: x + (this.spriteWidth / 2), y: y + this.spriteHeight };
+
+      if (this.drawBoundingBox)
+        this.c.strokeRect(x, y, 100, 200);
+      if (this.drawServerOrigin)
+        this.c.fillRect(serverOrigin.x, serverOrigin.y, 5, 5);
+
+      if (user.dir === 1) {
+        spriteX = 0;
+        if (user.state == 'jumping') spriteX = 200;
+        else if (user.state == 'kicking') spriteX = 400;
+
+        if(user.state == "dying") {
+          spriteX = 400;
+          if (user.deathState == 'jumping') spriteX = 200;
+          else if (user.deathState == 'standing') spriteX = 0;
+          this.deathImage(window.NodeKick.Assets.diveSprite, spriteX, x, y, deathCooldown);
+        } else {
+          this.c.drawImage(window.NodeKick.Assets.diveSprite, spriteX, 0, 200, 400, x, y, 100, 200);
+        }
+      }
+      else {
+        spriteX = 0;
+        if (user.state == 'jumping') spriteX = 200;
+        else if (user.state == 'standing') spriteX = 400;
+
+        if(user.state == "dying") {
+          spriteX = 0;
+          if (user.deathState == 'jumping') spriteX = 200;
+          else if (user.deathState == 'standing') spriteX = 400;
+          this.deathImage(window.NodeKick.Assets.diveSpriteInverted, spriteX, x, y, deathCooldown);
+        } else {
+          this.c.drawImage(window.NodeKick.Assets.diveSpriteInverted, spriteX, 0, 200, 400, x, y, 100, 200);
+        }
+      }
+    },
+
+    drawUsers: function(users) {
+      var deadUsers = _.filter(users, function(user) { return user.state == "dying"; });
+      var liveUsers = _.filter(users, function(user) { return user.state != "dying"; });
+      _.each(deadUsers, function (user) { this.drawUser(user); }, this);
+      _.each(liveUsers, function (user) { this.drawUser(user); }, this);
       _.each(users, function (user) {
         var x = user.x - (this.spriteWidth / 2);
         var y = this.floorY + user.y - this.spriteHeight + this.spriteBottomPadding;
-        var deathCooldown = user.deathCooldown;
-        var spriteX;
-        var serverOrigin = {
-          x: x + (this.spriteWidth / 2),
-          y: y + this.spriteHeight
-        };
-
-        if (this.drawBoundingBox)
-          this.c.strokeRect(x, y, 100, 200);
-        if (this.drawServerOrigin)
-          this.c.fillRect(serverOrigin.x, serverOrigin.y, 5, 5);
-
-        if (user.dir === 1) {
-          spriteX = 0;
-          if (user.state == 'jumping') spriteX = 200;
-          else if (user.state == 'kicking') spriteX = 400;
-
-          if(user.state == "dying") {
-            spriteX = 400;
-            if (user.deathState == 'jumping') spriteX = 200;
-            else if (user.deathState == 'standing') spriteX = 0;
-            this.deathImage(window.NodeKick.Assets.diveSprite, spriteX, x, y, deathCooldown);
-          } else {
-            this.c.drawImage(window.NodeKick.Assets.diveSprite, spriteX, 0, 200, 400, x, y, 100, 200);
-          }
-        }
-        else {
-          spriteX = 0;
-          if (user.state == 'jumping') spriteX = 200;
-          else if (user.state == 'standing') spriteX = 400;
-
-          if(user.state == "dying") {
-            spriteX = 0;
-            if (user.deathState == 'jumping') spriteX = 200;
-            else if (user.deathState == 'standing') spriteX = 400;
-            this.deathImage(window.NodeKick.Assets.diveSpriteInverted, spriteX, x, y, deathCooldown);
-          } else {
-            this.c.drawImage(window.NodeKick.Assets.diveSpriteInverted, spriteX, 0, 200, 400, x, y, 100, 200);
-          }
-        }
-
-        // this.drawAvatar(user, serverOrigin.x, serverOrigin.y - 140);
+        var serverOrigin = { x: x + (this.spriteWidth / 2), y: y + this.spriteHeight };
         this.drawAvatar(user, serverOrigin.x, this.floorY + 50);
       }, this);
     }
