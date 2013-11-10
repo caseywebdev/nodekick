@@ -117,6 +117,9 @@
         break;
       }
       $alert.text(text);
+      if (message.user) {
+        $alert.prepend($('<img>').attr({src: message.user.avatar}));
+      }
       $('.alerts').append($alert);
       setTimeout(function () {
         $alert.remove();
