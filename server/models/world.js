@@ -51,9 +51,9 @@ var World = module.exports = Backbone.Model.extend({
   },
   bulletTime: function () {
     clearTimeout(this.bulletTimeout);
-    this.timeScalar = 0.05;
+    this.timeScalar = 0.01;
     var self = this;
-    this.bulletTimeout = _.delay(function () { self.timeScalar = 1; }, 1000);
+    this.bulletTimeout = _.delay(function () { self.timeScalar = 1; }, 500);
   }
 });
 
