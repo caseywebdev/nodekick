@@ -27,7 +27,7 @@ describe('game stuff', function() {
     world.users.add(standingUser);
 
     var standingUser2 = new User();
-    standingUser2.set({ x: 1600, y: 0, state: "standing" });
+    standingUser2.set({ x: 600, y: 0, state: "standing" });
     world.users.add(standingUser2);
 
     var kickingUser = new User();
@@ -54,7 +54,7 @@ describe('game stuff', function() {
     world.users.add(standingUser);
 
     var standingUser2 = new User();
-    standingUser2.set({ x: 1600, y: 0, state: "standing" });
+    standingUser2.set({ x: 600, y: 0, state: "standing" });
     world.users.add(standingUser2);
 
     var kickingUser = new User();
