@@ -239,7 +239,7 @@ User.Collection = Backbone.Collection.extend({
             users.trigger('message', {
               type: 'multikill',
               text: 'multikill',
-              user: kicker.toFrame()
+              user: kicker.toJSON()
             });
           });
           other.resetStreak();
@@ -261,14 +261,14 @@ User.Collection = Backbone.Collection.extend({
         users.trigger('message', {
           type: 'headshot',
           text: 'headshot',
-          user: kill.killer.toFrame()
+          user: kill.killer.toJSON()
         });
       }
-      if (kill.killer.get("streak") >= 1) {
+      if (kill.killer.get("streak") >= config.world.minStreak) {
         users.trigger('message', {
           type: 'streak',
           text: 'killing streak',
-          user: kill.killer.toJSON
+          user: kill.killer.toJSON()
         });
       }
 
@@ -276,7 +276,7 @@ User.Collection = Backbone.Collection.extend({
         users.trigger('message', {
           type: 'deathfromabove',
           text: 'death from above',
-          user: kill.killer.toFrame()
+          user: kill.killer.toJSON()
         });
       }
     }, this);

@@ -16,6 +16,7 @@ var defaults = {
     jumpPower: 1500,
     kickPower: 700,
     multiTime: 2000,
+    minStreak: 3,
     fps: 60,
     boxes: {
       "1": {
