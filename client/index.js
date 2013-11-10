@@ -107,14 +107,14 @@
           this.playSound("rampage");
           text = 'rampage!';
         } else if (streak == 9) {
-          this.playSound("dominating!!");
-          text = 'dominating';
+          this.playSound("dominating");
+          text = 'dominating!!';
         } else if (streak == 12) {
-          this.playSound("unstoppable!!!");
-          text = 'unstoppable';
+          this.playSound("unstoppable");
+          text = 'unstoppable!!!';
         } else if (streak >= 15) {
-          this.playSound("godlike!!!!");
-          text = 'godlike';
+          this.playSound("godlike");
+          text = 'godlike!!!!';
         } else return;
         break;
       case 'headshot':
@@ -132,8 +132,8 @@
           this.playSound("triplekill");
           text = 'triple kill!!';
         } else if (multis >= 4) {
-          this.playSound("monsterkill!!!");
-          text = 'monster kill';
+          this.playSound("monsterkill");
+          text = 'monster kill!!!';
         }
         break;
       }
