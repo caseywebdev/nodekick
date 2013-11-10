@@ -78,7 +78,6 @@ var User = module.exports = Backbone.Model.extend({
 
   foot: function () {
     if(!this.isKicking()) { return null; }
-    var kf = this.toFrame();
     var kickerFoot = _.last(this.boxes());
     return kickerFoot;
   },
@@ -100,11 +99,14 @@ var User = module.exports = Backbone.Model.extend({
   recordHit: function(foot) {
     var footPoint = foot;
     var _this = this;
+    var didDie = false;
     _.each(this.boxes(), function(box) {
       if(_this.hasCollision(footPoint, box)) {
-        _this.set({ "state": "dying" });
+        didDie = true;
       }
     });
+
+    return didDie;
   },
 
   hasCollision: function(points1, points2) {
@@ -136,13 +138,21 @@ User.Collection = Backbone.Collection.extend({
     var notDeadPlayers = _.filter(this.models, function(model) {
       return !model.isDead();
     });
+
+    var toKill = [];
     
     _.each(kickers, function(kicker) {
       _.each(notDeadPlayers, function(other) {
         if(kicker !== other) {
-          other.recordHit(kicker.foot());
+          if(other.recordHit(kicker.foot())) {
+            toKill.push(other);
+          }
         }
       });
+    });
+
+    _.each(toKill, function(kill) {
+      kill.set({ state: "dying" });
     });
   },
   removeDeadPlayers: function() {
