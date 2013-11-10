@@ -54,11 +54,28 @@ if (!window.NodeKick)
       }
     },
 
+    deathImage: function(sprite, spriteX, x, y, deathCooldown) {
+      var deathCanvas = window.document.getElementById('deathCanvas');
+      var c = deathCanvas.getContext('2d');
+      c.drawImage(sprite, spriteX, 0, 200, 400, 0, 0, 100, 200);
+      var image = c.getImageData(0, 0, 100, 200);
+      var length = image.data.length;
+      var maxDeathCooldown = 2.0;
+
+      var alphaPercentage = deathCooldown / maxDeathCooldown;
+
+      for(var i = 3; i < length; i = i + 4) {
+        if(image.data[i] > 0) { image.data[i] *= alphaPercentage; }
+      }
+
+      this.c.putImageData(image, x, y);
+    },
+
     drawUsers: function (users) {
       _.each(users, function (user) {
-
         var x = user.x - (this.spriteWidth / 2);
         var y = this.floorY + user.y - this.spriteHeight + this.spriteBottomPadding;
+        var deathCooldown = user.deathCooldown;
         var spriteX;
         var serverOrigin = { x: x + (this.spriteWidth / 2), y: y + this.spriteHeight };
 
@@ -73,7 +90,13 @@ if (!window.NodeKick)
             spriteX = 200;
           else if (user.state == 'kicking')
             spriteX = 400;
-          this.c.drawImage(window.NodeKick.Assets.diveSprite, spriteX, 0, 200, 400, x, y, 100, 200);
+
+          if(user.state == "dying") {
+            console.log(user);
+            this.deathImage(window.NodeKick.Assets.diveSprite, spriteX, x, y, deathCooldown);
+          } else {
+            this.c.drawImage(window.NodeKick.Assets.diveSprite, spriteX, 0, 200, 400, x, y, 100, 200);
+          }
         }
         else {
           spriteX = 0;
@@ -81,14 +104,18 @@ if (!window.NodeKick)
             spriteX = 200;
           else if (user.state == 'standing')
             spriteX = 400;
-          //console.log('spriteX', spriteX);
-          this.c.drawImage(window.NodeKick.Assets.diveSpriteInverted, spriteX, 0, 200, 400, x, y, 100, 200);
+
+          if(user.state == "dying") {
+            console.log(user);
+            this.deathImage(window.NodeKick.Assets.diveSpriteInverted, spriteX, x, y, deathCooldown);
+          } else {
+            this.c.drawImage(window.NodeKick.Assets.diveSpriteInverted, spriteX, 0, 200, 400, x, y, 100, 200);
+          }
         }
 
         // this.drawAvatar(user, serverOrigin.x, serverOrigin.y - 140);
         this.drawAvatar(user, serverOrigin.x, this.floorY + 50);
       }, this);
-
     }
   };
 

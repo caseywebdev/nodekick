@@ -23,7 +23,7 @@ var User = module.exports = Backbone.Model.extend({
       yv: 5,
       dir: direction,
       state: 'jumping',
-      deathCooldown: 5
+      deathCooldown: 2
     };
   },
 
@@ -64,7 +64,7 @@ var User = module.exports = Backbone.Model.extend({
   },
 
   toFrame: function () {
-    return this.pick('id', 'x', 'y', 'dir', 'state');
+    return this.pick('id', 'x', 'y', 'dir', 'state', 'deathCooldown');
   },
   toUserData: function () {
     return this.pick('id', 'username', 'displayName', 'avatar');
