@@ -11,6 +11,7 @@ body
   font-size 12px
   overflow hidden
   color #666
+  background #02070d
 
 a
   text-decoration none
@@ -23,6 +24,12 @@ a
 
 .js-desktop .mobile-only
   display none
+
+#stage
+  display block
+  margin 0 auto
+  background-image url('/images/background-final-destination.jpg')
+  background-size 100%
 
 .move-ack
   width 200px
@@ -49,18 +56,31 @@ a
   &.js-right
     background-position 200px 0
 
-.sign-in-info
+.sign-in-with-twitter
+.user-info
   top 0
   right 0
-  position absolute
+  position fixed
   background #fff
   border-bottom-left-radius 5px
   box-shadow 0 1px 3px rgba(0, 0, 0, .75)
   overflow auto
-  .twitter
-    margin 5px
+
+@keyframes flashy
+  from
+    background #fff
+  to
+    background #08f
+
+.sign-in-with-twitter
+  padding 5px
+  animation flashy .25s infinite alternate
+
+.user-info
   .avatar
     float left
+    width 48px
+    height 48px
     border-bottom-left-radius 5px
     box-shadow 0 1px 3px rgba(0, 0, 0, .5)
   .username-and-sign-out
