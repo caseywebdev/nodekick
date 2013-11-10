@@ -48,6 +48,8 @@
       NodeKick.Drawer.drawUsers(this.users);
     },
 
+    showMessage: function (message) { console.log(message)  },
+
     updateUsers: function (users) { app.users = users; },
     updateScoreboard: function (scores) {
       _.reduce(scores, function (usersById, user) {
@@ -70,6 +72,7 @@
   if (!config.mobile) {
     live.connect('ws://' + location.host)
       .on('step', app.updateUsers)
+      .on('message', app.showMessage)
       .on('scores', app.updateScoreboard);
   }
 
