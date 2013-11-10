@@ -17,7 +17,7 @@ var World = module.exports = Backbone.Model.extend({
     var now = Date.now();
     var dt = (now - this.lastStep) / 1000;
     this.lastStep = now;
-    this.users.removeDeadPlayers();
+    this.users.removeDeadPlayers(dt);
     this.users.invoke('step', dt);
     this.users.checkCollisions();
     this.trigger('step', this.users.invoke('toFrame'));
