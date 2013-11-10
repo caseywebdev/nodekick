@@ -42,12 +42,16 @@ if (!window.NodeKick)
       var avatar = this.avatars[user.id];
       if (!avatar) {
         avatar = this.avatars[user.id] = new Image();
-        avatar.onload = function () { avatar.loaded = true; console.log('asdf') };
+        avatar.onload = function () {
+          avatar.loaded = true;
+        };
         avatar.src = userData.avatar;
-        avatar.width = this.avatarSize;
-        avatar.height = this.avatarSize;
       }
-      if (avatar.loaded) this.c.drawImage(avatar, x, y, this.avatarSize, this.avatarSize);
+      if (avatar.loaded) {
+        x = x - this.avatarSize / 2;
+        y = y - this.avatarSize / 2;
+        this.c.drawImage(avatar, x, y, this.avatarSize, this.avatarSize);
+      }
     },
 
     drawUsers: function (users) {
@@ -55,6 +59,7 @@ if (!window.NodeKick)
 
         var x = user.x - (this.spriteWidth / 2);
         var y = this.floorY + user.y - this.spriteHeight + this.spriteBottomPadding;
+        var spriteX;
         var serverOrigin = { x: x + (this.spriteWidth / 2), y: y + this.spriteHeight };
 
         if (this.drawBoundingBox)
@@ -63,7 +68,7 @@ if (!window.NodeKick)
           this.c.fillRect(serverOrigin.x, serverOrigin.y, 5, 5);
 
         if (user.dir === 1) {
-          var spriteX = 0;
+          spriteX = 0;
           if (user.state == 'jumping')
             spriteX = 200;
           else if (user.state == 'kicking')
@@ -71,7 +76,7 @@ if (!window.NodeKick)
           this.c.drawImage(window.NodeKick.Assets.diveSprite, spriteX, 0, 200, 400, x, y, 100, 200);
         }
         else {
-          var spriteX = 0;
+          spriteX = 0;
           if (user.state == 'jumping')
             spriteX = 200;
           else if (user.state == 'standing')
@@ -80,10 +85,8 @@ if (!window.NodeKick)
           this.c.drawImage(window.NodeKick.Assets.diveSpriteInverted, spriteX, 0, 200, 400, x, y, 100, 200);
         }
 
-        this.drawAvatar(user, serverOrigin.x, serverOrigin.y - 180);
-        this.c.fillRect(serverOrigin.x, this.floorY + 50, 5, 5);
-        this.c.fillRect(serverOrigin.x, serverOrigin.y - 180, 5, 5);
-
+        // this.drawAvatar(user, serverOrigin.x, serverOrigin.y - 140);
+        this.drawAvatar(user, serverOrigin.x, this.floorY + 50);
       }, this);
 
     }
