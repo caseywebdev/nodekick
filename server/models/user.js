@@ -164,7 +164,10 @@ User.Collection = Backbone.Collection.extend({
       }
     });
   },
-  checkCollisions: function () {
+  step: function () {
+    this.checkCollisions();
+  },
+  checkCollisions: function() {
     var kickers = _.filter(this.models, function (model) {
       return model.isKicking();
     });
@@ -178,11 +181,10 @@ User.Collection = Backbone.Collection.extend({
     _.each(kickers, function (kicker) {
       _.each(notDeadPlayers, function (other) {
         if (kicker !== other && other.recordHit(kicker.foot())) {
-          var headShot = other.isHeadShot(kicker.foot());
           toKill.push({
             killer: kicker,
             killed: other,
-            headShot: headShot
+            headShot: other.isHeadShot(kicker.foot())
           });
         }
       });

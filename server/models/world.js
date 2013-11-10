@@ -29,7 +29,7 @@ var World = module.exports = Backbone.Model.extend({
     this.lastStep = now;
     this.users.removeDeadPlayers(dt);
     this.users.invoke('step', dt);
-    this.users.checkCollisions();
+    this.users.step();
     this.trigger('step', this.users.invoke('toFrame'));
   },
   start: function () {
