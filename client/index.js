@@ -170,6 +170,7 @@
   };
 
   if (!config.mobile) {
+    if (typeof WebSocket === 'undefined') return alert('Game requires websockets');
     live.connect('ws://' + location.host)
       .on('step', app.updateWorld)
       .on('message', app.onMessage)
