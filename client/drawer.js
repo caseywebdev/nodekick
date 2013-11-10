@@ -126,7 +126,6 @@ if (!window.NodeKick)
     },
 
     deathImage: function(sprite, spriteX, x, y, deathCooldown) {
-      console.log('death image for location ', x, y);
       var deathCanvas = window.document.getElementById('deathCanvas');
       var deathContext = deathCanvas.getContext('2d');
       deathContext.clearRect(0, 0, 100, 200);
