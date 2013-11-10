@@ -12,6 +12,9 @@
     <link href='/index.css' rel='stylesheet'>
     <link href='http://fonts.googleapis.com/css?family=Piedra' rel='stylesheet' type='text/css'>
     <script src='/index.js'></script>
+    <% if (o.req.user) { %>
+    <script>window.app.currentUserId = <%= o.req.user.id %>;</script>
+    <% } %>
   </head>
 
   <body>

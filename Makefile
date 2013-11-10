@@ -20,7 +20,7 @@ server-w:
 	$(WATCHY) -w server -W 0.25 -- node server
 
 cogs-w:
-	$(COGS) -w client,css
+	$(COGS) -w client,views
 
 compress:
 	$(BOWER) install
