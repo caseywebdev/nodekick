@@ -85,7 +85,11 @@
     },
 
     onDeath: function (message) {
-      if(window.NodeKick.Sounds) window.NodeKick.Sounds.playRandomDeath();
+      //play death sound?
+    },
+
+    playSound: function(sound) {
+      if(window.NodeKick.Sounds) window.NodeKick.Sounds[sound].play();
     },
 
     showMessage: function (message) {
@@ -97,28 +101,38 @@
       case 'streak':
         var streak = message.user.streak;
         if (streak == 3) {
+          this.playSound("killingstreak");
           text = 'killing streak';
         } else if (streak == 6) {
+          this.playSound("rampage");
           text = 'rampage';
         } else if (streak == 9) {
+          this.playSound("dominating");
           text = 'dominating';
         } else if (streak == 12) {
+          this.playSound("unstoppable");
           text = 'unstoppable';
         } else if (streak >= 15) {
+          this.playSound("godlike");
           text = 'godlike';
         } else return;
         break;
       case 'headshot':
+        this.playSound('headshot');
         break;
       case 'deathfromabove':
+          this.playSound("deathfromabove");
         break;
       case 'multikill':
         var multis = message.user.multis;
         if (multis == 2) {
+          this.playSound("doublekill");
           text = 'double kill';
         } else if (multis == 3) {
+          this.playSound("triplekill");
           text = 'triple kill';
         } else if (multis >= 4) {
+          this.playSound("monsterkill");
           text = 'monster kill';
         }
         break;
