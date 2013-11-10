@@ -147,20 +147,21 @@ a
 @keyframes message
   2%
     transform scale(3)
-    opacity 1
+    opacity 0.8
   100%
     transform translateY(-200px) scale(.5)
     opacity 0
 
 .alerts
   position: fixed
-  bottom: 60%
+  bottom: 70%
   width: 100%
-  font-size: 4em
+  font-size: 3.2em
   font-weight 900
   text-transform uppercase
   font-family 'Piedra' cursive
   text-shadow 0 1px 3px rgba(0, 0, 0, .75)
+  opacity 0.8
   color #900
 
   .alert
@@ -174,4 +175,4 @@ a
       margin-right .2em
       position relative
       top -.22em
-    animation message 5s
+    animation message 3s

@@ -144,7 +144,7 @@
       $('.alerts').append($alert);
       setTimeout(function () {
         $alert.remove();
-      }, 4000);
+      }, 3000);
       console.log(message);
     },
 
