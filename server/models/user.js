@@ -8,7 +8,10 @@ var User = module.exports = Backbone.Model.extend({
   //   x, y
   //   dir (-1, 1)
   //   state (jumping, kicking, standing, dying)
-  defaults: function() {
+  initialize: function () {
+    this.triggerMulti = _.debounce(this.triggerMulti, config.world.multiTime);
+  },
+  defaults: function () {
     var randomX = _.random(config.world.leftEdge, config.world.rightEdge);
     var direction = 1;
 
@@ -26,6 +29,7 @@ var User = module.exports = Backbone.Model.extend({
       deathCooldown: 1,
       deathState: 'standing',
       streak: 0,
+      multis: 0,
       touchedGround: false
     };
   },
@@ -38,8 +42,15 @@ var User = module.exports = Backbone.Model.extend({
     return this.set({ touchedGround: true });
   },
 
-  increaseStreak: function() {
+  registerKill: function() {
+    this.set({ multis: this.get("multis") + 1 });
     this.set({ streak: this.get("streak") + 1 });
+  },
+
+  triggerMulti: function (cb) {
+    var multis = this.get('multis');
+    if (multis >= 2) cb(multis);
+    this.set('multis', 0);
   },
 
   resetStreak: function() {
@@ -210,6 +221,8 @@ User.Collection = Backbone.Collection.extend({
 
     var collisionResults = [];
 
+    var users = this;
+
     _.each(kickers, function (kicker) {
       _.each(notDeadPlayers, function (other) {
         if (kicker !== other && other.recordHit(kicker.foot())) {
@@ -220,20 +233,24 @@ User.Collection = Backbone.Collection.extend({
             deathFromAbove: !kicker.hasTouchedGround()
           });
 
-          if(!kicker.hasTouchedGround()) kicker.hasKilledFromAbove();
-          kicker.increaseStreak();
+          if (!kicker.hasTouchedGround()) kicker.hasKilledFromAbove();
+          kicker.registerKill();
+          kicker.triggerMulti(function (multis) {
+            users.trigger('message', {
+              type: 'multikill',
+              text: 'multikill',
+              user: kicker.toFrame()
+            });
+          });
           other.resetStreak();
         }
       });
     });
 
-    var users = this;
-
     _.each(collisionResults, function (kill) {
-      users.trigger('kill', kill);
+      this.trigger('kill', kill);
       kill.killed.set({ deathState: kill.killed.get("state"), state: "dying" });
-    });
-
+    }, this);
     return collisionResults;
   },
   broadcastMessages: function (collisionResults) {
@@ -250,19 +267,19 @@ User.Collection = Backbone.Collection.extend({
       if (kill.killer.get("streak") >= 1) {
         users.trigger('message', {
           type: 'streak',
-          text: 'multi kill',
+          text: 'killing streak',
           user: kill.killer.toJSON
         });
       }
 
-      if(kill.deathFromAbove) {
+      if (kill.deathFromAbove) {
         users.trigger('message', {
           type: 'deathfromabove',
           text: 'death from above',
           user: kill.killer.toFrame()
         });
       }
-    });
+    }, this);
 
     return collisionResults;
   },
