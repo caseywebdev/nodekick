@@ -173,9 +173,11 @@ User.Collection = Backbone.Collection.extend({
     _.each(kickers, function (kicker) {
       _.each(notDeadPlayers, function (other) {
         if (kicker !== other && other.recordHit(kicker.foot())) {
+          var headShot = true;
           toKill.push({
             killer: kicker,
-            killed: other
+            killed: other,
+            headShot: headShot
           });
         }
       });
@@ -184,6 +186,9 @@ User.Collection = Backbone.Collection.extend({
     var users = this;
     _.each(toKill, function (kill) {
       users.trigger('kill', kill);
+      if(kill.headShot) {
+        users.trigger('message', { type: 'headshot', text: 'headshot' });
+      }
       kill.killed.set({ deathState: kill.killed.get("state"), state: "dying" });
     });
   },

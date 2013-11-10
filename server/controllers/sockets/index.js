@@ -22,6 +22,11 @@ module.exports = function (app) {
     });
     ws.send(wsMsg('userData', app.world.users.invoke('toUserData')));
   });
+
+  app.world.users.on('message', function(message) {
+    broadcast('message', message);
+  });
+
   app.world.users.on('add', function (user) {
     app.world.getScores(function (er, scores) {
       if (er) throw er;

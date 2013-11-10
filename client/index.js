@@ -50,6 +50,7 @@
 
     updateUsers: function (users) { app.users = users; },
     updateScoreboard: function (scores) { console.log(scores); app.scores.set(scores); },
+    showMessage: function(message) { console.log(message); },
 
     updateUserData: function (users) {
       _.reduce(users, function (usersById, user) {
@@ -72,6 +73,7 @@
     live.connect('ws://' + location.host)
       .on('step', app.updateUsers)
       .on('userData', app.updateUserData)
+      .on('message', app.showMessage)
       .on('scores', app.updateScoreboard);
   }
 
