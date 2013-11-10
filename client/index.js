@@ -49,13 +49,12 @@
     },
 
     updateUsers: function (users) { app.users = users; },
-    updateScoreboard: function (scores) { console.log(scores); app.scores.set(scores); },
-
-    updateUserData: function (users) {
-      _.reduce(users, function (usersById, user) {
+    updateScoreboard: function (scores) {
+      _.reduce(scores, function (usersById, user) {
         usersById[user.id] = user;
         return usersById;
       }, app.usersById);
+      app.scores.set(scores);
     },
 
     move: function (dir) {
@@ -71,7 +70,6 @@
   if (!config.mobile) {
     live.connect('ws://' + location.host)
       .on('step', app.updateUsers)
-      .on('userData', app.updateUserData)
       .on('scores', app.updateScoreboard);
   }
 

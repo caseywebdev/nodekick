@@ -1,7 +1,6 @@
 'use strict';
 
 var _ = require('underscore');
-var db = require('../../db');
 
 module.exports = function (app) {
   var clients = app.wss.clients;
@@ -20,14 +19,12 @@ module.exports = function (app) {
       if (er) throw er;
       ws.send(wsMsg('scores', scores));
     });
-    ws.send(wsMsg('userData', app.world.users.invoke('toUserData')));
   });
   app.world.users.on('add', function (user) {
     app.world.getScores(function (er, scores) {
       if (er) throw er;
       broadcast('scores', scores);
     });
-    broadcast('userData', [user.toUserData()]);
   });
   app.world.on('scores', function (scores) {
     broadcast('scores', scores);
