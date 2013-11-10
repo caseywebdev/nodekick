@@ -48,8 +48,9 @@
       </div>
     </div>
     <div id='scoreboard'></div>
-    <div id="deathDiv" style="display: none">
-      <canvas id="deathCanvas" width="100" height="200"></canvas>
+    <div id="deathDiv" style="display: block">
+      <canvas id="deathCanvas" width="100" height="200" style="position: absolute; left: 0; border: solid 1px #FFF; background-color: red;"></canvas>
+      <canvas id="anotherCanvas" width="100" height="200" style="position: absolute; left: 100px; border: solid 1px #F00; background-color: red;"></canvas>
     </div>
     <canvas id='stage' class='desktop-only' width='1280' height='700'></canvas>
     <ul class='alerts'></ul>

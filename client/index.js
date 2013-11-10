@@ -52,7 +52,7 @@
       }
 
       NodeKick.Drawer.drawBackground();
-      NodeKick.Drawer.drawUsers(this.users);
+      NodeKick.Drawer.drawUsers(this.users, 19291404);
     },
 
     showMessage: function (message) {
@@ -67,7 +67,9 @@
       console.log(message);
     },
 
-    updateUsers: function (users) { app.users = users; },
+    updateUsers: function (users) {
+      app.users = users; 
+    },
     updateScoreboard: function (scores) {
       _.reduce(scores, function (usersById, user) {
         usersById[user.id] = user;

@@ -10,8 +10,9 @@ if (!window.NodeKick)
     spriteHeight: 200,
     spriteWidth: 100,
     spriteBottomPadding: 15,
-    paralaxLocation: 0,
-    isDaytime: false,
+    parallaxLocationX: 0,
+    parallaxLocationY: 0,
+    isDaytime: true,
 
     drawServerOrigin: false,
     drawBoundingBox: false,
@@ -27,11 +28,11 @@ if (!window.NodeKick)
       this.c.fillStyle = '#F00';
       this.c.strokeStyle = '#0F0';
 
-      this.fakeParallax();
-      this.fakeTransition();
+      //this.fakeParallax();
+      //this.fakeTransition();
     },
 
-    fakeParallax: function() {
+    /*fakeParallax: function() {
       var self = this;
       var parallaxDirection = -1;
       setInterval(function() {
@@ -44,6 +45,20 @@ if (!window.NodeKick)
           parallaxDirection = -1;
 
       }, 30);
+    },*/
+
+    parallax: function(user) {
+
+      if (!user)
+        return;
+
+      //console.log('user', user);
+      var self = this;
+      var parallaxDirection = -1;
+
+      this.parallaxLocationX = -1 * user.x / 45;
+      this.parallaxLocationY = -1 * user.y / 45;
+
     },
 
     fakeTransition: function() {
@@ -65,8 +80,8 @@ if (!window.NodeKick)
         backNear = window.NodeKick.Assets.backgroundImages['background-nighttime.png'];
         backDistant = window.NodeKick.Assets.backgroundImages['background-nighttime-distant.png'];      
       }
-      this.c.drawImage(backDistant, this.paralaxLocation, 0, this.canvas.width + 50, this.canvas.height + 50);
-      this.c.drawImage(backNear, 0, 0, this.canvas.width, this.canvas.height);
+      this.c.drawImage(backDistant, this.parallaxLocationX, this.parallaxLocationY, this.canvas.width + 50, this.canvas.height + 50);
+      this.c.drawImage(backNear, 0, this.parallaxLocationY / 5, this.canvas.width, this.canvas.height);
 
       if (this.drawFloorLine) {
         this.c.beginPath();
@@ -158,7 +173,8 @@ if (!window.NodeKick)
       }
     },
 
-    drawUsers: function(users) {
+    drawUsers: function(users, currentUserId) {
+      this.parallax(_.find(users, function(user) { return user.id == currentUserId}));
       var deadUsers = _.filter(users, function(user) { return user.state == "dying"; });
       var liveUsers = _.filter(users, function(user) { return user.state != "dying"; });
       _.each(deadUsers, function (user) { this.drawUser(user); }, this);
