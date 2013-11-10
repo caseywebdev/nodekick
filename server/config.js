@@ -9,7 +9,7 @@ var defaults = {
   },
   world: {
     leftEdge: 100, //if your x less than this when your y is 0, you die
-    rightEdge: 1100, //if your x greater than this when your y is 0, you die
+    rightEdge: 1200, //if your x greater than this when your y is 0, you die
     gravity: 3000, // amount of gravity applied per second
     jumpPower: 1500,
     kickPower: 700,
