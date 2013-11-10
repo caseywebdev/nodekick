@@ -6,7 +6,7 @@ if (!window.NodeKick)
 
   window.NodeKick.Drawer = {
 
-    floorY: 590,
+    floorY: 570,
     spriteHeight: 200,
     spriteWidth: 100,
     spriteBottomPadding: 15,
