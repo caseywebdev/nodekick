@@ -75,6 +75,15 @@
 
   (function () {
     var x0, y0, dx, dy;
+    var pressed = {};
+    var keys = {
+      '38': 'up',
+      '87': 'up',
+      '37': 'left',
+      '65': 'left',
+      '39': 'right',
+      '68': 'right'
+    };
     $(document).on({
       touchstart: function (ev) {
         ev = ev.originalEvent;
@@ -99,19 +108,14 @@
         if (!ev.originalEvent.touches.length) dx = dy = null;
       },
       keydown: function (ev) {
-        switch (ev.which) {
-        case 37:
-        case 65:
-          app.move('left');
-          break;
-        case 38:
-        case 87:
-          app.move('up');
-          break;
-        case 39:
-        case 68:
-          app.move('right');
-        }
+        var dir = keys[ev.which];
+        if (!dir) return;
+        if (!pressed[dir]) app.move(dir);
+        pressed[dir] = true;
+      },
+      keyup: function (ev) {
+        var dir = keys[ev.which];
+        if (dir) pressed[dir] = false;
       }
     });
   })();
