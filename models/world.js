@@ -10,10 +10,10 @@
   var _ = node ? require('underscore') : window._;
   var config = node ? require('../server/config') : window.config;
   var Backbone = node ? require('backbone') : window.Backbone;
-  var User = node ? require('./user') : app.user;
+  var User = node ? require('./user') : app.User;
   var db = node ? require('../server/db') : null;
 
-  var World = module.exports = Backbone.Model.extend({
+  var World = Backbone.Model.extend({
     timeScalar: 1,
     initialize: function () {
       this.users = new User.Collection();
@@ -62,10 +62,22 @@
       this.timeScalar = 0.01;
       var self = this;
       this.bulletTimeout = _.delay(function () { self.timeScalar = 1; }, 500);
+    },
+    toStep: function () {
+      return {
+        users: this.users,
+        timeScalar: this.timeScalar
+      };
     }
   });
 
   World.Collection = Backbone.Collection.extend({
     model: World
   });
+
+  node ? module.exports = World : app.World = World;
+
+  if (node) return;
+  app.world = new World();
+  app.world.start();
 })();

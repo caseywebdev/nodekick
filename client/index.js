@@ -2,12 +2,13 @@
 //= require jquery-mobile-events/jquery-mobile-events
 //= require underscore/underscore
 //= require backbone/backbone
-//= requireTree ../views/jst
-//= require scoreboard
+//= require request-animation-frame-polyfill
 //= require live
 //= require config
-//= require request-animation-frame-polyfill
-//= require player
+//= requireSelf
+//= requireTree ../models
+//= requireTree ../views/jst
+//= require scoreboard
 //= require drawer
 //= require assets
 
@@ -18,7 +19,6 @@
   var config = window.config;
   var live = window.live;
   var _ = window._;
-  var NodeKick = window.NodeKick;
   var Backbone = window.Backbone;
 
   // setInterval(function () {
@@ -37,15 +37,15 @@
 
     domReady: function () {
       $('html').addClass(config.mobile ? 'js-mobile' : 'js-desktop');
-      new window.ScoresListView({collection: app.scores});
-      NodeKick.Drawer.init();
-      NodeKick.Assets.init();
+      new app.ScoresListView({collection: app.scores});
+      app.Drawer.init();
+      app.Assets.init();
       app.setUpMoveAck();
     },
 
     setUpMoveAck: function () {
       if (!app.currentUserId) return;
-      var available = NodeKick.Assets.availableSprites;
+      var available = app.Assets.availableSprites;
       var name = available[app.currentUserId % available.length];
       var url = '/images/' + name + '-sprite.png';
       $('.js-move-ack').css('backgroundImage', "url('" + url + "')");
@@ -53,15 +53,15 @@
 
     draw: function () {
 
-      if (!NodeKick.Drawer.canvas || !NodeKick.Assets.isLoaded()) {
+      if (!app.Drawer.canvas || !app.Assets.isLoaded()) {
         console.log('assets not yet loaded');
         // DOM is not yet loaded or image assets have not loaded,
         // so no need to draw yet!
         return;
       }
 
-      NodeKick.Drawer.drawBackground();
-      NodeKick.Drawer.drawUsers(this.users, 19291404); //this.currentUserId
+      app.Drawer.drawBackground();
+      app.Drawer.drawUsers(app.world.users, app.currentUserId);
     },
 
     messageQueue: [],
@@ -127,8 +127,9 @@
       console.log(message);
     },
 
-    updateUsers: function (users) {
-      app.users = users; 
+    updateWorld: function (world) {
+      app.world.timeScalar = world.timeScalar;
+      app.world.users.set(world.users);
     },
     updateScoreboard: function (scores) {
       _.reduce(scores, function (usersById, user) {
@@ -150,7 +151,7 @@
 
   if (!config.mobile) {
     live.connect('ws://' + location.host)
-      .on('step', app.updateUsers)
+      .on('step', app.updateWorld)
       .on('message', app.onMessage)
       .on('scores', app.updateScoreboard);
   }
@@ -209,5 +210,5 @@
     app.draw();
   }
 
-  drawLoop();
+  _.defer(drawLoop);
 })();

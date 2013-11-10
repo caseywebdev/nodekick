@@ -3,7 +3,7 @@
 
   var Backbone = window.Backbone;
 
-  var ScoreView = window.ScoreView = Backbone.View.extend({
+  var ScoreView = window.app.ScoreView = Backbone.View.extend({
     template: window.jst.score,
     className: 'score',
     initialize: function () {
@@ -24,7 +24,7 @@
     }
   });
 
-  window.ScoresListView = Backbone.View.extend({
+  window.app.ScoresListView = Backbone.View.extend({
     el: '#scoreboard',
     initialize: function () {
       this.listenTo(this.collection, {

@@ -1,11 +1,10 @@
 (function () {
-  if (!window.NodeKick) window.NodeKick = {};
 
   var _ = window._;
   var SPRITES = ['donatello', 'dive', 'redacted'];
   var BACKGROUNDS = ['background-daytime.png', 'background-daytime-distant.png', 'background-nighttime-distant.png', 'background-nighttime.png'];
 
-  var Assets = window.NodeKick.Assets = {
+  var Assets = window.app.Assets = {
     availableSprites: ['donatello', 'dive', 'redacted'],
     sprites: {},
     backgroundImages: {},

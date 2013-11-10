@@ -14,7 +14,7 @@
     //   handle
     //   x, y
     //   dir (-1, 1)
-    //   state (jumping, kicking, standing, dying)
+    //   state (jumping, kicking, standing, dead)
     initialize: function () {
       this.triggerMulti = _.debounce(this.triggerMulti, config.world.multiTime);
     },
@@ -86,11 +86,11 @@
       }
 
       if (this.missedGround()) {
-        this.set({ state: 'dying', deathState: 'kicking' });
+        this.set({ state: 'dead', deathState: 'kicking' });
       }
 
       if(this.offStage()) {
-        this.set({ state: 'dying', deathState: 'kicking' });
+        this.set({ state: 'dead', deathState: 'kicking' });
       }
     },
 
@@ -185,7 +185,7 @@
       return true
     },
 
-    isDead: function () { return this.get('state') === 'dying'; },
+    isDead: function () { return this.get('state') === 'dead'; },
     isStanding: function () { return this.get('state') === 'standing'; },
     isJumping: function () { return this.get('state') === 'jumping'; },
     isKicking: function () { return this.get('state') === 'kicking'; },
@@ -256,7 +256,7 @@
 
       _.each(collisionResults, function (kill) {
         this.trigger('kill', kill);
-        kill.killed.set({ deathState: kill.killed.get("state"), state: "dying" });
+        kill.killed.set({ deathState: kill.killed.get("state"), state: "dead" });
       }, this);
       return collisionResults;
     },
