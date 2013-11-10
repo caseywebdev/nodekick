@@ -55,13 +55,7 @@
     },
 
     draw: function () {
-
-      if (!app.Drawer.canvas || !app.Assets.isLoaded()) {
-        console.log('assets not yet loaded');
-        // DOM is not yet loaded or image assets have not loaded,
-        // so no need to draw yet!
-        return;
-      }
+      if (!app.Drawer.canvas || !app.Assets.isLoaded()) return;
       app.Drawer.drawBackground();
       app.Drawer.drawUsers(app.world.users, app.currentUserId);
     },
@@ -144,7 +138,6 @@
       setTimeout(function () {
         $alert.remove();
       }, 4000);
-      console.log(message);
     },
 
     updateWorld: function (world) {
