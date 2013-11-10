@@ -14,6 +14,7 @@
   </head>
 
   <body>
+    <div class='top-right-corner'>
       <% if (o.req.user) { %>
       <div class='user-info'>
         <a href='https://twitter.com/<%- o.req.user.get('username') %>'>
@@ -27,13 +28,21 @@
           <a href='/auth/sign-out' class='sign-out'>Sign Out</a>
         </div>
       </div>
-    <% } else { %>
-    <div class='sign-in-with-twitter'>
-      <a href='/auth/twitter'>
-        <img src='/images/sign-in-with-twitter.png' class='twitter'>
-      </a>
+      <% } else { %>
+      <div class='sign-in-with-twitter'>
+        <a href='/auth/twitter'>
+          <img src='/images/sign-in-with-twitter.png' class='twitter'>
+        </a>
+      </div>
+      <% } %>
+      <div class='nko-vote-container'>
+        <iframe
+          src='http://nodeknockout.com/iframe/team-us'
+          allowtransparency
+          class='nko-vote'
+        ></iframe>
+      </div>
     </div>
-    <% } %>
     <div id='scoreboard'></div>
     <div id="deathDiv" style="display: none">
       <canvas id="deathCanvas" width="100" height="200"></canvas>
