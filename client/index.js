@@ -21,13 +21,6 @@
   var NodeKick = window.NodeKick;
   var Backbone = window.Backbone;
 
-  // setInterval(function () {
-  //   app.showMessage({
-  //     type: 'killstreak',
-  //     text: 'headshot'
-  //   });
-  // }, 3000);
-
   var app = window.app = {
     users: [],
     usersById: {},
@@ -91,14 +84,14 @@
         var streak = message.user.streak;
         if (streak == 3) {
           text = 'killing streak';
+        } else if (streak == 4) {
+          text = 'rampage!!';
+        } else if (streak == 5) {
+          text = 'dominating!!!';
         } else if (streak == 6) {
-          text = 'rampage';
-        } else if (streak == 9) {
-          text = 'dominating';
-        } else if (streak == 12) {
-          text = 'unstoppable';
-        } else if (streak >= 15) {
-          text = 'godlike';
+          text = 'unstoppable!!!!';
+        } else if (streak >= 7) {
+          text = 'godlike!!!!';
         } else return;
         break;
       case 'headshot':
@@ -108,11 +101,11 @@
       case 'multikill':
         var multis = message.user.multis;
         if (multis == 2) {
-          text = 'double kill';
+          text = 'double kill!';
         } else if (multis == 3) {
-          text = 'triple kill';
+          text = 'triple kill!!';
         } else if (multis >= 4) {
-          text = 'monster kill';
+          text = 'monster kill!!!';
         }
         break;
       }
@@ -124,7 +117,6 @@
       setTimeout(function () {
         $alert.remove();
       }, 4000);
-      console.log(message);
     },
 
     updateUsers: function (users) {
