@@ -24,8 +24,26 @@ var User = module.exports = Backbone.Model.extend({
       dir: direction,
       state: 'jumping',
       deathCooldown: 1,
-      deathState: 'standing'
+      deathState: 'standing',
+      streak: 0,
+      touchedGround: false
     };
+  },
+
+  hasTouchedGround: function() {
+    return this.get("touchedGround");
+  },
+
+  hasKilledFromAbove: function () {
+    return this.set({ touchedGround: true });
+  },
+
+  increaseStreak: function() {
+    this.set({ streak: this.get("streak") + 1 });
+  },
+
+  resetStreak: function() {
+    this.set({ streak: 0 });
   },
 
   step: function (dt) {
@@ -46,7 +64,7 @@ var User = module.exports = Backbone.Model.extend({
     }
 
     if (this.get('y') >= 0 && !this.isOffMap()) {
-      this.set({ y: 0, yv: 0, xv: 0, state: 'standing' });
+      this.set({ y: 0, yv: 0, xv: 0, state: 'standing', touchedGround: true });
     }
 
     if (this.isOffMap()) {
@@ -164,7 +182,11 @@ User.Collection = Backbone.Collection.extend({
       }
     });
   },
-  checkCollisions: function () {
+  step: function () {
+    var collisionResults = this.checkCollisions();
+    this.broadcastMessages(collisionResults);
+  },
+  checkCollisions: function() {
     var kickers = _.filter(this.models, function (model) {
       return model.isKicking();
     });
@@ -173,29 +195,79 @@ User.Collection = Backbone.Collection.extend({
       return !model.isDead();
     });
 
-    var toKill = [];
+    var collisionResults = [];
 
     _.each(kickers, function (kicker) {
       _.each(notDeadPlayers, function (other) {
         if (kicker !== other && other.recordHit(kicker.foot())) {
-          var headShot = other.isHeadShot(kicker.foot());
-          toKill.push({
+          collisionResults.push({
             killer: kicker,
             killed: other,
-            headShot: headShot
+            headShot: other.isHeadShot(kicker.foot()),
+            deathFromAbove: !kicker.hasTouchedGround()
           });
+
+          if(!kicker.hasTouchedGround()) kicker.hasKilledFromAbove();
+          kicker.increaseStreak();
+          other.resetStreak();
         }
       });
     });
 
     var users = this;
-    _.each(toKill, function (kill) {
+
+    _.each(collisionResults, function (kill) {
       users.trigger('kill', kill);
-      if(kill.headShot) {
-        users.trigger('message', { type: 'headshot', text: 'headshot' });
-      }
       kill.killed.set({ deathState: kill.killed.get("state"), state: "dying" });
     });
+
+    return collisionResults;
+  },
+  broadcastMessages: function(collisionResults) {
+    var users = this;
+
+    _.each(collisionResults, function (kill) {
+      if(kill.headShot) {
+        users.trigger('message', {
+          type: 'headshot',
+          text: 'headshot'
+        });
+      }
+
+      if(kill.killer.get("streak") == 2) {
+        users.trigger('message', {
+          type: 'doublekill',
+          text: 'doublekill',
+          user: kill.killer.toFrame()
+        });
+      }
+
+      if(kill.killer.get("streak") == 3) {
+        users.trigger('message', {
+          type: 'triplekill',
+          text: 'triplekill',
+          user: kill.killer.toFrame()
+        });
+      }
+
+      if(kill.killer.get("streak") >= 4) {
+        users.trigger('message', {
+          type: 'multikill',
+          text: 'multikill',
+          user: kill.killer.toFrame()
+        });
+      }
+
+      if(!kill.killer.deathFromAbove) {
+        users.trigger('message', {
+          type: 'deathfromabove',
+          text: 'deathfromabove',
+          user: kill.killer.toFrame()
+        });
+      }
+    });
+
+    return collisionResults;
   },
   removeDeadPlayers: function(dt) {
     var deadPlayers = _.filter(this.models, function(model) {
