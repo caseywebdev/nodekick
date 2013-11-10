@@ -2,8 +2,21 @@
 
 global-reset()
 
-.body
+img
+  vertical-align bottom
+
+body
   text-size-adjust 100%
+  font-family 'Helvetica Nueue', Arial, Helvetica, 'Lucida Grande', sans-serif
+  font-size 12px
+  overflow hidden
+  color #666
+
+a
+  text-decoration none
+  color #08f
+  &:hover
+    text-decoration underline
 
 .js-mobile .desktop-only
   display none
@@ -35,3 +48,28 @@ global-reset()
     transform scaleX(-1)
   &.js-right
     background-position 200px 0
+
+.sign-in-info
+  top 0
+  right 0
+  position absolute
+  background #fff
+  border-bottom-left-radius 5px
+  box-shadow 0 1px 3px rgba(0, 0, 0, .75)
+  overflow auto
+  .twitter
+    margin 5px
+  .avatar
+    float left
+    border-bottom-left-radius 5px
+    box-shadow 0 1px 3px rgba(0, 0, 0, .5)
+  .username-and-sign-out
+    padding 5px 10px
+    display inline-block
+    text-align center
+    .username
+      display block
+      font-size 16px
+      margin-bottom 5px
+      color #666
+

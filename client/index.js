@@ -2,10 +2,10 @@
 //= require jquery-mobile-events/jquery-mobile-events
 //= require underscore/underscore
 //= require backbone/backbone
+//= require live
 //= require config
 //= require request-animation-frame-polyfill
 //= require player
-//= require player-collection
 //= require drawer
 //= require assets
 
@@ -13,17 +13,14 @@
   'use strict';
 
   var $ = window.jQuery;
-  var _ = window._;
   var config = window.config;
-  var io = window.io;
+  var live = window.live;
+  var _ = window._;
+  var NodeKick = window.NodeKick;
 
   var app = window.app = {
-
-    users: window.NodeKick.PlayerCollection,
-
-    socketReady: function () {
-      app.socket.on('step', app.updateUsers);
-    },
+    users: [],
+    usersById: {},
 
     domReady: function () {
       $('html').addClass(config.mobile ? 'js-mobile' : 'js-desktop');
@@ -31,23 +28,27 @@
       window.NodeKick.Assets.init();
     },
 
-    draw: function() {
+    draw: function () {
 
       if (!NodeKick.Drawer.canvas || !NodeKick.Assets.isLoaded) {
         console.log('assets not yet loaded');
-        return; //DOM is not yet loaded or image assets have not loaded, so no need to draw yet!
+        // DOM is not yet loaded or image assets have not loaded,
+        // so no need to draw yet!
+        return;
       }
 
       NodeKick.Drawer.drawBackground();
       NodeKick.Drawer.drawUsers(this.users);
     },
 
-    updateUsers: function (users) {
-      _.each(users, function (user) {
-        var obj = app.users[user.id];
-        if (!obj) obj = app.users[user.id] = {};
-        _.extend(obj, user);
-      });
+    updateUsers: function (users) { app.users = users; },
+
+    updateUserData: function (users) {
+      _.reduce(users, function (usersById, user) {
+        usersById[user.id] = user;
+        return usersById;
+      }, app.usersById);
+
     },
 
     move: function (dir) {
@@ -61,8 +62,9 @@
   };
 
   if (!config.mobile) {
-    app.socket = io.connect();
-    app.socket.on('connect', app.socketReady);
+    live.connect('ws://' + location.host)
+      .on('step', app.updateUsers)
+      .on('userData', app.updateUserData);
   }
 
   (function () {
@@ -116,34 +118,4 @@
   }
 
   drawLoop();
-
-  // /* ====== TEMP: REMOVE WHEN WE HAVE LIVE SOCKET PEOPLE ======== */
-
-  // console.log('stuff', window.NodeKick, app)
-
-  var player1 = new window.NodeKick.Player('bob');
-  player1.x = 70;
-  player1.y = 0;
-  player1.state = 'stand';
-  player1.dir = -1;
-
-  // console.log('the player', player1);
-
-  var player2 = new window.NodeKick.Player('fred');
-  player2.x = 500;
-  player2.y = -300;
-  player2.state = 'jump';
-  player2.dir = 1;
-
-  // app.users[player1.handle] = player1;
-  // app.users[player2.handle] = player2;
-
-  setInterval(function() {
-    player2.x += 10;
-  }, 100);
-
-
-  // /* ============================================================ */
-
-
 })();

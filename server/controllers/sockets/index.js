@@ -1,21 +1,31 @@
 'use strict';
 
-var sockets = {};
 var _ = require('underscore');
 
 module.exports = function (app) {
-  app.io.sockets.on('connection', function (socket) {
-    sockets[socket.id] = socket.volatile;
-    console.log(socket.handshake);
+  var clients = app.wss.clients;
 
-    socket.on('disconnect', function () {
-      delete sockets[socket.id];
-    });
+  var wsMsg = function (name, obj) {
+    return JSON.stringify({id: _.uniqueId(), name: name, data: obj});
+  };
+
+  var broadcast = function (name, data) {
+    _.invoke(clients, 'send', wsMsg(name, data));
+  };
+
+  // send all user data
+  app.wss.on('connection', function (ws) {
+    ws.send(wsMsg('userData', app.world.getUsers()));
+  });
+  app.world.on('userData', function (users) {
+    broadcast('userData', users);
   });
 
+  // send user frames
   app.world.on('step', function (users) {
-    _.invoke(sockets, 'emit', 'step', users);
+    broadcast('step', users);
   });
+
+  process.on('SIGTERM', _.partial(_.invoke, clients, 'close'));
 };
 
-process.on('SIGTERM', _.partial(_.invoke, sockets, 'disconnect'));

@@ -6,15 +6,24 @@ var User = require('./user');
 
 var World = module.exports = Backbone.Model.extend({
   initialize: function () {
+    var world = this;
     this.users = new User.Collection();
+    this.users.on('add', function (user, users) {
+      console.log('user ' + user.get('username') + ' joined!');
+      world.trigger('userData', world.getUsers());
+    });
+  },
+  getUsers: function () {
+    return this.users.invoke('toUserData');
   },
   // control flow
   step: function () {
     var now = Date.now();
     var dt = (now - this.lastStep) / 1000;
     this.lastStep = now;
+    this.users.removeDeadPlayers();
     this.users.invoke('step', dt);
-    // this.users.checkCollisions();
+    this.users.checkCollisions();
     this.trigger('step', this.users.invoke('toFrame'));
   },
   start: function () {

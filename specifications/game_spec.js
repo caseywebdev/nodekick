@@ -9,6 +9,7 @@ describe('game stuff', function() {
 
     var user = new User();
     world.users.add(user);
+    user.set({ y: 0, state: "standing" });
 
     user.moveUp();
     expect(user.attributes.y).toEqual(0);
@@ -17,7 +18,56 @@ describe('game stuff', function() {
     expect(user.attributes.y < 0).toEqual(true);
   });
 
-  it('user kills another user', function() {
+  it('user kicking right kills', function() {
+    var world = new World();
+    world.lastStep = Date.now();
 
+    var standingUser = new User();
+    standingUser.set({ x: 300, y: 0, state: "standing" });
+    world.users.add(standingUser);
+
+    var standingUser2 = new User();
+    standingUser2.set({ x: 600, y: 0, state: "standing" });
+    world.users.add(standingUser2);
+
+    var kickingUser = new User();
+    kickingUser.set({ x: 300, y: -73, dir: 1 });
+    kickingUser.moveLeft();
+    world.users.add(kickingUser);
+
+    world.step();
+    expect(standingUser.isDead()).toBe(true);
+    expect(standingUser2.isDead()).toBe(false);
+
+    //dead player removed for now
+    world.step();
+    expect(world.users.models.length).toBe(2);
+
+  });
+
+  it('user kicking left kills', function() {
+    var world = new World();
+    world.lastStep = Date.now();
+
+    var standingUser = new User();
+    standingUser.set({ x: 300, y: 0, state: "standing" });
+    world.users.add(standingUser);
+
+    var standingUser2 = new User();
+    standingUser2.set({ x: 600, y: 0, state: "standing" });
+    world.users.add(standingUser2);
+
+    var kickingUser = new User();
+    kickingUser.set({ x: 340, y: -73, dir: -1 });
+    kickingUser.moveLeft();
+    world.users.add(kickingUser);
+
+    world.step();
+    expect(standingUser.isDead()).toBe(true);
+    expect(standingUser2.isDead()).toBe(false);
+
+    //dead player removed for now
+    world.step();
+    expect(world.users.models.length).toBe(2);
   });
 });
