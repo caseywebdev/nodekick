@@ -48,18 +48,25 @@ if (!window.NodeKick)
       }, 30);
     },*/
 
-    parallax: function(user) {
-
-      if (!user)
-        return;
-
-      //console.log('user', user);
-      var self = this;
-      var parallaxDirection = -1;
-
-      this.parallaxLocationX = -1 * user.x / 45;
-      this.parallaxLocationY = -1 * user.y / 45;
-
+    parallax: function (user) {
+      var x;
+      var y;
+      var users = window.app.users;
+      if (user) {
+        x = user.x;
+        y = user.y;
+      } else if (!users || users.length === 0) {
+        x = 575;
+        y = 570;
+      } else {
+        var sum = _.reduce(users, function (sum, user) {
+          return {x: sum.x + user.x, y: sum.y + user.y};
+        }, {x: 0, y: 0});
+        x = sum.x / users.length;
+        y = sum.y / users.length;
+      }
+      this.parallaxLocationX = -1 * x / 45;
+      this.parallaxLocationY = -1 * y / 45;
     },
 
     fakeTransition: function() {

@@ -61,7 +61,7 @@
       }
 
       NodeKick.Drawer.drawBackground();
-      NodeKick.Drawer.drawUsers(this.users, 19291404); //this.currentUserId
+      NodeKick.Drawer.drawUsers(app.users, app.currentUserId);
     },
 
     messageQueue: [],
