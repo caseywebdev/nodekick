@@ -257,6 +257,8 @@ User.Collection = Backbone.Collection.extend({
     var users = this;
 
     _.each(collisionResults, function (kill) {
+      users.trigger('death', { users: kill.killed.toJSON });
+      
       if (kill.headShot) {
         users.trigger('message', {
           type: 'headshot',

@@ -2,6 +2,7 @@
 //= require jquery-mobile-events/jquery-mobile-events
 //= require underscore/underscore
 //= require backbone/backbone
+//= require soundmanager/script/soundmanager2
 //= requireTree ../views/jst
 //= require scoreboard
 //= require live
@@ -10,6 +11,8 @@
 //= require player
 //= require drawer
 //= require assets
+//= require sounds
+
 
 (function () {
   'use strict';
@@ -79,6 +82,10 @@
           app.showMessage(msg);
         }, app.messageRate);
       }
+    },
+
+    onDeath: function (message) {
+      if(window.NodeKick.Sounds) window.NodeKick.Sounds.playRandomDeath();
     },
 
     showMessage: function (message) {
@@ -152,6 +159,7 @@
     live.connect('ws://' + location.host)
       .on('step', app.updateUsers)
       .on('message', app.onMessage)
+      .on('death', app.onDeath)
       .on('scores', app.updateScoreboard);
   }
 
