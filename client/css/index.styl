@@ -2,6 +2,10 @@
 
 global-reset()
 
+html
+body
+  height 100%
+
 img
   vertical-align bottom
 
@@ -12,6 +16,7 @@ body
   overflow hidden
   color #666
   background #02070d
+  text-align center
 
 a
   text-decoration none
@@ -26,12 +31,16 @@ a
   display none
 
 #stage
-  display block
-  margin 0 auto
   background-image url('/images/background.jpg')
   background-size 100%
 
 .move-ack
+  position fixed
+  top 0
+  bottom 0
+  left 0
+  right 0
+  margin auto
   width 200px
   height 400px
   background url('/images/kick-sprite.png')
@@ -86,7 +95,6 @@ a
   .username-and-sign-out
     padding 5px 10px
     display inline-block
-    text-align center
     .username
       display block
       font-size 16px
