@@ -63,16 +63,28 @@ var User = module.exports = Backbone.Model.extend({
       });
     }
 
-    if (this.get('y') >= 0 && !this.isOffMap()) {
+    if (this.get('y') >= 0 && !this.missedGround()) {
       this.set({ y: 0, yv: 0, xv: 0, state: 'standing', touchedGround: true });
     }
 
-    if (this.isOffMap()) {
+    if (this.missedGround()) {
+      this.set({ state: 'dying', deathState: 'kicking' });
+    }
+
+    if(this.offStage()) {
       this.set({ state: 'dying', deathState: 'kicking' });
     }
   },
 
-  isOffMap: function() {
+  offStage: function() {
+    if(this.get("x") <= config.world.left) return true;
+
+    if(this.get("x") >= config.world.right) return true;
+
+    return false;
+  },
+
+  missedGround: function() {
     if(!this.isStanding()) return false;
 
     if(this.get("x") <= config.world.leftEdge) return true;
