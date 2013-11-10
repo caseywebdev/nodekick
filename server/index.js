@@ -51,8 +51,6 @@ app.use(require('./middleware/url-normalizer'));
 
 passport.use(new TwitterStrategy(config.twitter,
   function (token, tokenSecret, profile, done) {
-    // if (err) { return done(err); }
-    console.log(token, profile, done);
     var users = app.world.users;
     var user = users.get(profile.id);
     done(null, user || new User({
