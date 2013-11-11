@@ -5,15 +5,16 @@
 //= require request-animation-frame-polyfill
 //= require soundmanager/script/soundmanager2
 //= require live
+//= require pixi/bin/pixi.js
 //= require config
 //= requireSelf
 //= requireTree ../models
+//= requireTree views
 //= requireTree ../views/jst
 //= require scoreboard
 //= require drawer
 //= require assets
 //= require sounds
-
 
 (function () {
   'use strict';
@@ -23,6 +24,7 @@
   var live = window.live;
   var _ = window._;
   var Backbone = window.Backbone;
+  var PIXI = window.PIXI;
 
   // setInterval(function () {
   //   app.showMessage({
@@ -32,11 +34,31 @@
   // }, 3000);
 
   var app = window.app = {
+    spriteSheets: ['/gfx/sprite-sheet.json'],
     users: [],
     usersById: {},
     scores: new Backbone.Collection(null, {
       comparator: function (user) { return -~~user.get('score'); }
     }),
+
+    init: function () {
+      app.loadSpriteSheets(function () {
+        $(function () { new app.WorldView({el: '#world'}); });
+      });
+      $(app.domReady);
+    },
+
+    loadSpriteSheets: function (cb) {
+      var loader = new PIXI.AssetLoader(this.spriteSheets);
+      loader.onComplete = cb;
+      loader.load();
+    },
+
+    characterTextures: {
+      'donatello': {},
+      'kick': {},
+      'redacted': {}
+    },
 
     domReady: function () {
       $('html').addClass(config.mobile ? 'js-mobile' : 'js-desktop');
@@ -141,8 +163,10 @@
     },
 
     updateWorld: function (world) {
+      var s = Date.now();
       app.world.timeScalar = world.timeScalar;
       app.world.users.set(world.users);
+      console.log('updated in ' + (Date.now() - s));
     },
     updateScoreboard: function (scores) {
       _.reduce(scores, function (usersById, user) {
@@ -163,7 +187,7 @@
   };
 
   if (!config.mobile) {
-    if (typeof WebSocket === 'undefined') return alert('Game requires websockets');
+    if (!window.WebSocket) return window.alert('WebSockets required.');
     live.connect('ws://' + location.host)
       .on('step', app.updateWorld)
       .on('message', app.onMessage)
@@ -218,12 +242,5 @@
     });
   })();
 
-  $(app.domReady);
-
-  function drawLoop() {
-    window.requestAnimationFrame(drawLoop);
-    app.draw();
-  }
-
-  _.defer(drawLoop);
+  _.defer(app.init);
 })();
