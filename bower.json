@@ -3,7 +3,8 @@
   "dependencies": {
     "jquery": "x",
     "jquery-mobile-events": "x",
-    "soundmanager": "V2.97a.20130512"
+    "soundmanager": "V2.97a.20130512",
+    "pixi": "x"
   },
   "version": "0.0.0"
 }
