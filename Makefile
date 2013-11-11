@@ -26,4 +26,8 @@ compress:
 	$(BOWER) install
 	$(COGS) -c
 
-.PHONY: server
+deploy:
+	git push heroku redux:master
+	heroku run make compress
+
+.PHONY: server deploy

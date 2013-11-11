@@ -28,13 +28,8 @@
     "uglify-js": "x",
     "ws": "x",
     "async": "x",
-    "superagent": "x"
-  },
-  "devDependencies": {
+    "superagent": "x",
     "watchy": "x"
-  },
-  "scripts": {
-    "postinstall" : "make compress"
   },
   "engines": {
     "node": "0.10.x"
