@@ -7,7 +7,7 @@ var fs = require('fs');
 var _ = require('underscore')._;
 var World = require('../models/world');
 var User = require('../models/user');
-var WebSocketServer = require('ws').Server;
+var ws = require('ws');
 var passport = require('passport');
 var TwitterStrategy = require('passport-twitter').Strategy;
 var db = require('./db');
@@ -18,7 +18,7 @@ var app = module.exports = express();
 var server = app.listen(config.port);
 
 // start socket.io
-app.wss = new WebSocketServer({server: server});
+app.wss = new ws.WebSocketServer({server: server});
 
 // Store the base URL for the url normalizer.
 app.set('url', config.url);

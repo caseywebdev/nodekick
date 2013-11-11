@@ -1,6 +1,9 @@
 'use strict';
 
 var _ = require('underscore');
+var ws = require('ws');
+
+var OPEN = ws.WebSocket.OPEN;
 
 module.exports = function (app) {
   var clients = app.wss.clients;
@@ -10,7 +13,7 @@ module.exports = function (app) {
   };
 
   var broadcast = function (name, data) {
-    _.invoke(clients, 'send', wsMsg(name, data));
+    _.invoke(_.where(clients, {readyState: OPEN}), 'send', wsMsg(name, data));
   };
 
   // send all user data
