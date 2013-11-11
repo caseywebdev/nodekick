@@ -27,8 +27,15 @@ a
   &:hover
     text-decoration underline
 
+.js-mobile .keys
+  top 200px
+
 .keys
-  margin-top 5px
+  position fixed
+  top 20px
+  user-select none
+  left 0
+  right 0
   font-size 20px
   font-family 'Piedra' cursive
   text-transform uppercase
@@ -75,6 +82,7 @@ a
     background-position 200px 0
 
 .top-right-corner
+  z-index 1
   top 0
   right 0
   position fixed
@@ -147,20 +155,21 @@ a
 @keyframes message
   2%
     transform scale(3)
-    opacity 1
+    opacity 0.8
   100%
     transform translateY(-200px) scale(.5)
     opacity 0
 
 .alerts
   position: fixed
-  bottom: 60%
+  bottom: 70%
   width: 100%
-  font-size: 4em
+  font-size: 3.2em
   font-weight 900
   text-transform uppercase
   font-family 'Piedra' cursive
   text-shadow 0 1px 3px rgba(0, 0, 0, .75)
+  opacity 0.8
   color #900
 
   .alert
@@ -174,4 +183,4 @@ a
       margin-right .2em
       position relative
       top -.22em
-    animation message 5s
+    animation message 3s
