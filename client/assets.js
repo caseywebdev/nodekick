@@ -2,9 +2,9 @@
 
   var _ = window._;
   var SPRITES = ['donatello', 'dive', 'redacted'];
-  var BACKGROUNDS = ['background-daytime.png', 
-    'background-daytime-distant.png', 
-    'background-nighttime-distant.png', 
+  var BACKGROUNDS = ['background-daytime.png',
+    'background-daytime-distant.png',
+    'background-nighttime-distant.png',
     'background-nighttime.png',
     'cloud-sprite.png'];
 
@@ -17,7 +17,7 @@
       return _(this.sprites).pluck('isLoaded').every(_.identity) && _(this.backgroundImages).pluck('isLoaded').every(_.identity);
     },
     getSprite: function (user) {
-      return _.values(this.sprites)[~~user.id % 3];
+      return _.values(this.sprites)[user.id % 3];
     },
     init: function () {
       _.each(this.availableSprites, function (spriteName) {

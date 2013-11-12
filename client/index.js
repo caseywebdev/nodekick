@@ -38,7 +38,7 @@
     users: [],
     usersById: {},
     scores: new Backbone.Collection(null, {
-      comparator: function (user) { return -~~user.get('score'); }
+      comparator: function (user) { return -(user.get('score') || 0); }
     }),
 
     init: function () {
