@@ -4,9 +4,9 @@
 //= require backbone/backbone
 //= require herit/herit
 //= require backbone-relations/backbone-relations
+//= require live/live
 //= require pixi/bin/pixi
 //= require soundmanager/script/soundmanager2
-//= require live
 //= requireSelf
 //= require config
 //= requireTree ../models
