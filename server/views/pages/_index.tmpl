@@ -8,13 +8,14 @@
       content='width=device-width,initial-scale=1.0,user-scalable=no'
     >
     <meta name='apple-mobile-web-app-capable' content='yes'>
+    <meta name='csrf-token' content='<%- o.req.csrfToken() %>'>
+    <% if (o.req.user) { %>
+    <meta name='current-user-id' content='<%= o.req.user.id %>'>
+    <% } %>
     <title>Nodekick</title>
     <link href='/index.css' rel='stylesheet'>
     <link href='http://fonts.googleapis.com/css?family=Piedra' rel='stylesheet' type='text/css'>
     <script src='/index.js'></script>
-    <% if (o.req.user) { %>
-    <script>window.app.currentUserId = <%= o.req.user.id %>;</script>
-    <% } %>
   </head>
 
   <body>

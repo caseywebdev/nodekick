@@ -1,6 +1,6 @@
 {
   "paths": [
-    "views/jst",
+    "client/templates",
     "node_modules",
     "bower_components",
     "client"
@@ -11,6 +11,6 @@
   },
   "targets": {
     "client/index.js": "public",
-    "client/css/index.styl": "public"
+    "client/styles/index.styl": "public"
   }
 }

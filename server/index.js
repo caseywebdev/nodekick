@@ -29,6 +29,7 @@ app.enable('strict routing');
 app.disable('x-powered-by');
 
 // Set view engine up for static pages and email.
+app.set('views', __dirname + '/views');
 app.set('view engine', 'tmpl');
 require('underscore-express')(app);
 
@@ -36,6 +37,7 @@ require('underscore-express')(app);
 app.use(express.compress());
 app.use(express.urlencoded());
 app.use(express.json());
+app.use(express.methodOverride());
 app.use(express.cookieParser());
 app.use(express.cookieSession(config.session));
 app.use(express.csrf());
@@ -85,20 +87,8 @@ _.each(files, function (file) {
   require('./controllers/' + file)(app);
 });
 
-// system settings
-
-// if run as root, downgrade to the owner of this file
-if (process.getuid() === 0) {
-  require('fs').stat(__filename, function (err, stats) {
-    if (err) { return console.error(err); }
-    process.setuid(stats.uid);
-  });
-}
-
 // signal hooks
 process.on('SIGTERM', function () {
-  console.log('received SIGTERM');
   app.world.stop();
   server.close();
-  setTimeout(process.exit.bind(process.exit), 100);
 });

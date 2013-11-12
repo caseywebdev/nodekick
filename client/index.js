@@ -11,7 +11,7 @@
 //= require config
 //= requireTree ../models
 //= requireTree views
-//= requireTree ../views/jst
+//= requireTree templates
 //= require scoreboard
 //= require drawer
 //= require assets
@@ -25,7 +25,19 @@
   var _ = window._;
   var PIXI = window.PIXI;
 
+  $.ajaxSetup({
+    dataType: 'json',
+
+    beforeSend: function (xhr) {
+      xhr.setRequestHeader('X-CSRF-Token', app.csrfToken);
+    }
+  });
+
   var app = window.app = {
+    csrfToken: $('meta[name="csrf-token"]').attr('content'),
+
+    currentUserId: $('meta[name="current-user-id"]').attr('content'),
+
     spriteSheets: ['/images/sprite-sheet.json'],
 
     init: function () {
