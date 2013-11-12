@@ -3,7 +3,7 @@
 var _ = require('underscore');
 var ws = require('ws');
 
-var OPEN = ws.WebSocket.OPEN;
+var OPEN = ws.OPEN;
 
 module.exports = function (app) {
   var clients = app.wss.clients;

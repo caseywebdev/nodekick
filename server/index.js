@@ -18,7 +18,7 @@ var app = module.exports = express();
 var server = app.listen(config.port);
 
 // start socket.io
-app.wss = new ws.WebSocketServer({server: server});
+app.wss = new ws.Server({server: server});
 
 // Store the base URL for the url normalizer.
 app.set('url', config.url);
