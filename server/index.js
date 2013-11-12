@@ -1,6 +1,4 @@
-// record check-ins
-require('nko')('15Mr9rFk1qr71_mD');
-
+require('backbone-relations');
 var config = require('./config');
 var express = require('express');
 var fs = require('fs');
@@ -40,6 +38,7 @@ app.use(express.urlencoded());
 app.use(express.json());
 app.use(express.cookieParser());
 app.use(express.cookieSession(config.session));
+app.use(express.csrf());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(__dirname + '/../public'));
@@ -51,7 +50,7 @@ app.use(require('./middleware/url-normalizer'));
 
 passport.use(new TwitterStrategy(config.twitter,
   function (token, tokenSecret, profile, done) {
-    var users = app.world.users;
+    var users = app.world.get('users');
     var user = users.get(profile.id);
     done(null, user || new User({
       id: profile.id,
@@ -67,7 +66,7 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (id, done) {
-  var users = app.world.users;
+  var users = app.world.get('users');
   var user = users.get(id);
   if (user) return done(null, user);
   db.findUser(id, function (er, user) {
@@ -78,7 +77,6 @@ passport.deserializeUser(function (id, done) {
 
 // add game state, app.world
 app.world = new World();
-app.world.start();
 
 // controllers
 var files = fs.readdirSync(__dirname + '/controllers');

@@ -1,35 +1,35 @@
 {
-  "name": "nko4-team-us",
+  "name": "nodekick",
   "version": "0.0.0",
   "description": "Team Us",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server"
-  },
+  "main": "server",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git@github.com:nko4/team-us.git"
   },
   "dependencies": {
+    "async": "x",
+    "backbone": "x",
+    "backbone-relations": "x",
     "bower": "x",
-    "nko": "x",
-    "underscore": "x",
+    "cogs": "x",
+    "csso": "x",
+    "express": "x",
+    "express-namespace": "x",
+    "herit": "x",
+    "nib": "x",
     "passport": "x",
     "passport-twitter": "x",
     "redis": "x",
-    "express": "x",
-    "express-namespace": "x",
-    "backbone": "x",
-    "cogs": "x",
-    "underscore-express": "x",
     "stylus": "x",
-    "nib": "x",
-    "csso": "x",
-    "uglify-js": "x",
-    "ws": "x",
-    "async": "x",
     "superagent": "x",
-    "watchy": "x"
+    "uglify-js": "x",
+    "underscore": "x",
+    "underscore-express": "x",
+    "underscore.string": "x",
+    "watchy": "x",
+    "ws": "x"
   },
   "engines": {
     "node": "0.10.x"

@@ -5,7 +5,7 @@ if (!window.NodeKick)
   var _ = window._;
 
   soundManager.setup({
-    url: '/swf/',
+    url: '/flash/',
     // optional: use 100% HTML5 mode where available
     // preferFlash: false,
     onready: function() {

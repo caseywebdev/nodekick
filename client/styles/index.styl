@@ -1,0 +1,190 @@
+//= requireSelf
+//= requireTree .
+
+@import 'config'
+
+global-reset()
+
+html
+body
+  height 100%
+
+img
+canvas
+  vertical-align bottom
+
+body
+  text-size-adjust 100%
+  font-family 'Helvetica Nueue', Arial, Helvetica, 'Lucida Grande', sans-serif
+  font-size 12px
+  overflow hidden
+  color #666
+  background #02070d
+  text-align center
+
+a
+  text-decoration none
+  color #08f
+  &:hover
+    text-decoration underline
+
+#world
+  transform scale(0.5) translate(-50%, -50%)
+
+.js-mobile .keys
+  top 200px
+
+.keys
+  position fixed
+  top 20px
+  user-select none
+  left 0
+  right 0
+  font-size 20px
+  font-family 'Piedra' cursive
+  text-transform uppercase
+  text-shadow 0 1px 3px rgba(0, 0, 0, .75)
+  span
+    margin-left 12px
+    margin-right 4px
+    color #bbb
+
+.js-mobile .desktop-only
+  display none
+
+.js-desktop .mobile-only
+  display none
+
+.move-ack
+  position fixed
+  top 0
+  bottom 0
+  left 0
+  right 0
+  margin auto
+  width 200px
+  height 400px
+  opacity 0
+  &.js-transition
+    transition-duration .25s
+    transition-timing-function ease-in-out
+    transition-property opacity transform
+  &.js-flash
+    opacity 1
+    &.js-up
+      transform translateY(25px)
+    &.js-left
+      transform translate(25px, -25px) scaleX(-1)
+    &.js-right
+      transform translate(-25px, -25px)
+  &.js-up
+    background-position -200px 0
+  &.js-left
+    background-position 200px 0
+    transform scaleX(-1)
+  &.js-right
+    background-position 200px 0
+
+.top-right-corner
+  z-index 1
+  top 0
+  right 0
+  position fixed
+  text-align right
+
+@keyframes flashy
+  from
+    background #fff
+  to
+    background #08f
+
+.sign-in-with-twitter
+.user-info
+.nko-vote-container
+  overflow auto
+  margin-top 5px
+  border-radius left 5px
+  box-shadow 0 1px 3px rgba(0, 0, 0, .75)
+  background #fff
+
+.nko-vote-container
+  display inline-block
+  border-radius left 5px
+  padding 5px
+  text-align right
+
+.nko-vote
+  display block
+  width 115px
+  height 25px
+
+.sign-in-with-twitter
+  padding 5px
+  animation flashy .25s infinite alternate
+
+.user-info
+  .avatar
+    float left
+    width 48px
+    height 48px
+    border-bottom-left-radius 5px
+    box-shadow 0 1px 3px rgba(0, 0, 0, .5)
+  .username-and-sign-out
+    padding 5px 10px
+    display inline-block
+    .username
+      display block
+      font-size 16px
+      margin-bottom 5px
+      color #666
+
+#stage
+  width 1280px
+  position absolute
+  left 50%
+  margin-left -640px
+  z-index -200
+
+.callout
+  position absolute
+  bottom 20px
+  left 50%
+  width 1280px
+  margin-left -640px
+  font-size 1.2em
+  color #ddd
+  text-shadow 0 2px 2px rgba(0, 0, 0, .75)
+  //  style="font-size: 20px; margin-top: 20px;"
+
+@keyframes message
+  2%
+    transform scale(3)
+    opacity 0.8
+  100%
+    transform translateY(-200px) scale(.5)
+    opacity 0
+
+.alerts
+  position: fixed
+  bottom: 70%
+  width: 100%
+  font-size: 3.2em
+  font-weight 900
+  text-transform uppercase
+  font-family 'Piedra' cursive
+  text-shadow 0 1px 3px rgba(0, 0, 0, .75)
+  opacity 0.8
+  color #900
+
+  .alert
+    // mask-image url(http://f.cl.ly/items/131E0X1b1i0X1s263R00/a.png) repeat
+    // -o-mask-image url(http://f.cl.ly/items/131E0X1b1i0X1s263R00/a.png) repeat
+    // -moz-mask-image url(http://f.cl.ly/items/131E0X1b1i0X1s263R00/a.png) repeat
+    // -webkit-mask-image url(http://f.cl.ly/items/131E0X1b1i0X1s263R00/a.png) repeat
+    img
+      width .6em
+      height .6em
+      margin-right .2em
+      position relative
+      top -.22em
+    animation message 3s

@@ -1,8 +1,15 @@
 'use strict';
 
+var passport = require('passport');
+
 module.exports = function (app) {
   app.namespace('/auth', function () {
-    app.get('/sign-out', require('./sign-out'));
-    require('./twitter')(app);
+    app.namespace('/twitter', function () {
+      app.get('/', passport.authenticate('twitter'));
+      app.get('/callback', passport.authenticate('twitter', {
+        successRedirect: '/',
+        failureRedirect: '/'
+      }));
+    });
   });
 };

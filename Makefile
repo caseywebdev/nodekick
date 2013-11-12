@@ -17,7 +17,7 @@ server:
 	node server
 
 server-w:
-	$(WATCHY) -w server,models -W 0.25 -- node server
+	$(WATCHY) -w models,server -W 0.25 -- node server
 
 cogs-w:
 	$(COGS) -w client,models,views
@@ -30,4 +30,7 @@ deploy:
 	git push heroku redux:master
 	heroku run make compress
 
-.PHONY: server deploy
+audio:
+	scripts/audio-to-mp3.sh
+
+.PHONY: audio server

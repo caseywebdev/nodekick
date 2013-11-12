@@ -1,3 +1,5 @@
+//= require ./model
+
 (function () {
   'use strict';
 
@@ -6,17 +8,17 @@
   var app = node ? null : window.app;
 
   var _ = node ? require('underscore') : window._;
-  var Backbone = node ? require('backbone') : window.Backbone;
-  var config = node ? require('../server/config') : window.config;
+  var config = node ? require('../server/config') : app.config;
+  var Model = node ? require('./model') : app.Model;
 
-  var User = Backbone.Model.extend({
+  var User = Model.extend({
     // attributes
     //   handle
     //   x, y
     //   dir (-1, 1)
     //   state (jumping, kicking, standing, dead)
     initialize: function () {
-      this.triggerMulti = _.debounce(this.triggerMulti, config.world.multiTime);
+      this.triggerMulti = _.debounce(this.triggerMulti, config.multiTime);
       this.on('change:state', function () {
         if (!this.get('diedAt') && this.isDead()) {
           this.set('deathTicks', 60);
@@ -24,10 +26,10 @@
       });
     },
     defaults: function () {
-      var randomX = _.random(config.world.leftEdge, config.world.rightEdge);
+      var randomX = _.random(config.leftEdge, config.rightEdge);
       var direction = 1;
 
-      if(randomX > ((config.world.rightEdge - config.world.leftEdge) / 2)) {
+      if(randomX > ((config.rightEdge - config.leftEdge) / 2)) {
         direction = -1;
       }
 
@@ -44,6 +46,10 @@
         multis: 0,
         touchedGround: false
       };
+    },
+
+    applyMove: function (move) {
+      this['move' + _.str.capitalize(move.get('type'))]();
     },
 
     hasTouchedGround: function() {
@@ -74,7 +80,7 @@
 
       if (this.isJumping()) {
         // apply gravity
-        var yv = this.get('yv') + config.world.gravity * dt;
+        var yv = this.get('yv') + config.gravity * dt;
         this.set({
           y: this.get('y') + yv * dt,
           yv: yv
@@ -97,9 +103,9 @@
     },
 
     offStage: function() {
-      if(this.get("x") <= config.world.left) return true;
+      if(this.get("x") <= config.left) return true;
 
-      if(this.get("x") >= config.world.right) return true;
+      if(this.get("x") >= config.right) return true;
 
       return false;
     },
@@ -107,9 +113,9 @@
     missedGround: function() {
       if(!this.isStanding()) return false;
 
-      if(this.get("x") <= config.world.leftEdge) return true;
+      if(this.get("x") <= config.leftEdge) return true;
 
-      if(this.get("x") >= config.world.rightEdge) return true;
+      if(this.get("x") >= config.rightEdge) return true;
 
       return false;
     },
@@ -128,8 +134,8 @@
       if (!this.canKick()) return;
       this.set({
         state: 'kicking',
-        xv: dir * config.world.kickPower,
-        yv: config.world.kickPower
+        xv: dir * config.kickPower,
+        yv: config.kickPower
       });
     },
 
@@ -137,7 +143,7 @@
       if (!this.canJump()) return;
       this.set({
         state: 'jumping',
-        yv: -config.world.jumpPower
+        yv: -config.jumpPower
       });
     },
 
@@ -151,7 +157,7 @@
       var kf = this.toFrame();
       var boxesForUser = JSON.parse(
           JSON.stringify(
-            config.world.boxes[kf.dir][kf.state]));
+            config.boxes[kf.dir][kf.state]));
       _.each(boxesForUser, function(box) {
         box.x += kf.x;
         box.x2 += kf.x;
@@ -198,23 +204,9 @@
     canChangeDir: function () { return this.isStanding() || this.isJumping(); }
   });
 
-  User.Collection = Backbone.Collection.extend({
+  User.Collection = Model.Collection.extend({
     model: User,
-    initialize: function (__, options) {
-      if (options && options.recent) return;
-      this.recent = new User.Collection(this.models, {recent: true});
-      this.recent.timeouts = {};
-      this.recent.listenTo(this, {
-        add: function (model) {
-          clearTimeout(this.timeouts[model.id]);
-          this.add(model);
-        },
-        remove: function (model) {
-          this.timeouts[model.id] =
-            setTimeout(this.remove.bind(this, model), 5 * 60 * 1000);
-        }
-      });
-    },
+
     step: function () {
       var collisionResults = this.checkCollisions();
       this.broadcastMessages(collisionResults);
@@ -273,7 +265,7 @@
             user: kill.killer.toJSON()
           });
         }
-        if (kill.killer.get("streak") >= config.world.minStreak) {
+        if (kill.killer.get("streak") >= config.minStreak) {
           users.trigger('message', {
             type: 'streak',
             text: 'killing streak',

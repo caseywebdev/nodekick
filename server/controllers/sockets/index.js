@@ -18,36 +18,17 @@ module.exports = function (app) {
 
   // send all user data
   app.wss.on('connection', function (ws) {
-    app.world.getScores(function (er, scores) {
-      if (er) throw er;
-      ws.send(wsMsg('step', app.world.toStep()));
-      ws.send(wsMsg('scores', scores));
-    });
+    ws.send(wsMsg('world', sendWorld));
   });
 
-  app.world.users.on('message', function (message) {
+  app.world.get('users').on('message', function (message) {
     broadcast('message', message);
   });
 
-  app.world.users.on('death', function (message) {
-    broadcast('death', message);
-  });
 
-  app.world.users.on('add', function (user) {
-    app.world.getScores(function (er, scores) {
-      if (er) throw er;
-      broadcast('scores', scores);
-    });
-  });
-  app.world.on('scores', function (scores) {
-    broadcast('scores', scores);
-  });
-
-  // send user frames
-  app.world.users.on(
-    'add remove change:state change:dir',
-    _.debounce(function () { broadcast('step', app.world.toStep()); })
-  );
+  var sendWorld = _.debounce(function () { broadcast('world', app.world); });
+  app.world.get('users').on('add remove change:state change:dir', sendWorld);
+  app.world.get('recentUsers').on('remove', sendWorld);
 
   process.on('SIGTERM', _.partial(_.invoke, clients, 'close'));
 };

@@ -20,7 +20,7 @@
     authRequired: false,
 
     connect: function (url) {
-      url = live.url = url || live.url || '';
+      url = live.url = url || live.url || 'ws://' + location.host;
       if (live.state) return;
       live.state = 1;
       return live.authRequired ? live.authorize() : live.createSocket();
