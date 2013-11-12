@@ -81,11 +81,12 @@ passport.deserializeUser(function (id, done) {
 app.world = new World();
 
 // controllers
-var files = fs.readdirSync(__dirname + '/controllers');
+var files = _.without(fs.readdirSync(__dirname + '/controllers'), 'errors');
 _.each(files, function (file) {
   if (file[0] === '.') return;
   require('./controllers/' + file)(app);
 });
+require('./controllers/errors')(app);
 
 // signal hooks
 process.on('SIGTERM', function () {
