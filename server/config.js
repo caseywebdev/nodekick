@@ -71,12 +71,12 @@ var defaults = {
 
 module.exports = _.extend(defaults, ({
   development: {
-    port: 8000,
-    url: 'http://nodekick.dev:8000',
+    port: 3005,
+    url: 'http://nodekick.com.dev',
     twitter: {
-      consumerKey: 'CKmeGkSx1X8j2KEtHZDGw',
-      consumerSecret: 'ExDAPkeVGHwQVp5bwKMdyUt9xQbnJ2IpjhhvAOV3p14',
-      callbackURL: 'http://nodekick.dev:8000/auth/twitter/callback'
+      consumerKey: 'tNvNfVCJCr6nMa5c4UP03w',
+      consumerSecret: '2aHTJ3yTPrUuio0Aw8kq7sq2okVAAwqb4pYFuJhE',
+      callbackURL: 'http://nodekick.com.dev/auth/twitter/callback'
     }
   },
   production: {
