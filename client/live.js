@@ -1,84 +1,94 @@
 (function () {
   'use strict';
 
-  var $ = window.jQuery;
   var _ = window._;
   var Backbone = window.Backbone;
+  var herit = window.herit;
 
-  var callbacks = {};
-  var queue = [];
-
-  // STATES
-  // 0 - disconnected
-  // 1 - connecting (optionally generating live key)
-  // 2 - connected and awaiting authorization
-  // 3 - connected and authorized
-
-  var live = window.live = _.extend(Backbone.Events, {
+  var Live = window.Live = herit(_.extend({
     reconnectWait: 1000,
 
-    authRequired: false,
+    fetchAuthKey: null,
 
-    connect: function (url) {
-      url = live.url = url || live.url || 'ws://' + location.host;
-      if (live.state) return;
-      live.state = 1;
-      return live.authRequired ? live.authorize() : live.createSocket();
+    socketConstructor: WebSocket,
+
+    url: 'ws://' + location.host,
+
+    constructor: function (options) {
+      _.extend(this, options);
+      this.callbacks = [];
+      this.queue = [];
+      this.state = Live.DISCONNECTED;
+    },
+
+    isDisconnected: function () { return this.state === Live.DISCONNECTED; },
+
+    isConnecting: function () { return this.state === Live.CONNECTING; },
+
+    isAuthorizing: function () { return this.state === Live.AUTHORIZING; },
+
+    isConnected: function () { return this.state === Live.CONNECTED; },
+
+    connect: function () {
+      if (!this.isDisconnected()) return;
+      this.state = Live.CONNECTING;
+      return this.authRequired ? this.authorize() : this.createSocket();
     },
 
     createSocket: function () {
-      var socket = live.socket = new WebSocket(live.url);
-      socket.onopen = live.onopen;
-      socket.onclose = live.onclose;
-      socket.onmessage = live.onmessage;
-      return live;
+      var socket = this.socket = new this.socketConstructor(this.url);
+      socket.onopen = _.bind(this.onopen, this);
+      socket.onclose = _.bind(this.onclose, this);
+      socket.onmessage = _.bind(this.onmessage, this);
+      return this;
     },
 
     authorize: function () {
-      live.state = 1;
-      $.ajax({
-        url: live.url,
-        success: function (liveKey) {
-          live.createSocket().send('authorize', liveKey, function (er) {
-            if (er) throw new Error(er);
-            live.state = 3;
-            live.flushQueue();
-          });
-        },
-        error: live.onclose
-      });
-      return live;
+      this.state = Live.AUTHORIZING;
+      this.fetchAuthKey(_.bind(function (er, authKey) {
+        if (er) {
+          this.onclose();
+          throw er;
+        }
+        this.createSocket().send('authorize', authKey, _.bind(function (er) {
+          if (er) throw er;
+          this.state = Live.CONNECTED;
+          this.flushQueue();
+        }, this));
+      }, this));
+      return this;
     },
 
     send: function (name, data, cb) {
-      if (!name) return live;
-      if (!live.state) live.connect();
-      if (live.state === 3 || (live.state === 2 && name === 'authorize')) {
+      if (!name) return this;
+      if (this.isDisconnected()) this.connect();
+      if (this.isConnected() ||
+          (this.isAuthorizing() && name === 'authorize')) {
         var id = _.uniqueId();
-        var req = {id: id, name: name, data: data};
-        callbacks[id] = cb;
-        live.socket.send(JSON.stringify(req));
+        this.callbacks[id] = cb;
+        this.socket.send(JSON.parse({id: id, name: name, data: data}));
       } else {
-        queue.push(arguments);
+        this.queue.push(arguments);
       }
-      return live;
+      return this;
     },
 
     flushQueue: function () {
-      var clone = queue.slice();
-      queue = [];
-      for (var args; args = clone.shift();) live.send.apply(live, args);
+      var clone = this.queue.slice();
+      this.queue = [];
+      for (var args; args = clone.shift();) this.send.apply(this, args);
     },
 
     onopen: function () {
-      live.state = live.authRequired ? 2 : 3;
-      live.flushQueue();
+      this.state = this.fetchAuthKey ? Live.AUTHORIZING : Live.CONNECTED;
+      this.flushQueue();
     },
 
     onclose: function () {
-      live.state = 0;
-      clearTimeout(live.reconnectTimeout);
-      live.reconnectTimeout = _.delay(live.connect, live.reconnectWait);
+      this.state = Live.DISCONNECTED;
+      clearTimeout(this.reconnectTimeout);
+      this.reconnectTimeout =
+        _.delay(_.bind(this.connect, this), this.reconnectWait);
     },
 
     onmessage: function (ev) {
@@ -86,12 +96,12 @@
       try { raw = JSON.parse(raw); } catch (er) { return; }
       var id = raw.id;
       if (!id) return;
-      var cb = callbacks[id];
-      delete callbacks[id];
+      var cb = this.callbacks[id];
+      delete this.callbacks[id];
       var name = raw.name;
       if (name) {
-        return live.trigger(name, raw.data, function (er, data) {
-          var socket = live.socket;
+        var socket = this.socket;
+        return this.trigger(name, raw.data, function (er, data) {
           if (socket.readyState !== 1) return;
           var res = {id: id};
           if (er) res.error = er.message || er;
@@ -99,7 +109,15 @@
           socket.send(JSON.stringify(res));
         });
       }
-      if (cb) cb(raw.error, raw.data);
+      if (cb) cb(raw.error && new Error(raw.error), raw.data);
     }
+  }, Backbone.Events), {
+    DISCONNECTED: 0,
+
+    CONNECTING: 1,
+
+    AUTHORIZING: 2,
+
+    CONNECTED: 3
   });
 })();

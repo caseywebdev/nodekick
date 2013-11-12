@@ -21,8 +21,8 @@
   'use strict';
 
   var $ = window.jQuery;
-  var live = window.live;
   var _ = window._;
+  var Live = window.Live;
   var PIXI = window.PIXI;
 
   $.ajaxSetup({
@@ -40,10 +40,12 @@
 
     spriteSheets: ['/images/sprite-sheet.json'],
 
+    live: new Live(),
+
     init: function () {
       app.world = new app.World();
       if (!app.config.mobile) {
-        live.connect()
+        app.live.connect()
           .on('world', app.world.set.bind(app.world))
           .on('message', app.onMessage);
       }
