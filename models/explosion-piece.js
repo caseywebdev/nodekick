@@ -39,11 +39,7 @@
       if (sprite.position.y < 0) return;
       var remainingTime = sprite.position.y / yv;
       yv = -((yv - (remainingTime * config.gravity)) * this.bounce);
-      this.set({
-        xv: xv * this.bounce,
-        yv: yv,
-        rv: rv * this.bounce
-      });
+      this.set({xv: xv * this.bounce, yv: yv, rv: rv * this.bounce});
       sprite.position.y = yv * remainingTime;
     }
   });
