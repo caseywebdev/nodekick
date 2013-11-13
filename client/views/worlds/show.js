@@ -15,7 +15,6 @@
     height: 1400,
 
     listeners: {
-      model: {step: 'step'},
       users: {add: 'onUserAdd', remove: 'onUserRemove'}
     },
 
@@ -50,17 +49,16 @@
       this.container.addChild(character.get('sprite'));
     },
 
-    step: function (dt) { this.explosions.invoke('step', dt); },
-
     onUserRemove: function (user) {
       var character = this.characters.findWhere({user: user});
       var sprite = character.get('sprite');
       this.characters.remove(character);
       this.container.removeChild(sprite);
-      this.explosions.add({
+      new app.Explosion({
         sprite: sprite,
         rows: 20,
         columns: 10,
+        world: this.model,
         container: this.container
       });
     }
