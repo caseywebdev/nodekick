@@ -47,8 +47,8 @@
             explosionPieceSprite,
             _.random(container.children.length)
           );
-        }, this);
-      }, this);
+        });
+      });
     },
 
     step: function (dt) {
