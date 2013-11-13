@@ -19,7 +19,7 @@
     },
 
     initialize: function () {
-      this.keysDown = [];
+      this.dirPressed = {};
       _.bindAll(
         this,
         'onTouchstart',

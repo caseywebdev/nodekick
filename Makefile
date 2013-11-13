@@ -17,7 +17,7 @@ server:
 	node server
 
 server-w:
-	$(WATCHY) -w models,server -W 0.25 -- node server
+	$(WATCHY) -w models,server -- node server
 
 cogs-w:
 	$(COGS) -w client,models

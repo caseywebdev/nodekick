@@ -1,4 +1,4 @@
-//= require ./user
+//= require ./model
 
 (function () {
   'use strict';
@@ -15,7 +15,7 @@
   var World = Model.extend({
     relations: {
       users: {hasMany: 'user'},
-      recentUsers: {hasMany: 'user'},
+      recentUsers: {hasMany: 'user'}
     },
 
     defaults: {
@@ -33,7 +33,7 @@
         },
         remove: function (user) {
           this.userTimeouts[user.id] = setTimeout(
-            recentUsers.remove.bind(recentUsers, user),
+            _.bind(recentUsers.remove, recentUsers, user),
             config.recentUserDuration
           );
         }
@@ -47,13 +47,12 @@
 
     step: function () {
       var now = Date.now();
-      var dt = ((now - this.get('lastStep')) / 1000) * this.get('timeScalar');
-      this.set('lastStep', now);
-      var users = this.get('users');
-      users.removeDeadPlayers(dt);
-      users.invoke('step', dt);
-      users.step();
-      this.trigger('step', users.invoke('toFrame'));
+      var dt = ((now - this.lastStep) / 1000) * this.get('timeScalar');
+      this.lastStep = now;
+      // users.removeDeadPlayers(dt);
+      this.get('users').invoke('step', dt);
+      // users.step();
+      this.trigger('step', dt);
     },
 
     start: function () {

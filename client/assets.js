@@ -23,7 +23,6 @@
       _.each(this.availableSprites, function (spriteName) {
         var sprite = this.sprites[spriteName] = new Image();
         sprite.addEventListener('load', function () {
-          // console.log('sprite loaded: ' + spriteName, sprite);
           // create inverted copy
           var invertedEl = sprite.inverted = document.getElementById(spriteName + '-invert');
           var c = invertedEl.getContext('2d');

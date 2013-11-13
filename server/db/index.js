@@ -3,7 +3,7 @@ var client = redis.createClient();
 var _ = require('underscore');
 var async = require('async');
 
-client.on('error', console.error.bind(console));
+client.on('error', _.bind(console.error, console));
 
 var usersKey = 'nodekick:users';
 var scoresKey = 'nodekick:scores';
@@ -23,10 +23,7 @@ module.exports = {
     });
   },
   registerKill: function (user, cb) {
-    client.zincrby(scoresKey, 1, user.id, function (er, score) {
-      console.log(user.get('username') + ' now has ' + score + ' kills');
-      if (cb) cb(er, score);
-    });
+    client.zincrby(scoresKey, 1, user.id, cb);
   },
   getScores: function (users, cb) {
     async.map(users, function (user, cb) {
@@ -53,4 +50,4 @@ module.exports = {
   }
 };
 
-process.on('SIGTERM', client.end.bind(client));
+process.on('SIGTERM', _.bind(client.end, client));

@@ -3,6 +3,7 @@ var config = require('./config');
 var express = require('express');
 var fs = require('fs');
 var _ = require('underscore')._;
+_.str = require('underscore.string');
 var World = require('../models/world');
 var User = require('../models/user');
 var ws = require('ws');

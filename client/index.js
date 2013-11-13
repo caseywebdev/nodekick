@@ -44,18 +44,18 @@
 
     init: function () {
       app.world = new app.World();
-      if (!app.config.mobile) {
-        app.live.connect()
-          .on('world', app.world.set.bind(app.world))
-          .on('message', app.onMessage);
-      }
       $(app.domReady);
       app.loadSpriteSheets(function () {
         $(function () {
           new app.MainView({el: 'body'});
-          new app.WorldView({model: app.world, el: '#world'});
+          new app.WorldsShowView({model: app.world, el: '#world'});
         });
       });
+      if (!app.config.mobile) {
+        app.live.connect()
+          .on('world', _.bind(app.world.set, app.world))
+          .on('message', app.onMessage);
+      }
     },
 
     loadSpriteSheets: function (cb) {
@@ -73,8 +73,8 @@
     domReady: function () {
       $('html').addClass(app.config.mobile ? 'js-mobile' : 'js-desktop');
       // new app.ScoresListView({collection: app.scores});
-      app.Drawer.init();
-      app.Assets.init();
+      // app.Drawer.init();
+      // app.Assets.init();
       app.setUpMoveAck();
     },
 

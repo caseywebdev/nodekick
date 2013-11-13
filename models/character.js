@@ -6,21 +6,23 @@
   var app = window.app;
 
   var _ = window._;
+  var Model = app.Model;
   var PIXI = window.PIXI;
 
-  app.Character = app.Model.extend({
+  var Character = app.Character = Model.extend({
     initialize: function () {
+      this.createSprite();
       this.listenTo(this.get('user'), {
         'change:character change:state': this.updateTexture,
         'change:x change:y': this.updatePosition,
         'change:dir': this.updateDirection
-      }).createSprite();
+      });
     },
 
     createSprite: function () {
       var sprite = new PIXI.Sprite(this.texture());
       sprite.anchor.x = 0.5;
-      sprite.anchor.y = 1;
+      sprite.anchor.y = 0.9;
       this.set('sprite', sprite);
       this.updatePosition();
       this.updateDirection();
@@ -44,5 +46,9 @@
     updateDirection: function () {
       this.get('sprite').scale.x = this.get('user').get('dir');
     }
+  });
+
+  Character.Collection = Model.Collection.extend({
+    model: Character
   });
 })();

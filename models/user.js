@@ -38,6 +38,7 @@
         y: -600,
         xv: 0,
         yv: 5,
+        character: 'dive',
         dir: direction,
         state: 'jumping',
         deathCooldown: 1,
