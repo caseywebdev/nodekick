@@ -54,13 +54,15 @@
     step: function (dt) {
       var container = this.get('container');
       var explosionPieces = this.get('explosionPieces');
-      this.get('explosionPieces').each(function (explosionPiece) {
+      var toRemove = [];
+      explosionPieces.each(function (explosionPiece) {
         explosionPiece.step(dt);
         var sprite = explosionPiece.get('sprite');
         if (sprite.alpha > 0) return;
         container.removeChild(sprite);
-        explosionPieces.remove(explosionPiece);
+        toRemove.push(explosionPiece);
       });
+      explosionPieces.remove(toRemove);
       if (!explosionPieces.length) this.stopListening();
     }
   });
