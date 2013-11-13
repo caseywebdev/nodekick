@@ -23,7 +23,7 @@
     initialize: function () {
       var sprite = this.get('sprite');
       sprite.anchor.x = sprite.anchor.y = 0.5;
-      this.set('rv', (this.get('xv') > 0 ? -1 : 1) * this.get('rv'));
+      this.set('rv', (this.get('xv') < 0 ? -1 : 1) * this.get('rv'));
     },
 
     step: function (dt) {
