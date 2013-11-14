@@ -20,7 +20,7 @@
       var x = _.random(-100, 100);
       return {
         x: x,
-        y: -600,
+        y: 600,
         xv: 0,
         yv: 5,
         character: 'dive',
@@ -36,7 +36,7 @@
 
     step: function (dt) {
       if (this.isJumping()) {
-        var yv = this.get('yv') + config.gravity * dt;
+        var yv = this.get('yv') - config.gravity * dt;
         this.set({y: this.get('y') + yv * dt, yv: yv});
       } else if (this.isKicking()) {
         this.set({
@@ -44,7 +44,7 @@
           y: this.get('y') + this.get('yv') * dt
         });
       }
-      if (this.get('y') < 0) return;
+      if (this.get('y') > 0) return;
       this.set({y: 0, yv: 0, xv: 0, state: 'standing', touchedGround: true});
     },
 
@@ -58,12 +58,12 @@
       this.set({
         state: 'kicking',
         xv: dir * config.kickPower,
-        yv: config.kickPower
+        yv: -config.kickPower
       });
     },
 
     moveUp: function () {
-      if (this.canJump()) this.set({state: 'jumping', yv: -config.jumpPower});
+      if (this.canJump()) this.set({state: 'jumping', yv: config.jumpPower});
     },
 
     isStanding: function () { return this.get('state') === 'standing'; },

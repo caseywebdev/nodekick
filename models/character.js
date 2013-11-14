@@ -5,7 +5,6 @@
 
   var app = window.app;
 
-  var _ = window._;
   var Model = app.Model;
   var PIXI = window.PIXI;
 
@@ -40,7 +39,10 @@
     },
 
     updatePosition: function () {
-      _.extend(this.get('sprite').position, this.get('user').pick('x', 'y'));
+      var sprite = this.get('sprite');
+      var user = this.get('user');
+      sprite.position.x = user.get('x');
+      sprite.position.y = -user.get('y');
     },
 
     updateDirection: function () {

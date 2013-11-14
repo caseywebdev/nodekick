@@ -13,7 +13,7 @@
     "backbone": "x",
     "backbone-relations": "x",
     "bower": "x",
-    "box2d": "x",
+    "box2d.js": "x",
     "cogs": "x",
     "csso": "x",
     "express": "x",
