@@ -17,19 +17,15 @@ module.exports = function (app) {
   };
 
   // send all user data
-  app.wss.on('connection', function (ws) {
-    ws.send(wsMsg('world', sendWorld));
-  });
 
   app.world.get('users').on('message', function (message) {
     broadcast('message', message);
   });
 
-
   var sendWorld = _.debounce(function () { broadcast('world', app.world); });
+  app.wss.on('connection', sendWorld);
   app.world.get('users').on('add remove change:state change:dir', sendWorld);
   app.world.get('recentUsers').on('remove', sendWorld);
 
   process.on('SIGTERM', _.partial(_.invoke, clients, 'close'));
 };
-

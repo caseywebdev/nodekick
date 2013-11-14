@@ -1,14 +1,9 @@
-var _ = require('underscore');
-var Move = require('../../../models/move');
+var movesCreate = require('../../../interactions/moves/create');
 
 module.exports = function (req, res, next) {
-  var move = new Move(_.pick(req.body, 'type'));
-  if (!move.isValid()) return next(400);
-  var users = req.app.world.get('users');
-  if (!users.get(req.user)) {
-    if (move.get('type') !== 'up') return next(403);
-    users.add(req.user);
-  }
-  req.user.applyMove(move);
-  res.send(move);
+  movesCreate.run({
+    type: req.body.type,
+    user: req.user,
+    world: req.app.world
+  }, function (er, val) { er ? next(er) : res.send(val); });
 };

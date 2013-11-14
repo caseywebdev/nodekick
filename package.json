@@ -18,6 +18,7 @@
     "express": "x",
     "express-namespace": "x",
     "herit": "x",
+    "interaction": "x",
     "nib": "x",
     "passport": "x",
     "passport-twitter": "x",

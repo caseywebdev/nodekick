@@ -10,9 +10,9 @@ var defaults = {
       maxAge: 1000 * 60 * 60 * 24 * 365 * 10
     }
   },
-  gravity: 3000,
-  jumpPower: 1500,
-  kickPower: 700,
+  gravity: 7000,
+  jumpPower: 3000,
+  kickPower: 1500,
   recentKillDuration: 3000,
   fps: 60,
   boxes: {

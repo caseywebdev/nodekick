@@ -49,9 +49,7 @@
       var now = Date.now();
       var dt = ((now - this.lastStep) / 1000) * this.get('timeScalar');
       this.lastStep = now;
-      // users.removeDeadPlayers(dt);
       this.get('users').invoke('step', dt);
-      // users.step();
       this.trigger('step', dt);
     },
 

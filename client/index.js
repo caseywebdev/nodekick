@@ -13,8 +13,6 @@
 //= requireTree views
 //= requireTree templates
 //= require scoreboard
-//= require drawer
-//= require assets
 //= require sounds
 
 (function () {
@@ -40,7 +38,11 @@
 
     spriteSheets: ['/images/sprite-sheet.json'],
 
-    live: new Live(),
+    live: new Live({
+      // fetchAuthKey: function (cb) {
+      //   $.ajax({url: '/auth/live', success: _.partial(cb, null), error: cb});
+      // }
+    }),
 
     init: function () {
       app.world = new app.World();
@@ -53,7 +55,10 @@
       });
       if (!app.config.mobile) {
         app.live.connect()
-          .on('world', _.bind(app.world.set, app.world))
+          .on('world', function (world) {
+            app.world.set(world);
+            app.world.start();
+          })
           .on('message', app.onMessage);
       }
     },
@@ -73,23 +78,13 @@
     domReady: function () {
       $('html').addClass(app.config.mobile ? 'js-mobile' : 'js-desktop');
       // new app.ScoresListView({collection: app.scores});
-      // app.Drawer.init();
-      // app.Assets.init();
       app.setUpMoveAck();
     },
 
     setUpMoveAck: function () {
       if (!app.currentUserId) return;
-      var available = app.Assets.availableSprites;
-      var name = available[app.currentUserId % available.length];
-      var url = '/images/' + name + '-sprite.png';
+      var url = '/images/sprite-sheet.png';
       $('.js-move-ack').css('backgroundImage', "url('" + url + "')");
-    },
-
-    draw: function () {
-      if (!app.Drawer.canvas || !app.Assets.isLoaded()) return;
-      app.Drawer.drawBackground();
-      app.Drawer.drawUsers(app.world.get('users'), app.currentUserId);
     },
 
     messageQueue: [],
