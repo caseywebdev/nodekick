@@ -55,13 +55,15 @@
       var sprite = character.get('sprite');
       this.characters.remove(character);
       this.container.removeChild(sprite);
+      var killForce = user.get('killForce');
       new app.Explosion({
         sprite: sprite,
         rows: 20,
         columns: 10,
         world: this.model,
         container: this.container,
-        force: user.get('killForce')
+        xv: killForce && killForce.xv,
+        yv: killForce && -killForce.yv
       });
     }
   });

@@ -28,7 +28,8 @@
       var pieceHeight = sprite.height / rows;
       var texturePieceWidth = texture.frame.width / columns;
       var texturePieceHeight = texture.frame.height / rows;
-      var killForce = this.get('killForce');
+      var xv = this.get('xv');
+      var yv = this.get('yv');
       return _.times(rows, function (y) {
         return _.times(columns, function (x) {
           var explosionPieceTexture = new PIXI.Texture(texture.baseTexture, {
@@ -40,9 +41,11 @@
           var explosionPieceSprite = new PIXI.Sprite(explosionPieceTexture);
           explosionPieceSprite.position.x = offsetX + ((x + 0.5) * pieceWidth);
           explosionPieceSprite.position.y = offsetY + ((y + 0.5) * pieceHeight);
-          var explosionPiece = new app.ExplosionPiece(_.extend({
-            sprite: explosionPieceSprite
-          }, killForce));
+          var explosionPiece = new app.ExplosionPiece({
+            sprite: explosionPieceSprite,
+            xv: xv,
+            yv: yv
+          });
           explosionPieces.add(explosionPiece);
           container.addChildAt(
             explosionPieceSprite,
