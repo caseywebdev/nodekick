@@ -78,6 +78,13 @@
       }, this.attributes);
     },
 
+    kill: function (userA, userB, isHeadshot) {
+      userA.incr('kills');
+      if (isHeadshot) userA.incr('headshots');
+      userB.incr('deaths');
+      userB.set({isDead: true, killForce: userA.pick('xv', 'yv')});
+    },
+
     checkCollisions: function () {
       if (!node) return;
       this.b2World.Step();
@@ -103,22 +110,12 @@
         var fixtureB = contact.GetFixtureB();
         var userA = fixtureA.GetBody().user;
         var userB = fixtureB.GetBody().user;
-        var aIsAFoot = !!(fixtureA.GetFilterData().get_categoryBits() & 4);
-        var aIsAHead = !!(fixtureA.GetFilterData().get_categoryBits() & 2);
-        var bIsAFoot = !!(fixtureB.GetFilterData().get_categoryBits() & 4);
-        var bIsAHead = !!(fixtureB.GetFilterData().get_categoryBits() & 2);
-        if (aIsAFoot && !userB.get('isDead')) {
-          userA.incr('kills');
-          if (bIsAHead) userA.incr('headshots');
-          userB.incr('deaths');
-          userB.set({isDead: true, killForce: userA.pick('xv', 'yv')});
-        }
-        if (bIsAFoot && !userA.get('isDead')) {
-          userB.incr('kills');
-          if (aIsAHead) userB.incr('headshots');
-          userA.incr('deaths');
-          userA.set({isDead: true, killForce: userB.pick('xv', 'yv')});
-        }
+        var aIsFoot = !!(fixtureA.GetFilterData().get_categoryBits() & 4);
+        var aIsHead = !!(fixtureA.GetFilterData().get_categoryBits() & 2);
+        var bIsFoot = !!(fixtureB.GetFilterData().get_categoryBits() & 4);
+        var bIsHead = !!(fixtureB.GetFilterData().get_categoryBits() & 2);
+        if (aIsFoot && !userB.get('isDead')) this.kill(userA, userB, bIsHead);
+        if (bIsFoot && !userA.get('isDead')) this.kill(userB, userA, aIsHead);
       });
     }
   });
