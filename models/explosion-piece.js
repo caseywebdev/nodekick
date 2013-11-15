@@ -13,8 +13,8 @@
 
     defaults: function () {
       return {
-        xv: -(config.kickPower - (Math.random() * config.kickPower)),
-        yv: config.kickPower - (Math.random() * config.kickPower),
+        xv: 1000 - (Math.random() * 2000),
+        yv: 1000 - (Math.random() * 2000),
         rv: Math.random() * Math.PI * 20,
         av: 0.25 + (Math.random() * 0.25)
       };
@@ -23,6 +23,8 @@
     initialize: function () {
       var sprite = this.get('sprite');
       sprite.anchor.x = sprite.anchor.y = 0.5;
+      this.set('xv', this.get('xv') + 200 - (Math.random() * 400));
+      this.set('yv', this.get('yv') + 200 - (Math.random() * 400));
       this.set('rv', (this.get('xv') < 0 ? -1 : 1) * this.get('rv'));
     },
 

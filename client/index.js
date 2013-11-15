@@ -55,10 +55,7 @@
       });
       if (!app.config.mobile) {
         app.live.connect()
-          .on('world', function (world) {
-            app.world.set(world);
-            app.world.start();
-          })
+          .on('world', _.bind(app.world.set, app.world))
           .on('message', app.onMessage);
       }
     },

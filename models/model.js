@@ -23,6 +23,11 @@
         if (er) ers[key] = er;
       }
       if (_.size(ers)) return ers;
+    },
+
+    incr: function (attr, n) {
+      if (!n) n = 1;
+      this.set(attr, this.get(attr) + n);
     }
   }, {
     relations: function () {

@@ -15,7 +15,7 @@
     height: 1400,
 
     listeners: {
-      users: {add: 'onUserAdd', remove: 'onUserRemove'}
+      users: {add: 'addCharacter', 'remove change:isDead': 'removeCharacter'}
     },
 
     initialize: function () {
@@ -43,14 +43,15 @@
       requestAnimFrame(this.render);
     },
 
-    onUserAdd: function (user) {
+    addCharacter: function (user) {
       var character = new app.Character({user: user});
       this.characters.add(character);
       this.container.addChild(character.get('sprite'));
     },
 
-    onUserRemove: function (user) {
+    removeCharacter: function (user) {
       var character = this.characters.findWhere({user: user});
+      if (!character) return;
       var sprite = character.get('sprite');
       this.characters.remove(character);
       this.container.removeChild(sprite);
@@ -59,7 +60,8 @@
         rows: 20,
         columns: 10,
         world: this.model,
-        container: this.container
+        container: this.container,
+        force: user.get('killForce')
       });
     }
   });

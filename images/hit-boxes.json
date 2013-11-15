@@ -5,17 +5,12 @@
 				{
 					"density": 0, "friction": 0, "bounce": 0, 
 					"filter": { "categoryBits": 3, "maskBits": 4 },
-					"shape": [   462, 250  ,  540, 182  ,  691, 244  ,  710, 360  ,  657, 469  ,  586, 509  ,  444, 414  ]
+					"shape": [   462, 250  ,  540, 182  ,  710, 360  ,  657, 469  ,  586, 509  ,  444, 414  ]
 				}  ,
 				{
 					"density": 0, "friction": 0, "bounce": 0, 
 					"filter": { "categoryBits": 3, "maskBits": 4 },
-					"shape": [   710, 360  ,  691, 244  ,  767, 370  ,  798, 447  ]
-				}  ,
-				{
-					"density": 0, "friction": 0, "bounce": 0, 
-					"filter": { "categoryBits": 3, "maskBits": 4 },
-					"shape": [   767, 370  ,  691, 244  ,  803, 390  ]
+					"shape": [   710, 360  ,  540, 182  ,  691, 244  ]
 				}   ,
 				{
 					"density": 0, "friction": 0, "bounce": 0, 
@@ -115,17 +110,12 @@
 				{
 					"density": 0, "friction": 0, "bounce": 0, 
 					"filter": { "categoryBits": 3, "maskBits": 4 },
-					"shape": [   658, 572  ,  625, 628  ,  386, 533  ,  393, 446  ,  441, 383  ,  626, 415  ]
+					"shape": [   658, 571  ,  625, 627  ,  386, 532  ,  393, 445  ,  441, 382  ,  626, 414  ]
 				}  ,
 				{
 					"density": 0, "friction": 0, "bounce": 0, 
 					"filter": { "categoryBits": 3, "maskBits": 4 },
-					"shape": [   625, 628  ,  658, 572  ,  768, 628  ]
-				}  ,
-				{
-					"density": 0, "friction": 0, "bounce": 0, 
-					"filter": { "categoryBits": 3, "maskBits": 4 },
-					"shape": [   491, 712  ,  386, 533  ,  625, 628  ,  580, 694  ]
+					"shape": [   491, 711  ,  386, 532  ,  625, 627  ,  580, 693  ]
 				}   ,
 				{
 					"density": 0, "friction": 0, "bounce": 0, 
@@ -190,12 +180,7 @@
 				{
 					"density": 0, "friction": 0, "bounce": 0, 
 					"filter": { "categoryBits": 3, "maskBits": 4 },
-					"shape": [   403, 172  ,  502, 136  ,  569, 182  ,  616, 318  ,  593, 406  ,  515, 465  ,  340, 371  ]
-				}  ,
-				{
-					"density": 0, "friction": 0, "bounce": 0, 
-					"filter": { "categoryBits": 3, "maskBits": 4 },
-					"shape": [   616, 318  ,  569, 182  ,  682, 397  ]
+					"shape": [   403, 172  ,  502, 136  ,  569, 182  ,  616, 318  ,  593, 412  ,  516, 471  ,  340, 377  ]
 				}  
 		]
 		
