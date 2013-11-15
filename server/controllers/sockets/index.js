@@ -2,6 +2,7 @@
 
 var _ = require('underscore');
 var ws = require('ws');
+var config = require('../../config');
 
 var OPEN = ws.OPEN;
 
@@ -24,6 +25,7 @@ module.exports = function (app) {
 
   var sendWorld = _.debounce(function () { broadcast('world', app.world); });
   app.wss.on('connection', sendWorld);
+  setInterval(sendWorld, config.mps);
   app.world.get('users').on('add remove change:state change:dir', sendWorld);
   app.world.get('recentUsers').on('remove', sendWorld);
 

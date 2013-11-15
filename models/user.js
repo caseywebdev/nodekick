@@ -17,7 +17,7 @@
       this.triggerMulti = _.debounce(this.triggerMulti, config.multiTime);
       if (!node) return;
       this.on({
-        'change:state change:dir': this.updateBodyFixtures,
+        'change:state change:dir': this.createBody,
         'change:x change:y': this.updateBodyPosition
       });
     },
@@ -86,22 +86,13 @@
 
     isKicking: function () { return this.get('state') === 'kicking'; },
 
-    createBody: function (world) {
+    createBody: function () {
+      if (this.body) this.world.DestroyBody(this.body);
       var bodyDef = new Box2D.b2BodyDef();
       bodyDef.set_type(Box2D.b2_dynamicBody);
-      this.body = world.CreateBody(bodyDef);
-      this.body.user = this;
-      this.updateBodyFixtures();
+      var body = this.body = this.world.CreateBody(bodyDef);
+      body.user = this;
       this.updateBodyPosition();
-    },
-
-    updateBodyFixtures: function () {
-      var body = this.body;
-      var fixture = body.GetFixtureList();
-      while (fixture.a) {
-        body.DestroyFixture(fixture);
-        fixture = fixture.GetNext();
-      }
       var dir = this.get('dir');
       var hitBoxScalar = config.hitBoxScalar;
       _.each(config.hitBoxes[this.get('state')], function (def) {

@@ -29,6 +29,7 @@ var defaults = {
   recentUserDuration: 1000 * 60 * 5,
   deathDuration: 1000,
   fps: 60,
+  mps: 15,
   hitBoxes: require('../images/hit-boxes'),
   hitBoxScalar: 0.2
 };

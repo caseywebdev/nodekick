@@ -35,7 +35,8 @@
         add: function (user) {
           clearTimeout(this.userTimeouts[user.id]);
           this.get('recentUsers').add(user);
-          user.createBody(this.b2World);
+          user.world = this.b2World;
+          user.createBody();
         },
         remove: function (user) {
           this.userTimeouts[user.id] = _.delay(
@@ -116,7 +117,7 @@
         var bIsHead = !!(fixtureB.GetFilterData().get_categoryBits() & 2);
         if (aIsFoot && !userB.get('isDead')) this.kill(userA, userB, bIsHead);
         if (bIsFoot && !userA.get('isDead')) this.kill(userB, userA, aIsHead);
-      });
+      }, this);
     }
   });
 
