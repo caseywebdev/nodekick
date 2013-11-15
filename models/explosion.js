@@ -22,8 +22,12 @@
       var columns = this.get('columns');
       var explosionPieces = this.get('explosionPieces');
       var container = this.get('container');
-      var offsetX = sprite.position.x - (sprite.anchor.x * sprite.width);
-      var offsetY = sprite.position.y - (sprite.anchor.y * sprite.height);
+      var scaleX = sprite.scale.x;
+      var scaleY = sprite.scale.y;
+      var offsetX =
+        sprite.position.x - (sprite.anchor.x * (sprite.width / scaleX));
+      var offsetY =
+        sprite.position.y - (sprite.anchor.y * (sprite.height / scaleY));
       var pieceWidth = sprite.width / columns;
       var pieceHeight = sprite.height / rows;
       var texturePieceWidth = texture.frame.width / columns;
@@ -39,8 +43,12 @@
             height: texturePieceHeight
           });
           var explosionPieceSprite = new PIXI.Sprite(explosionPieceTexture);
-          explosionPieceSprite.position.x = offsetX + ((x + 0.5) * pieceWidth);
-          explosionPieceSprite.position.y = offsetY + ((y + 0.5) * pieceHeight);
+          explosionPieceSprite.scale.x = scaleX;
+          explosionPieceSprite.scale.y = scaleY;
+          explosionPieceSprite.position.x =
+            offsetX + ((x + 0.5) * scaleX * pieceWidth);
+          explosionPieceSprite.position.y =
+            offsetY + ((y + 0.5) * scaleY * pieceHeight);
           var explosionPiece = new app.ExplosionPiece({
             sprite: explosionPieceSprite,
             xv: xv,
