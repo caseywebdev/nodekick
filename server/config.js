@@ -28,10 +28,11 @@ var defaults = {
   recentKillDuration: 1000 * 3,
   recentUserDuration: 1000 * 60 * 5,
   deathDuration: 1000,
+  bulletTimeDuration: 1500,
   fps: 60,
   mps: 15,
   hitBoxes: require('../images/hit-boxes'),
-  hitBoxScalar: 0.2
+  hitBoxScalar: 0.2,
 };
 
 module.exports = _.extend(defaults, ({

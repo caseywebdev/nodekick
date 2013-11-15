@@ -23,8 +23,8 @@
     initialize: function () {
       var sprite = this.get('sprite');
       sprite.anchor.x = sprite.anchor.y = 0.5;
-      this.set('xv', this.get('xv') + 200 - (Math.random() * 400));
-      this.set('yv', this.get('yv') + 200 - (Math.random() * 400));
+      this.set('xv', this.get('xv') + 500 - (Math.random() * 1000));
+      this.set('yv', this.get('yv') + 500 - (Math.random() * 1000));
       this.set('rv', (this.get('xv') < 0 ? -1 : 1) * this.get('rv'));
     },
 

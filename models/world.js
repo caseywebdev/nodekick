@@ -84,6 +84,12 @@
       if (isHeadshot) userA.incr('headshots');
       userB.incr('deaths');
       userB.set({isDead: true, killForce: userA.pick('xv', 'yv')});
+
+      // Bullet time is badass but can be really annoying when there are other
+      // players around. Let's only trigger bullet time when there is one living
+      // player (or none like when players kill each other).
+      if (this.get('users').where({isDead: false}).length > 1) return;
+      this.bulletTime();
     },
 
     checkCollisions: function () {
@@ -118,6 +124,15 @@
         if (aIsFoot && !userB.get('isDead')) this.kill(userA, userB, bIsHead);
         if (bIsFoot && !userA.get('isDead')) this.kill(userB, userA, aIsHead);
       }, this);
+    },
+
+    bulletTime: function () {
+      clearTimeout(this.bulletTimeTimeoutId);
+      this.set('timeScalar', 0.01);
+      this.bulletTimeTimeoutId = _.delay(
+        _.bind(this.set, this, 'timeScalar', 1),
+        config.bulletTimeDuration
+      );
     }
   });
 
