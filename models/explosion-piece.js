@@ -15,8 +15,8 @@
       return {
         xv: 1000 - (Math.random() * 2000),
         yv: 1000 - (Math.random() * 2000),
-        rv: Math.random() * Math.PI * 20,
-        av: 0.25 + (Math.random() * 0.25)
+        rv: Math.random() * Math.PI * 10,
+        fv: 0.25 + (Math.random() * 0.25)
       };
     },
 
@@ -25,7 +25,7 @@
       sprite.anchor.x = sprite.anchor.y = 0.5;
       this.set('xv', this.get('xv') + 1000 - (Math.random() * 2000));
       this.set('yv', this.get('yv') + 1000 - (Math.random() * 2000));
-      this.set('rv', (this.get('xv') < 0 ? -1 : 1) * this.get('rv'));
+      this.set('av', (this.get('xv') < 0 ? -1 : 1) * this.get('rv'));
     },
 
     step: function (dt) {
@@ -33,15 +33,15 @@
       var xv = this.get('xv');
       var yv = this.get('yv') + config.gravity * dt;
       this.set('yv', yv);
-      var rv = this.get('rv');
+      var av = this.get('av');
       sprite.position.x += xv * dt;
       sprite.position.y += yv * dt;
-      sprite.rotation += rv * dt;
-      sprite.alpha -= this.get('av') * dt;
+      sprite.rotation += av * dt;
+      sprite.alpha -= this.get('fv') * dt;
       if (sprite.position.y < 0) return;
       var remainingTime = sprite.position.y / yv;
       yv = -((yv - (remainingTime * config.gravity)) * this.bounce);
-      this.set({xv: xv * this.bounce, yv: yv, rv: rv * this.bounce});
+      this.set({xv: xv * this.bounce, yv: yv, av: av * this.bounce});
       sprite.position.y = yv * remainingTime;
     }
   });
