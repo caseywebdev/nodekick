@@ -24,6 +24,8 @@
       this.characters = new app.Character.Collection();
       this.explosions = new app.Explosion.Collection();
       this.container = new PIXI.DisplayObjectContainer();
+      this.container.addChild(this.layer1 = new PIXI.DisplayObjectContainer());
+      this.container.addChild(this.layer2 = new PIXI.DisplayObjectContainer());
       this.container.position.x = this.width / 2;
       this.container.position.y = this.height / 2;
       this.stage.addChild(this.container);
@@ -33,7 +35,7 @@
       line.lineStyle(2, 0xFF0000);
       line.moveTo(-600, 0);
       line.lineTo(600, 0);
-      this.container.addChild(line);
+      this.layer1.addChild(line);
       _.bindAll(this, 'render');
       this.render();
     },
@@ -46,7 +48,7 @@
     addCharacter: function (user) {
       var character = new app.Character({user: user});
       this.characters.add(character);
-      this.container.addChild(character.get('sprite'));
+      this.layer2.addChild(character.get('sprite'));
     },
 
     removeCharacter: function (user) {
@@ -54,14 +56,14 @@
       if (!character) return;
       var sprite = character.get('sprite');
       this.characters.remove(character);
-      this.container.removeChild(sprite);
+      this.layer2.removeChild(sprite);
       var killForce = user.get('killForce');
       new app.Explosion({
         sprite: sprite,
         rows: 20,
         columns: 10,
         world: this.model,
-        container: this.container,
+        container: this.layer2,
         xv: killForce && killForce.xv,
         yv: killForce && -killForce.yv
       });

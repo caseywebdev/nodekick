@@ -89,6 +89,9 @@
     createBody: function () {
       if (this.body) this.world.DestroyBody(this.body);
       var bodyDef = new Box2D.b2BodyDef();
+      var vector = bodyDef.get_position();
+      vector.set_x(-100);
+      bodyDef.set_position(vector);
       bodyDef.set_type(Box2D.b2_dynamicBody);
       var body = this.body = this.world.CreateBody(bodyDef);
       body.user = this;
@@ -103,7 +106,7 @@
         filter.set_maskBits(def.filter.maskBits);
         var vectors = [];
         for (var i = 0, l = def.shape.length; i < l; i += 2) {
-          var x = (dir === -1 ? 200 : 0) + (dir * def.shape[i] * hitBoxScalar);
+          var x = ((dir === -1 ? 1000 : 0) + dir * def.shape[i]) * hitBoxScalar;
           var y = (2000 - def.shape[i + 1]) * hitBoxScalar;
           vectors.push(new Box2D.b2Vec2(x, y));
         }
@@ -111,6 +114,7 @@
         fixtureDef.set_shape(Box2D.createPolygonShape(vectors));
         body.CreateFixture(fixtureDef);
       });
+      this.updateBodyPosition();
     },
 
     updateBodyPosition: function () {

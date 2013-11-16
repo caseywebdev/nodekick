@@ -24,10 +24,8 @@
       var container = this.get('container');
       var scaleX = sprite.scale.x;
       var scaleY = sprite.scale.y;
-      var offsetX =
-        sprite.position.x - (sprite.anchor.x * (sprite.width / scaleX));
-      var offsetY =
-        sprite.position.y - (sprite.anchor.y * (sprite.height / scaleY));
+      var offsetX = sprite.position.x - (sprite.anchor.x * sprite.width);
+      var offsetY = sprite.position.y - (sprite.anchor.y * sprite.height);
       var pieceWidth = sprite.width / columns;
       var pieceHeight = sprite.height / rows;
       var texturePieceWidth = texture.frame.width / columns;
@@ -46,9 +44,9 @@
           explosionPieceSprite.scale.x = scaleX;
           explosionPieceSprite.scale.y = scaleY;
           explosionPieceSprite.position.x =
-            offsetX + ((x + 0.5) * scaleX * pieceWidth);
+            offsetX + ((x + 0.5) * pieceWidth);
           explosionPieceSprite.position.y =
-            offsetY + ((y + 0.5) * scaleY * pieceHeight);
+            offsetY + ((y + 0.5) * pieceHeight);
           var explosionPiece = new app.ExplosionPiece({
             sprite: explosionPieceSprite,
             xv: xv,
