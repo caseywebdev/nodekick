@@ -8,6 +8,7 @@ global-reset()
 html
 body
   height 100%
+  width 100%
 
 img
 canvas
@@ -29,7 +30,14 @@ a
     text-decoration underline
 
 #world
+  display flex
+  align-items center
   transform scale(0.5) translate(-50%, -50%)
+  width 200%
+  height 200%
+  canvas
+    flex auto
+    width 200%
 
 .js-mobile .keys
   top 200px

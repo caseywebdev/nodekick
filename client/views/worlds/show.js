@@ -10,9 +10,9 @@
   var requestAnimFrame = window.requestAnimFrame;
 
   app.WorldsShowView = app.View.extend({
-    width: 2560,
+    width: 2880,
 
-    height: 1400,
+    height: 1620,
 
     listeners: {
       users: {add: 'addCharacter', 'remove change:isDead': 'removeCharacter'}
