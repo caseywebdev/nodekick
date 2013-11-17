@@ -19,15 +19,15 @@ module.exports = function (app) {
 
   // send all user data
 
-  app.world.get('users').on('message', function (message) {
+  app.game.get('users').on('message', function (message) {
     broadcast('message', message);
   });
 
-  var sendWorld = _.debounce(function () { broadcast('world', app.world); });
-  app.wss.on('connection', sendWorld);
-  setInterval(sendWorld, config.mps);
-  app.world.get('users').on('add remove change:state change:dir', sendWorld);
-  app.world.get('recentUsers').on('remove', sendWorld);
+  var sendGame = _.debounce(function () { broadcast('game', app.game); });
+  app.wss.on('connection', sendGame);
+  setInterval(sendGame, config.mps);
+  app.game.get('users').on('add remove change:state change:dir', sendGame);
+  app.game.get('recentUsers').on('remove', sendGame);
 
   process.on('SIGTERM', _.partial(_.invoke, clients, 'close'));
 };

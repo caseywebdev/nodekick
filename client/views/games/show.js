@@ -9,7 +9,7 @@
   var PIXI = window.PIXI;
   var requestAnimFrame = window.requestAnimFrame;
 
-  app.WorldsShowView = app.View.extend({
+  app.GamesShowView = app.View.extend({
     width: 2880,
 
     height: 1620,
@@ -62,7 +62,7 @@
         sprite: sprite,
         rows: 20,
         columns: 10,
-        world: this.model,
+        game: this.model,
         container: this.layer2,
         xv: killForce && killForce.xv,
         yv: killForce && -killForce.yv

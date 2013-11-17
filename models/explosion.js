@@ -15,7 +15,7 @@
     },
 
     initialize: function () {
-      this.listenTo(this.get('world'), 'step', this.step);
+      this.listenTo(this.get('game'), 'step', this.step);
       var sprite = this.get('sprite');
       var texture = sprite.texture;
       var rows = this.get('rows');

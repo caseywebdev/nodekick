@@ -13,7 +13,7 @@
   var Model = node ? require('./model') : app.Model;
   var Box2D = node ? require('box2d.js').Box2D : null;
 
-  var World = Model.extend({
+  var Game = Model.extend({
     relations: {
       users: {hasMany: 'user'},
       recentUsers: {hasMany: 'user'}
@@ -27,7 +27,7 @@
       _.bindAll(this, 'step');
       this.start();
       if (!node) return;
-      this.b2World = new Box2D.b2World(new Box2D.b2Vec2(0, 0));
+      this.world = new Box2D.b2World(new Box2D.b2Vec2(0, 0));
       this.userTimeouts = [];
       var users = this.get('users');
       var recentUsers = this.get('recentUsers');
@@ -35,7 +35,7 @@
         add: function (user) {
           clearTimeout(this.userTimeouts[user.id]);
           this.get('recentUsers').add(user);
-          user.world = this.b2World;
+          user.world = this.world;
           user.createBody();
         },
         remove: function (user) {
@@ -43,7 +43,7 @@
             _.bind(recentUsers.remove, recentUsers, user),
             config.recentUserDuration
           );
-          this.b2World.DestroyBody(user.body);
+          this.world.DestroyBody(user.body);
         },
         'change:isDead': function (user) {
           _.delay(_.bind(users.remove, users, user), config.deathDuration);
@@ -94,8 +94,8 @@
 
     checkCollisions: function () {
       if (!node) return;
-      this.b2World.Step();
-      var contact = this.b2World.GetContactList();
+      this.world.Step();
+      var contact = this.world.GetContactList();
       var contacts = [];
       while (contact.a) {
         if (contact.IsTouching()) contacts.push(contact);
@@ -136,9 +136,9 @@
     }
   });
 
-  World.Collection = Model.Collection.extend({
-    model: World
+  Game.Collection = Model.Collection.extend({
+    model: Game
   });
 
-  node ? module.exports = World : app.World = World;
+  node ? module.exports = Game : app.Game = Game;
 })();

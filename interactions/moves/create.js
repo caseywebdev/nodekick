@@ -6,7 +6,7 @@ module.exports = new Interaction({
   run: function (options, cb) {
     var move = new Move(_.pick(options, 'type'));
     if (!move.isValid()) return cb(400);
-    var users = options.world.get('users');
+    var users = options.game.get('users');
     if (!users.get(options.user)) {
       if (move.get('type') !== 'up') return cb(403);
       users.add(options.user);

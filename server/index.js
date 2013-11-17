@@ -4,7 +4,7 @@ var express = require('express');
 var fs = require('fs');
 var _ = require('underscore')._;
 _.str = require('underscore.string');
-var World = require('../models/world');
+var Game = require('../models/game');
 var User = require('../models/user');
 var ws = require('ws');
 var passport = require('passport');
@@ -53,7 +53,7 @@ app.use(require('./middleware/url-normalizer'));
 
 passport.use(new TwitterStrategy(config.twitter,
   function (token, tokenSecret, profile, done) {
-    var users = app.world.get('users');
+    var users = app.game.get('users');
     var user = users.get(profile.id);
     done(null, user || new User({
       id: profile.id,
@@ -69,7 +69,7 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (id, done) {
-  var users = app.world.get('users');
+  var users = app.game.get('users');
   var user = users.get(id);
   if (user) return done(null, user);
   db.findUser(id, function (er, user) {
@@ -78,8 +78,7 @@ passport.deserializeUser(function (id, done) {
   });
 });
 
-// add game state, app.world
-app.world = new World();
+app.game = new Game();
 
 // controllers
 var files = _.without(fs.readdirSync(__dirname + '/controllers'), 'errors');
@@ -91,6 +90,6 @@ require('./controllers/errors')(app);
 
 // signal hooks
 process.on('SIGTERM', function () {
-  app.world.stop();
+  app.game.stop();
   server.close();
 });

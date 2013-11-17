@@ -45,17 +45,17 @@
     }),
 
     init: function () {
-      app.world = new app.World();
+      app.game = new app.Game();
       $(app.domReady);
       app.loadSpriteSheets(function () {
         $(function () {
           new app.MainView({el: 'body'});
-          new app.WorldsShowView({model: app.world, el: '#world'});
+          new app.GamesShowView({model: app.game, el: '#game'});
         });
       });
       if (!app.config.mobile) {
         app.live.connect()
-          .on('world', _.bind(app.world.set, app.world))
+          .on('game', _.bind(app.game.set, app.game))
           .on('message', app.onMessage);
       }
     },
