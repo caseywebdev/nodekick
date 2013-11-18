@@ -1,5 +1,5 @@
 var redis = require('redis');
-var client = redis.createClient();
+var client = redis.client = redis.createClient();
 var _ = require('underscore');
 var async = require('async');
 

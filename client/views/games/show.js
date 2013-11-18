@@ -27,7 +27,7 @@
       this.container.addChild(this.layer1 = new PIXI.DisplayObjectContainer());
       this.container.addChild(this.layer2 = new PIXI.DisplayObjectContainer());
       this.container.position.x = this.width / 2;
-      this.container.position.y = this.height / 2;
+      this.container.position.y = this.height - 200;
       this.stage.addChild(this.container);
       this.$el.append(this.renderer.view);
       this.users = this.model.get('users');
@@ -64,8 +64,8 @@
         columns: 10,
         game: this.model,
         container: this.layer2,
-        xv: killForce && killForce.xv,
-        yv: killForce && -killForce.yv
+        xv: user.get('xv') + ((killForce && killForce.xv) || 0),
+        yv: -(user.get('yv') + ((killForce && killForce.yv) || 0))
       });
     }
   });

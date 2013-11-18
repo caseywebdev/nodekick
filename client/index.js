@@ -24,12 +24,15 @@
   var PIXI = window.PIXI;
 
   $.ajaxSetup({
-    dataType: 'json',
-
     beforeSend: function (xhr) {
       xhr.setRequestHeader('X-CSRF-Token', app.csrfToken);
     }
   });
+
+  window.Backbone.ajax = function (options) {
+    if (app.config.mobile) return $.ajax.apply($, arguments);
+    app.live.send(options.type + ' ' + options.url, JSON.parse(options.data));
+  };
 
   var app = window.app = {
     csrfToken: $('meta[name="csrf-token"]').attr('content'),
@@ -39,9 +42,9 @@
     spriteSheets: ['/images/sprite-sheet.json'],
 
     live: new Live({
-      // fetchAuthKey: function (cb) {
-      //   $.ajax({url: '/auth/live', success: _.partial(cb, null), error: cb});
-      // }
+      fetchAuthKey: function (cb) {
+        $.ajax({url: '/auth/live', success: _.partial(cb, null), error: cb});
+      }
     }),
 
     init: function () {
@@ -52,12 +55,12 @@
           new app.MainView({el: 'body'});
           new app.GamesShowView({model: app.game, el: '#game'});
         });
+        if (!app.config.mobile) {
+          app.live.connect()
+            .on('game', _.bind(app.game.set, app.game))
+            .on('message', app.onMessage);
+        }
       });
-      if (!app.config.mobile) {
-        app.live.connect()
-          .on('game', _.bind(app.game.set, app.game))
-          .on('message', app.onMessage);
-      }
     },
 
     loadSpriteSheets: function (cb) {

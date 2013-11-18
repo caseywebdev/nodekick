@@ -84,6 +84,11 @@
       });
     },
 
-    sendMove: function (type) { (new app.Move({type: type})).save(); }
+    sendMove: function (type) {
+      var move = new app.Move({type: type});
+      move.save();
+      var user = app.game.get('users').get(app.currentUserId);
+      if (user) user.applyMove(move);
+    }
   });
 })();
