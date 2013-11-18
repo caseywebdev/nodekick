@@ -18,6 +18,10 @@
       '68': 'right'
     },
 
+    events: {
+      'click .js-sign-out': 'signOut'
+    },
+
     initialize: function () {
       this.dirPressed = {};
       _.bindAll(
@@ -89,6 +93,14 @@
       move.save();
       var user = app.game.get('users').get(app.currentUserId);
       if (user) user.applyMove(move);
+    },
+
+    signOut: function () {
+      $.ajax({
+        type: 'DELETE',
+        url: '/sessions',
+        complete: _.bind(location.reload, location)
+      });
     }
   });
 })();

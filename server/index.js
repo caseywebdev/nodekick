@@ -15,6 +15,11 @@ var db = require('./db');
 require('express-namespace');
 var app = module.exports = express();
 var server = app.listen(config.port);
+require('colors').setTheme({
+  error: 'red',
+  fast: 'green',
+  slow: 'yellow'
+});
 
 // start socket.io
 app.wss = new ws.Server({server: server});

@@ -33,8 +33,8 @@ module.exports = function (app) {
       try { data = JSON.parse(data); } catch (e) { return; }
       if (data.name === 'authorize') {
         redis.client.get('liveKey:' + data.data, function (er, id) {
-          if (er || !id) return er;
-          client.userId = id;
+          if (er) return er;
+          client.userId = +id;
           client.send(JSON.stringify({id: data.id}));
         });
       } else if (client.userId) {
@@ -59,8 +59,6 @@ module.exports = function (app) {
             }
           });
         }
-      } else {
-        client.close();
       }
     });
   });

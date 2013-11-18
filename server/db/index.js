@@ -16,7 +16,7 @@ module.exports = {
     });
   },
   createUser: function (user, cb) {
-    var userJSON = JSON.stringify(user.toUserData());
+    var userJSON = JSON.stringify(user);
     client.hset(usersKey, user.id, userJSON, function (er) {
       if (er) cb(er);
       cb(null, user.id);

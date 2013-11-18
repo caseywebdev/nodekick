@@ -2,5 +2,5 @@
 
 module.exports = function (req, res) {
   req.logout();
-  res.redirect('/');
+  res.send(204);
 };
