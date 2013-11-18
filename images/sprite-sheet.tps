@@ -175,6 +175,7 @@
             <filename>dive-jumping.png</filename>
             <filename>dive-kicking.png</filename>
             <filename>dive-standing.png</filename>
+            <filename>saw-blade.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

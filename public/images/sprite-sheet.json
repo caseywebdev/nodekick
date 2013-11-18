@@ -71,14 +71,22 @@
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":200,"h":400},
 	"sourceSize": {"w":200,"h":400}
+},
+"saw-blade.png":
+{
+	"frame": {"x":1800,"y":0,"w":100,"h":100},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":100},
+	"sourceSize": {"w":100,"h":100}
 }},
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker ",
 	"version": "1.0",
 	"image": "sprite-sheet.png",
 	"format": "RGBA8888",
-	"size": {"w":1800,"h":400},
+	"size": {"w":1900,"h":400},
 	"scale": "0.2",
-	"smartupdate": "$TexturePacker:SmartUpdate:9905b122ea3e890fb14d37fe2b1f60e3:95a6a1ca77ebb0d756fb8c4699811ef3:4cb984b15aa0f50ff47c18de1fc08384$"
+	"smartupdate": "$TexturePacker:SmartUpdate:47c190d6d4aa8f841235f68103845ad4:209eb98dbc45226fe21b8da3752bf0d7:4cb984b15aa0f50ff47c18de1fc08384$"
 }
 }

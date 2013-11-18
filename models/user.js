@@ -58,12 +58,6 @@
       if (this.get('y') <= 0) {
         this.set({y: 0, yv: 0, xv: 0, state: 'standing', touchedGround: true});
       }
-      var x = this.get('x');
-      var absX = Math.abs(x);
-      var side = x / absX;
-      if (absX > 1000) {
-        this.set('x', -side * (2 * 1000 - absX));
-      }
     },
 
     moveLeft: function () { this.setDir(-1); },

@@ -33,29 +33,31 @@ module.exports = function (app) {
       try { data = JSON.parse(data); } catch (e) { return; }
       if (data.name === 'authorize') {
         redis.client.get('liveKey:' + data.data, function (er, id) {
-          if (er) return;
-          var users = app.game.get('users');
-          var user = users.get(id);
-          if (user) {
-            client.user = user;
-            return client.send(JSON.stringify({
-              id: client.id,
-              data: client.user
-            }));
-          }
-          db.findUser(id, function (er, user) {
-            if (er) return;
-            client.user = new User(user);
-            client.send(JSON.stringify({id: data.id, data: client.user}));
-          });
+          if (er || !id) return er;
+          client.userId = id;
+          client.send(JSON.stringify({id: data.id}));
         });
-      } else if (client.user) {
-        if (data.name === 'POST /moves') {
-          movesCreate.run({
-            type: data.data.type,
-            user: client.user,
-            game: app.game
-          }, function () {});
+      } else if (client.userId) {
+        var user = app.game.get('users').get(client.userId);
+        if (user) {
+          if (data.name === 'POST /moves') {
+            return movesCreate.run({
+              type: data.data.type,
+              user: user,
+              game: app.game
+            }, function () {});
+          }
+        } else {
+          db.findUser(client.userId, function (er, user) {
+            if (er || !user) return;
+            if (data.name === 'POST /moves') {
+              movesCreate.run({
+                type: data.data.type,
+                user: new User(user),
+                game: app.game
+              }, function () {});
+            }
+          });
         }
       } else {
         client.close();

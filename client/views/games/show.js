@@ -22,7 +22,6 @@
       this.stage = new PIXI.Stage(0xffffff);
       this.renderer = new PIXI.autoDetectRenderer(this.width, this.height);
       this.characters = new app.Character.Collection();
-      this.explosions = new app.Explosion.Collection();
       this.container = new PIXI.DisplayObjectContainer();
       this.container.addChild(this.layer1 = new PIXI.DisplayObjectContainer());
       this.container.addChild(this.layer2 = new PIXI.DisplayObjectContainer());
@@ -35,7 +34,15 @@
       line.lineStyle(2, 0xFF0000);
       line.moveTo(-600, 0);
       line.lineTo(600, 0);
+      var sawBlade = new PIXI.Sprite(PIXI.TextureCache['saw-blade.png']);
+      sawBlade.anchor.x = sawBlade.anchor.y = 0.5;
+      sawBlade.position.x = 1125;
+      sawBlade.position.y = -250;
+      this.listenTo(this.model, 'step', function (dt) {
+        sawBlade.rotation += Math.PI * 10 * dt;
+      });
       this.layer1.addChild(line);
+      this.layer1.addChild(sawBlade);
       _.bindAll(this, 'render');
       this.render();
     },
@@ -58,7 +65,7 @@
       this.characters.remove(character);
       this.layer2.removeChild(sprite);
       var killForce = user.get('killForce');
-      new app.Explosion({
+      new app.ExplosionPiece.Collection(null, {
         sprite: sprite,
         rows: 20,
         columns: 10,

@@ -61,6 +61,7 @@
       this.lastStep = now;
       this.get('users').invoke('step', dt);
       this.checkCollisions();
+      this.checkOutOfBounds();
       this.trigger('step', dt);
     },
 
@@ -80,10 +81,15 @@
     },
 
     kill: function (userA, userB, isHeadshot) {
-      userA.incr('kills');
-      if (isHeadshot) userA.incr('headshots');
-      userB.incr('deaths');
-      userB.set({isDead: true, killForce: userA.pick('xv', 'yv')});
+      userA.incr('deaths');
+      var killForce;
+      var User = require('./user');
+      if (userB instanceof User) {
+        userB.incr('kills');
+        if (isHeadshot) userB.incr('headshots');
+        killForce = userB.pick('xv', 'yv');
+      }
+      userA.set({isDead: true, killForce: killForce || userB});
 
       // Bullet time is badass but can be really annoying when there are other
       // players around. Let's only trigger bullet time when there is one living
@@ -121,8 +127,20 @@
         var aIsHead = !!(fixtureA.GetFilterData().get_categoryBits() & 2);
         var bIsFoot = !!(fixtureB.GetFilterData().get_categoryBits() & 4);
         var bIsHead = !!(fixtureB.GetFilterData().get_categoryBits() & 2);
-        if (aIsFoot && !userB.get('isDead')) this.kill(userA, userB, bIsHead);
-        if (bIsFoot && !userA.get('isDead')) this.kill(userB, userA, aIsHead);
+        if (aIsFoot && !userB.get('isDead')) this.kill(userB, userA, bIsHead);
+        if (bIsFoot && !userA.get('isDead')) this.kill(userA, userB, aIsHead);
+      }, this);
+    },
+
+    checkOutOfBounds: function () {
+      if (!node) return;
+      this.get('users').each(function (user) {
+        if (user.get('isDead')) return;
+        var x = user.get('x');
+        var absX = Math.abs(x);
+        var side = x / absX;
+        if (absX <= 1000) return;
+        this.kill(user, {xv: -(side * 4000), yv: -user.get('yv')});
       }, this);
     },
 
