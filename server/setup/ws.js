@@ -58,7 +58,7 @@ app.wss.on('connection', function (client) {
     }
   });
 });
-var gameStateIntervalId = setInterval(sendGame, config.mps);
+var gameStateIntervalId = setInterval(sendGame, 1000 / config.mps);
 app.game.get('users').on('add remove change:state change:dir', sendGame);
 app.game.get('recentUsers').on('remove', sendGame);
 app.game.on('message', function (data) { broadcast(wsMsg('message', data)); });
