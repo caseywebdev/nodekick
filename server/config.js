@@ -39,7 +39,7 @@ module.exports = _.extend(defaults, ({
     }
   },
   production: {
-    port: 80,
+    port: process.env.PORT || 80,
     url: 'http://nodekick.com',
     session: _.extend({}, defaults, {
       secret: process.env.SESSION_SECRET
