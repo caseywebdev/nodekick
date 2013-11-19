@@ -74,8 +74,8 @@
       app.live.send('game', app.serverState, function (er, patches) {
         jsonpatch.apply(app.serverState, patches);
         app.game.set(app.serverState);
+        app.requestState();
       });
-      app.requestState();
     },
 
     domReady: function () {
