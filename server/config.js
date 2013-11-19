@@ -19,7 +19,7 @@ var defaults = {
   bulletTimeDuration: 1500,
   fps: 60,
   mps: 15,
-  hitBoxes: require('../images/hit-boxes'),
+  hitBoxes: require('./hit-boxes'),
   hitBoxScalar: 0.2,
   redis: {
     url: '',
