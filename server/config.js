@@ -15,10 +15,10 @@ var defaults = {
   kickPower: 1500,
   recentKillDuration: 1000 * 3,
   recentUserDuration: 1000 * 60 * 5,
-  deathDuration: 1000,
-  bulletTimeDuration: 1500,
+  deathDuration: 2000,
+  bulletTimeDuration: 500,
   fps: 60,
-  mps: 15,
+  mps: 30,
   hitBoxes: require('./hit-boxes'),
   hitBoxScalar: 0.2,
   redis: {

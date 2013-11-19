@@ -28,13 +28,13 @@
     },
 
     defaults: function () {
-      var x = _.random(-100, 100);
+      var x = _.random(-500, 500);
       return {
         x: x,
-        y: 600,
+        y: 1000,
         xv: 0,
         yv: 0,
-        character: 'dive',
+        character: _.sample(['dive', 'donatello', 'redacted']),
         dir: -(x / Math.abs(x)),
         state: 'jumping',
         kills: 0,
