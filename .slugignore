@@ -1,0 +1,8 @@
+/.git*
+/audio
+/client
+/images
+/psd
+/scripts
+/.jshintrc
+/README.md
