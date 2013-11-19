@@ -7,6 +7,7 @@
 //= require live/live
 //= require pixi/bin/pixi
 //= require soundmanager/script/soundmanager2
+//= require fast-json-patch/src/json-patch.js
 //= requireSelf
 //= require config
 //= requireTree setup
@@ -19,6 +20,7 @@
 
   var $ = window.jQuery;
   var _ = window._;
+  var jsonpatch = window.jsonpatch;
   var Live = window.Live;
   var PIXI = window.PIXI;
   var soundManager = window.soundManager;
@@ -47,8 +49,10 @@
         });
         if (!app.config.mobile) {
           app.live.connect()
-            .on('game', _.bind(app.game.set, app.game))
             .on('message', _.bind(app.messages.add, app.messages));
+          app.requestState =
+            _.throttle(app.requestState, 1000 / app.config.mps);
+          app.requestState();
         }
       });
     },
@@ -63,6 +67,15 @@
       'donatello': {},
       'kick': {},
       'redacted': {}
+    },
+
+    requestState: function () {
+      if (!app.serverState) app.serverState = {};
+      app.live.send('game', app.serverState, function (er, patches) {
+        jsonpatch.apply(app.serverState, patches);
+        app.game.set(app.serverState);
+      });
+      app.requestState();
     },
 
     domReady: function () {

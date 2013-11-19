@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var app = require('./express');
 var config = require('../config');
+var jsonpatch = require('fast-json-patch');
 var redis = require('redis');
 var movesCreate = require('../../interactions/moves/create');
 var User = require('../../models/user');
@@ -22,9 +23,6 @@ app.game.get('users').on('message', function (message) {
   broadcast('message', message);
 });
 
-var sendGame = _.debounce(function () {
-  broadcast('game', app.game.toFrame());
-});
 app.wss.on('connection', function (client) {
   client.on('message', function (data) {
     try { data = JSON.parse(data); } catch (e) { return; }
@@ -34,6 +32,13 @@ app.wss.on('connection', function (client) {
         client.userId = id;
         client.send(JSON.stringify({id: data.id}));
       });
+    } else if (data.name === 'game') {
+      var observer = jsonpatch.observe(data.data);
+      _.extend(data.data, app.game.toFrame());
+      client.send(JSON.stringify({
+        id: data.id,
+        data: jsonpatch.generate(observer)
+      }));
     } else if (client.userId) {
       var user = app.game.get('users').get(client.userId);
       if (user) {
@@ -58,12 +63,8 @@ app.wss.on('connection', function (client) {
     }
   });
 });
-var gameStateIntervalId = setInterval(sendGame, 1000 / config.mps);
-app.game.get('users').on('add remove change:state change:dir', sendGame);
-app.game.get('recentUsers').on('remove', sendGame);
 app.game.on('message', function (data) { broadcast(wsMsg('message', data)); });
 
 process.on('SIGTERM', function () {
-  clearInterval(gameStateIntervalId);
   wss.close();
 });

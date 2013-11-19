@@ -18,7 +18,6 @@ var defaults = {
   deathDuration: 2000,
   bulletTimeDuration: 500,
   fps: 60,
-  mps: 30,
   hitBoxes: require('./hit-boxes'),
   hitBoxScalar: 0.2,
   redis: {
