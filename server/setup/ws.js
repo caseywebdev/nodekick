@@ -61,6 +61,7 @@ app.wss.on('connection', function (client) {
 var gameStateIntervalId = setInterval(sendGame, config.mps);
 app.game.get('users').on('add remove change:state change:dir', sendGame);
 app.game.get('recentUsers').on('remove', sendGame);
+app.game.on('message', function (data) { broadcast(wsMsg('message', data)); });
 
 process.on('SIGTERM', function () {
   clearInterval(gameStateIntervalId);

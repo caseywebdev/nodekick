@@ -16,14 +16,14 @@
     urlRoot: '/users',
 
     initialize: function () {
-      this.on(node ? {
+      if (!node) return;
+      this.on({
         'change:state change:dir': this.createBody,
         'change:x change:y': this.updateBodyPosition,
-        'change:kills': this.updateStreaks
-      } : {
-        'change:killStreak': this.playKillStreak,
-        'change:recentKills': this.playRecentKills,
-        'change:headshots': _.bind(app.playSound, app, 'headshot')
+        'change:kills': this.updateStreaks,
+        'change:killStreak': this.sendKillStreak,
+        'change:recentKills': this.sendRecentKills,
+        'change:headshots': this.sendHeadshot
       });
     },
 
@@ -133,8 +133,8 @@
     },
 
     updateStreaks: function () {
-      this.incr('killStreak');
       this.incr('recentKills');
+      this.incr('killStreak');
       this.clearRecentKills();
     },
 
@@ -142,34 +142,47 @@
       this.set('recentKills', 0);
     }, config.recentKillDuration),
 
-    playKillStreak: function () {
+    sendKillStreak: function () {
       switch (this.get('killStreak')) {
       case 3:
-        return app.playSound('killing-streak');
+        return this.sendMessage('Killing Streak!', 'killing-streak');
       case 6:
-        return app.playSound('rampage');
+        return this.sendMessage('Rampage!', 'rampage');
       case 9:
-        return app.playSound('dominating');
+        return this.sendMessage('Dominating!', 'dominating');
       case 12:
-        return app.playSound('unstoppable');
+        return this.sendMessage('Unstoppable!', 'unstoppable');
       case 15:
-        return app.playSound('godlike');
+        return this.sendMessage('Godlike!', 'godlike');
       }
     },
 
-    playRecentKills: function () {
+    sendRecentKills: function () {
       switch (this.get('recentKills')) {
       case 0:
         return;
       case 1:
-        if (!this.get('touchedGround')) app.playSound('death-from-above');
+        if (!this.get('touchedGround')) {
+          this.sendMessage('Death From Above!', 'death-from-above');
+        }
         return;
       case 2:
-        return app.playSound('double-kill');
+        return this.sendMessage('Double Kill!', 'double-kill');
       case 3:
-        return app.playSound('triple-kill');
+        return this.sendMessage('Triple Kill!', 'triple-kill');
       }
-      app.playSound('monster-kill');
+      this.sendMessage('Monster Kill!', 'monster-kill');
+    },
+
+    sendHeadshot: function () { this.sendMessage('Headshot!', 'headshot'); },
+
+    sendMessage: function (text, soundId) {
+      var Message = node ? require('./message') : app.Message;
+      this.trigger('message', new Message({
+        user: this,
+        text: text,
+        soundId: soundId
+      }));
     },
 
     toFrame: function () { return this.attributes; },

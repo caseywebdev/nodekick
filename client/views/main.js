@@ -22,7 +22,12 @@
       'click .js-sign-out': 'signOut'
     },
 
-    initialize: function () {
+    listeners: {
+      messages: {add: 'showMessage'}
+    },
+
+    initialize: function (options) {
+      this.messages = options.messages;
       this.dirPressed = {};
       _.bindAll(
         this,
@@ -101,6 +106,13 @@
         url: '/sessions',
         complete: _.bind(location.reload, location)
       });
-    }
+    },
+
+    showMessage: _.throttle(function () {
+      var message = this.messages.shift();
+      if (!message) return;
+      (new app.MessageShowView({model: message})).render();
+      this.showMessage();
+    }, app.config.messageThrottleDuration)
   });
 })();

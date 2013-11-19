@@ -47,7 +47,8 @@
         },
         'change:isDead': function (user) {
           _.delay(_.bind(users.remove, users, user), config.deathDuration);
-        }
+        },
+        message: _.partial(this.trigger, 'message')
       });
     },
 
@@ -85,8 +86,8 @@
       var killForce;
       var User = require('./user');
       if (userB instanceof User) {
-        userB.incr('kills');
         if (isHeadshot) userB.incr('headshots');
+        userB.incr('kills');
         killForce = userB.pick('xv', 'yv');
       }
       userA.set({isDead: true, killForce: killForce || userB});

@@ -11,6 +11,8 @@
     recentKillDuration: 3000,
     fps: 60,
     soundTracks: 5,
+    messageDuration: 3000,
+    messageThrottleDuration: 1000,
     sounds: [
       'death-from-above',
       'dominating',

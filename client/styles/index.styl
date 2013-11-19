@@ -108,23 +108,11 @@ a
 
 .sign-in-with-twitter
 .user-info
-.nko-vote-container
   overflow auto
   margin-top 5px
   border-radius left 5px
   box-shadow 0 1px 3px rgba(0, 0, 0, .75)
   background #fff
-
-.nko-vote-container
-  display inline-block
-  border-radius left 5px
-  padding 5px
-  text-align right
-
-.nko-vote
-  display block
-  width 115px
-  height 25px
 
 .sign-in-with-twitter
   padding 5px
@@ -167,32 +155,23 @@ a
 @keyframes message
   2%
     transform scale(3)
-    opacity 0.8
   100%
-    transform translateY(-200px) scale(.5)
+    transform translateY(-400%) scale(.5)
     opacity 0
 
-.alerts
-  position: fixed
-  bottom: 70%
-  width: 100%
-  font-size: 3.2em
-  font-weight 900
+.js-message
+  position fixed
+  bottom 70%
+  width 100%
+  font-size 46px
   text-transform uppercase
-  font-family 'Piedra' cursive
-  text-shadow 0 1px 3px rgba(0, 0, 0, .75)
-  opacity 0.8
-  color #900
-
-  .alert
-    // mask-image url(http://f.cl.ly/items/131E0X1b1i0X1s263R00/a.png) repeat
-    // -o-mask-image url(http://f.cl.ly/items/131E0X1b1i0X1s263R00/a.png) repeat
-    // -moz-mask-image url(http://f.cl.ly/items/131E0X1b1i0X1s263R00/a.png) repeat
-    // -webkit-mask-image url(http://f.cl.ly/items/131E0X1b1i0X1s263R00/a.png) repeat
-    img
-      width .6em
-      height .6em
-      margin-right .2em
-      position relative
-      top -.22em
-    animation message 3s
+  font-family 'Piedra' sans-serif
+  text-shadow 0 1px 1px rgba(0, 0, 0, .75)
+  color #a00
+  animation message 3s
+  img
+    width 48px
+    height 48px
+    margin-right 10px
+    border-radius 5px
+    box-shadow 0 1px 1px rgba(0, 0, 0, .75)

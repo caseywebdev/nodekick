@@ -38,16 +38,17 @@
 
     init: function () {
       app.game = new app.Game();
+      app.messages = new app.Message.Collection();
       $(app.domReady);
       app.loadSpriteSheets(function () {
         $(function () {
-          new app.MainView({el: 'body'});
+          new app.MainView({el: 'body', messages: app.messages});
           new app.GamesShowView({model: app.game, el: '#game'});
         });
         if (!app.config.mobile) {
           app.live.connect()
             .on('game', _.bind(app.game.set, app.game))
-            .on('message', app.onMessage);
+            .on('message', _.bind(app.messages.add, app.messages));
         }
       });
     },
@@ -108,62 +109,7 @@
 
     playSound: function (id) {
       var sound = app.sounds[id];
-      sound[++sound.track % app.config.soundTracks].play();
-    },
-
-    showMessage: function (message) {
-      var $alert = $('<li>');
-      $alert.addClass('alert');
-      $alert.addClass(message.type);
-      var text = message.text;
-      switch (message.type) {
-      case 'streak':
-        var streak = message.user.streak;
-        if (streak == 3) {
-          this.playSound("killingstreak");
-          text = 'killing streak';
-        } else if (streak == 6) {
-          this.playSound("rampage");
-          text = 'rampage!';
-        } else if (streak == 9) {
-          this.playSound("dominating");
-          text = 'dominating!!';
-        } else if (streak == 12) {
-          this.playSound("unstoppable");
-          text = 'unstoppable!!!';
-        } else if (streak >= 15) {
-          this.playSound("godlike");
-          text = 'godlike!!!!';
-        } else return;
-        break;
-      case 'headshot':
-        this.playSound('headshot');
-        break;
-      case 'deathfromabove':
-        this.playSound("deathfromabove");
-        break;
-      case 'multikill':
-        var multis = message.user.multis;
-        if (multis == 2) {
-          this.playSound("doublekill");
-          text = 'double kill!';
-        } else if (multis == 3) {
-          this.playSound("triplekill");
-          text = 'triple kill!!';
-        } else if (multis >= 4) {
-          this.playSound("monsterkill");
-          text = 'monster kill!!!';
-        }
-        break;
-      }
-      $alert.text(text);
-      if (message.user) {
-        $alert.prepend($('<img>').attr({src: message.user.avatar}));
-      }
-      $('.alerts').append($alert);
-      setTimeout(function () {
-        $alert.remove();
-      }, 3000);
+      if (sound) sound[++sound.track % app.config.soundTracks].play();
     }
   };
 
