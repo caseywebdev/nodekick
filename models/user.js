@@ -95,6 +95,7 @@
     isKicking: function () { return this.get('state') === 'kicking'; },
 
     createBody: function () {
+      if (!this.world) return;
       if (this.body) this.world.DestroyBody(this.body);
       var bodyDef = new Box2D.b2BodyDef();
       var vector = bodyDef.get_position();
@@ -126,6 +127,7 @@
     },
 
     updateBodyPosition: function () {
+      if (!this.body) return;
       var vector = this.body.GetPosition();
       vector.set_x(this.get('x'));
       vector.set_y(this.get('y'));
