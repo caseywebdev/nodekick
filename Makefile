@@ -28,7 +28,6 @@ compress:
 
 deploy:
 	git push heroku redux:master
-	heroku run make compress
 
 audio:
 	scripts/audio-to-mp3.sh
