@@ -73,10 +73,10 @@
 
     stop: function () { clearInterval(this.intervalId); },
 
-    toJSON: function () {
+    toFrame: function () {
       return _.extend({
-        recentUsers: this.get('recentUsers'),
-        users: this.get('users')
+        recentUsers: this.get('recentUsers').invoke('toFrame'),
+        users: this.get('users').invoke('toFrame')
       }, this.attributes);
     },
 

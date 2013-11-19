@@ -13,6 +13,8 @@
   var Box2D = node ? require('box2d.js').Box2D : null;
 
   var User = Model.extend({
+    urlRoot: '/users',
+
     initialize: function () {
       this.triggerMulti = _.debounce(this.triggerMulti, config.multiTime);
       if (!node) return;
@@ -123,6 +125,20 @@
       vector.set_x(this.get('x'));
       vector.set_y(this.get('y'));
       this.body.SetTransform(vector, 0);
+    },
+
+    toFrame: function () { return this.attributes; },
+
+    toJSON: function () {
+      return this.pick(
+        'id',
+        'username',
+        'displayName',
+        'avatar',
+        'kills',
+        'deaths',
+        'headshots'
+      );
     }
   });
 

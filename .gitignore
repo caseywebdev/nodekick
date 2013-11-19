@@ -5,3 +5,4 @@
 /public/index.css
 /bower_components
 /log
+/.env.sh
