@@ -16,11 +16,14 @@
     urlRoot: '/users',
 
     initialize: function () {
-      this.triggerMulti = _.debounce(this.triggerMulti, config.multiTime);
-      if (!node) return;
-      this.on({
+      this.on(node ? {
         'change:state change:dir': this.createBody,
-        'change:x change:y': this.updateBodyPosition
+        'change:x change:y': this.updateBodyPosition,
+        'change:kills': this.updateStreaks
+      } : {
+        'change:killStreak': this.playKillStreak,
+        'change:recentKills': this.playRecentKills,
+        'change:headshots': _.bind(app.playSound, app, 'headshot')
       });
     },
 
@@ -37,6 +40,8 @@
         kills: 0,
         headshots: 0,
         deaths: 0,
+        recentKills: 0,
+        killStreak: 0,
         touchedGround: false,
         isDead: false
       };
@@ -125,6 +130,46 @@
       vector.set_x(this.get('x'));
       vector.set_y(this.get('y'));
       this.body.SetTransform(vector, 0);
+    },
+
+    updateStreaks: function () {
+      this.incr('killStreak');
+      this.incr('recentKills');
+      this.clearRecentKills();
+    },
+
+    clearRecentKills: _.debounce(function () {
+      this.set('recentKills', 0);
+    }, config.recentKillDuration),
+
+    playKillStreak: function () {
+      switch (this.get('killStreak')) {
+      case 3:
+        return app.playSound('killing-streak');
+      case 6:
+        return app.playSound('rampage');
+      case 9:
+        return app.playSound('dominating');
+      case 12:
+        return app.playSound('unstoppable');
+      case 15:
+        return app.playSound('godlike');
+      }
+    },
+
+    playRecentKills: function () {
+      switch (this.get('recentKills')) {
+      case 0:
+        return;
+      case 1:
+        if (!this.get('touchedGround')) app.playSound('death-from-above');
+        return;
+      case 2:
+        return app.playSound('double-kill');
+      case 3:
+        return app.playSound('triple-kill');
+      }
+      app.playSound('monster-kill');
     },
 
     toFrame: function () { return this.attributes; },

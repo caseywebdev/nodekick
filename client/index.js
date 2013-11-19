@@ -9,11 +9,10 @@
 //= require soundmanager/script/soundmanager2
 //= requireSelf
 //= require config
+//= requireTree setup
 //= requireTree ../models
 //= requireTree views
 //= requireTree templates
-//= require scoreboard
-//= require sounds
 
 (function () {
   'use strict';
@@ -22,17 +21,7 @@
   var _ = window._;
   var Live = window.Live;
   var PIXI = window.PIXI;
-
-  $.ajaxSetup({
-    beforeSend: function (xhr) {
-      xhr.setRequestHeader('X-CSRF-Token', app.csrfToken);
-    }
-  });
-
-  window.Backbone.ajax = function (options) {
-    if (app.config.mobile) return $.ajax.apply($, arguments);
-    app.live.send(options.type + ' ' + options.url, JSON.parse(options.data));
-  };
+  var soundManager = window.soundManager;
 
   var app = window.app = {
     csrfToken: $('meta[name="csrf-token"]').attr('content'),
@@ -104,8 +93,22 @@
       }
     },
 
-    playSound: function(sound) {
-      if(window.NodeKick.Sounds) window.NodeKick.Sounds[sound].play();
+    soundManagerReady: function () {
+      app.sounds = _.reduce(app.config.sounds, function (sounds, id) {
+        var sound = sounds[id] = {track: 0};
+        _.times(app.config.soundTracks, function (track) {
+          sound[track] = soundManager.createSound(
+            id + '-' + track,
+            '/audio/' + id + '.mp3'
+          );
+        });
+        return sounds;
+      }, {});
+    },
+
+    playSound: function (id) {
+      var sound = app.sounds[id];
+      sound[++sound.track % app.config.soundTracks].play();
     },
 
     showMessage: function (message) {
@@ -137,7 +140,7 @@
         this.playSound('headshot');
         break;
       case 'deathfromabove':
-          this.playSound("deathfromabove");
+        this.playSound("deathfromabove");
         break;
       case 'multikill':
         var multis = message.user.multis;

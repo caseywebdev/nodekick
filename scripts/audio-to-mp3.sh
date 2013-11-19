@@ -5,6 +5,9 @@ for i in $root/audio/*
 do
   if test -f $i
   then
-    ffmpeg -n -i $i $root/public/audio/`echo ${i%.*}`.mp3
+    base=${i##*/}
+    base=${base%.*}
+    echo $base
+    ffmpeg -n -i $i $root/public/audio/$base.mp3
   fi
 done
