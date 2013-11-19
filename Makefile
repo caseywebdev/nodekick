@@ -22,9 +22,11 @@ server-w:
 cogs-w:
 	$(COGS) -w client,models
 
-compress:
+heroku-buildpack:
 	$(BOWER) install
 	$(COGS) -c
+	rm -fr bower_components
+	rm -fr client
 
 deploy:
 	git push heroku redux:master
