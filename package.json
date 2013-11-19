@@ -19,6 +19,7 @@
     "csso": "x",
     "express": "x",
     "express-namespace": "x",
+    "fast-json-patch": "x",
     "herit": "x",
     "interaction": "x",
     "nib": "x",
