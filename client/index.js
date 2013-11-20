@@ -43,7 +43,7 @@
       app.messages = new app.Message.Collection();
       if (!app.config.mobile) {
         app.live.connect()
-          .on('state', app.updateState)
+          .on('state-patches', app.applyStatePatches)
           .on('message', _.bind(app.messages.add, app.messages));
       }
       $(app.domReady);
@@ -56,10 +56,15 @@
       loader.load();
     },
 
-    updateState: function (state) {
+    applyStatePatches: function (statePatches) {
       if (!app.state) app.state = {};
-      jsonpatch.apply(app.state, state);
-      app.game.set(app.state);
+      if (!statePatches.length) return;
+      jsonpatch.apply(app.state, statePatches);
+      app.game.set(_.omit(app.state, 'userIds'));
+      var recentUsers = app.game.get('recentUsers');
+      app.game.get('users').set(
+        _.map(app.state.userIds, _.bind(recentUsers.get, recentUsers))
+      );
     },
 
     domReady: function () {

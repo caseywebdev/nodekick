@@ -73,7 +73,7 @@
     toFrame: function () {
       return _.extend({
         recentUsers: this.get('recentUsers').invoke('toFrame'),
-        users: this.get('users').invoke('toFrame')
+        userIds: this.get('users').pluck('id')
       }, this.attributes);
     },
 

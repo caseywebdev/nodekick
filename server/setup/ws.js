@@ -72,7 +72,7 @@ var stateIntervalId = setInterval(function () {
     if (client.readyState !== OPEN) continue;
     var observer = jsonpatch.observe(client.state);
     _.extend(client.state, state);
-    client.send(wsMsg('state', jsonpatch.generate(observer)));
+    client.send(wsMsg('state-patches', jsonpatch.generate(observer)));
   }
 }, 1000 / config.game.mps);
 
