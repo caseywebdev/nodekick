@@ -9,7 +9,6 @@
 
   var _ = node ? require('underscore') : window._;
   var config = node ? require('../server/config') : app.config;
-  var db = node ? require('../server/db') : null;
   var Model = node ? require('./model') : app.Model;
   var Box2D = node ? require('box2d.js').Box2D : null;
 
@@ -51,10 +50,6 @@
         },
         message: _.partial(this.trigger, 'message')
       });
-    },
-
-    getScores: function (cb) {
-      db.getScores(this.get('recentUsers').invoke('toUserData'), cb);
     },
 
     step: function () {
