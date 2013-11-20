@@ -26,7 +26,7 @@
       this.container.addChild(this.layer1 = new PIXI.DisplayObjectContainer());
       this.container.addChild(this.layer2 = new PIXI.DisplayObjectContainer());
       this.container.position.x = this.width / 2;
-      this.container.position.y = this.height - 200;
+      this.container.position.y = this.height - 100;
       this.stage.addChild(this.container);
       this.$el.append(this.renderer.view);
       this.users = this.model.get('users');
@@ -47,7 +47,7 @@
 
     createSawblades: function () {
       var sawBlades = _.flatten(_.map([-1, 1], function (dir) {
-        return _.times(28, function (y) {
+        return _.times(30, function (y) {
           var sawBlade = new PIXI.Sprite(PIXI.TextureCache['saw-blade.png']);
           sawBlade.anchor.x = sawBlade.anchor.y = 0.5;
           sawBlade.position.x = dir * (app.config.game.width / 2);
