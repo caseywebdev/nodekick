@@ -60,12 +60,6 @@
       loader.load();
     },
 
-    characterTextures: {
-      'donatello': {},
-      'kick': {},
-      'redacted': {}
-    },
-
     updateState: function (state) {
       if (!app.state) app.state = {};
       jsonpatch.apply(app.state, state);
