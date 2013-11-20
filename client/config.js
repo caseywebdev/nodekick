@@ -10,7 +10,6 @@
     kickPower: 1500,
     recentKillDuration: 3000,
     fps: 60,
-    mps: 30,
     soundTracks: 5,
     messageDuration: 3000,
     messageThrottleDuration: 1000,

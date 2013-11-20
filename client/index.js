@@ -49,10 +49,8 @@
         });
         if (!app.config.mobile) {
           app.live.connect()
+            .on('state', app.updateState)
             .on('message', _.bind(app.messages.add, app.messages));
-          app.requestState =
-            _.throttle(app.requestState, 1000 / app.config.mps);
-          app.requestState();
         }
       });
     },
@@ -69,13 +67,10 @@
       'redacted': {}
     },
 
-    requestState: function () {
-      if (!app.serverState) app.serverState = {};
-      app.live.send('game', app.serverState, function (er, patches) {
-        jsonpatch.apply(app.serverState, patches);
-        app.game.set(app.serverState);
-        app.requestState();
-      });
+    updateState: function (state) {
+      if (!app.state) app.state = {};
+      jsonpatch.apply(app.state, state);
+      app.game.set(app.state);
     },
 
     domReady: function () {

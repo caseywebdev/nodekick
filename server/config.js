@@ -18,6 +18,7 @@ var defaults = {
   deathDuration: 2000,
   bulletTimeDuration: 500,
   fps: 60,
+  mps: 30,
   hitBoxes: require('./hit-boxes'),
   hitBoxScalar: 0.2,
   redis: {
@@ -39,7 +40,7 @@ module.exports = _.extend(defaults, ({
   },
   production: {
     port: process.env.PORT || 80,
-    url: 'http://nodekick.com',
+    url: 'http://nodekick.herokuapp.com',
     session: _.extend({}, defaults, {
       secret: process.env.SESSION_SECRET
     }),

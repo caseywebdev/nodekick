@@ -24,6 +24,7 @@ app.game.get('users').on('message', function (message) {
 });
 
 app.wss.on('connection', function (client) {
+  client.state = {};
   client.on('message', function (data) {
     try { data = JSON.parse(data); } catch (e) { return; }
     if (data.name === 'authorize') {
@@ -64,7 +65,18 @@ app.wss.on('connection', function (client) {
   });
 });
 app.game.on('message', function (data) { broadcast(wsMsg('message', data)); });
+var stateIntervalId = setInterval(function () {
+  var state = app.game.toFrame();
+  for (var i = 0, l = clients.length; i < l; ++i) {
+    var client = clients[i];
+    if (client.readyState !== OPEN) continue;
+    var observer = jsonpatch.observe(client.state);
+    _.extend(client.state, state);
+    client.send(wsMsg('state', jsonpatch.generate(observer)));
+  }
+}, 1000 / config.mps);
 
 process.on('SIGTERM', function () {
+  clearInterval(stateIntervalId);
   wss.close();
 });
