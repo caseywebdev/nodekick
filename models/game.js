@@ -95,8 +95,8 @@
       // Bullet time is badass but can be really annoying when there are other
       // players around. Let's only trigger bullet time when there is one living
       // player (or none like when players kill each other).
-      if (this.get('users').where({isDead: false}).length > 1) return;
-      this.bulletTime();
+      // if (this.get('users').where({isDead: false}).length > 1) return;
+      // this.bulletTime();
     },
 
     checkCollisions: function () {
