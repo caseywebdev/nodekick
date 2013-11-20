@@ -58,6 +58,7 @@
       ev.preventDefault();
       ev = ev.originalEvent;
       if (ev.touches.length !== 1 || this.swiped) return;
+      this.swiped = true;
       var touch = ev.touches[0];
       var dx = touch.screenX - this.x0;
       var dy = touch.screenY - this.y0;

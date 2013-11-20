@@ -7,11 +7,12 @@ module.exports = new Interaction({
     var move = new Move(_.pick(options, 'type'));
     if (!move.isValid()) return cb(400);
     var users = options.game.get('users');
-    if (!users.get(options.user)) {
+    var user = users.get(options.user);
+    if (!user) {
       if (move.get('type') !== 'up') return cb(403);
-      users.add(options.user);
+      users.add(user = options.user);
     }
-    options.user.applyMove(move);
+    user.applyMove(move);
     cb(null, move);
   }
 });

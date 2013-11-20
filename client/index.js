@@ -43,11 +43,10 @@
       app.messages = new app.Message.Collection();
       $(app.domReady);
       app.loadSpriteSheets(function () {
-        $(function () {
-          new app.MainView({el: 'body', messages: app.messages});
-          new app.GamesShowView({model: app.game, el: '#game'});
-        });
         if (!app.config.mobile) {
+          $(function () {
+            new app.GamesShowView({model: app.game, el: '#game'});
+          });
           app.live.connect()
             .on('state', app.updateState)
             .on('message', _.bind(app.messages.add, app.messages));
@@ -75,6 +74,7 @@
 
     domReady: function () {
       $('html').addClass(app.config.mobile ? 'js-mobile' : 'js-desktop');
+      new app.MainView({el: 'body', messages: app.messages});
       // new app.ScoresListView({collection: app.scores});
       app.setUpMoveAck();
     },

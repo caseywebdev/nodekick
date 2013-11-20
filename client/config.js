@@ -1,10 +1,8 @@
 (function () {
   'use strict';
 
-  var mobileUserAgentRe = /iPod|iPhone|iPad|Android/i;
-
   window.app.config = {
-    mobile: mobileUserAgentRe.test(navigator.userAgent),
+    mobile: window.screen.width < 768,
     gravity: 7000,
     jumpPower: 3000,
     kickPower: 1500,
