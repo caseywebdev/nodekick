@@ -41,16 +41,13 @@
     init: function () {
       app.game = new app.Game();
       app.messages = new app.Message.Collection();
-      app.live.connect()
-        .on('state', app.updateState)
-        .on('message', _.bind(app.messages.add, app.messages));
+      if (!app.config.mobile) {
+        app.live.connect()
+          .on('state', app.updateState)
+          .on('message', _.bind(app.messages.add, app.messages));
+      }
       $(app.domReady);
-      app.loadSpriteSheets(function () {
-        if (app.config.mobile) return;
-        $(function () {
-          new app.GamesShowView({model: app.game, el: '#game'});
-        });
-      });
+      app.loadSpriteSheets(app.spriteSheetsReady);
     },
 
     loadSpriteSheets: function (cb) {
@@ -71,12 +68,6 @@
       app.setUpMoveAck();
     },
 
-    setUpMoveAck: function () {
-      if (!app.currentUserId) return;
-      var url = '/images/sprite-sheet.png';
-      $('.js-move-ack').css('backgroundImage', "url('" + url + "')");
-    },
-
     soundManagerReady: function () {
       app.sounds = _.reduce(app.config.sounds, function (sounds, id) {
         var sound = sounds[id] = {track: 0};
@@ -88,6 +79,17 @@
         });
         return sounds;
       }, {});
+    },
+
+    spriteSheetsReady: function () {
+      if (app.config.mobile) return;
+      $(function () { new app.GamesShowView({model: app.game, el: '#game'}); });
+    },
+
+    setUpMoveAck: function () {
+      if (!app.currentUserId) return;
+      var url = '/images/sprite-sheet.png';
+      $('.js-move-ack').css('backgroundImage', "url('" + url + "')");
     },
 
     playSound: function (id) {
