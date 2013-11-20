@@ -41,16 +41,15 @@
     init: function () {
       app.game = new app.Game();
       app.messages = new app.Message.Collection();
+      app.live.connect()
+        .on('state', app.updateState)
+        .on('message', _.bind(app.messages.add, app.messages));
       $(app.domReady);
       app.loadSpriteSheets(function () {
-        if (!app.config.mobile) {
-          $(function () {
-            new app.GamesShowView({model: app.game, el: '#game'});
-          });
-          app.live.connect()
-            .on('state', app.updateState)
-            .on('message', _.bind(app.messages.add, app.messages));
-        }
+        if (app.config.mobile) return;
+        $(function () {
+          new app.GamesShowView({model: app.game, el: '#game'});
+        });
       });
     },
 
