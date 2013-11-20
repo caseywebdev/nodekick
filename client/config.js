@@ -2,7 +2,7 @@
   'use strict';
 
   window.app.config = {
-    mobile: window.screen.width < 768,
+    mobile: /i(Phone|Pod|Pad)|Android/.test(navigator.userAgent),
     game: {
       gravity: 7000,
       jumpPower: 3000,
