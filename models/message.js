@@ -19,7 +19,6 @@
     html: function () {
       var $div = $('<div>').text(this.get('text'));
       var avatar = this.get('user').get('avatar');
-      console.log(avatar);
       if (avatar) $div.prepend($('<img>').attr('src', avatar));
       return $div.html();
     },

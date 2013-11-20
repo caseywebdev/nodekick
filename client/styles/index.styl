@@ -20,7 +20,7 @@ body
   font-size 12px
   overflow hidden
   color #666
-  background #02070d
+  background #fff
   text-align center
 
 a
@@ -30,14 +30,23 @@ a
     text-decoration underline
 
 #game
-  display flex
-  align-items center
+  // display flex
+  // align-items center
   transform scale(0.5) translate(-50%, -50%)
   width 200%
   height 200%
   canvas
-    flex auto
-    width 200%
+    margin auto
+    position absolute
+    width 100%
+    top 0
+    bottom 0
+    right 0
+    left 0
+    &:before
+      content ''
+      display block
+      padding-top 56.25%
 
 .js-mobile .keys
   top 200px
@@ -93,7 +102,7 @@ a
   &.js-right
     background-position 200px 0
 
-.top-right-corner
+.session-info
   z-index 1
   top 0
   right 0

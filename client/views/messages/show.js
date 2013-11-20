@@ -14,7 +14,7 @@
     render: function () {
       View.prototype.render.apply(this, arguments);
       this.$el.html(this.model.html()).appendTo('body');
-      _.delay(_.bind(this.remove, this), app.config.messageDuration);
+      _.delay(_.bind(this.remove, this), app.config.game.messageDuration);
       app.playSound(this.model.get('soundId'));
       return this;
     }

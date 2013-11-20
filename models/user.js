@@ -28,15 +28,14 @@
     },
 
     defaults: function () {
-      var x = _.random(-500, 500);
       return {
-        x: x,
-        y: 1000,
+        x: 0,
+        y: 0,
         xv: 0,
         yv: 0,
         character: _.sample(['dive', 'donatello', 'redacted']),
-        dir: -(x / Math.abs(x)),
-        state: 'jumping',
+        dir: 1,
+        state: 'standing',
         kills: 0,
         headshots: 0,
         deaths: 0,
@@ -54,7 +53,7 @@
     step: function (dt) {
       if (this.get('isDead')) return;
       if (this.isJumping()) {
-        var yv = this.get('yv') - config.gravity * dt;
+        var yv = this.get('yv') - config.game.gravity * dt;
         this.set({y: this.get('y') + yv * dt, yv: yv});
       } else if (this.isKicking()) {
         this.set({
@@ -78,14 +77,14 @@
       this.set({
         dir: dir,
         state: 'kicking',
-        xv: dir * config.kickPower,
-        yv: -config.kickPower
+        xv: dir * config.game.kickPower,
+        yv: -config.game.kickPower
       });
     },
 
     moveUp: function () {
-      if (this.get('isDead')) return;
-      if (this.isStanding()) this.set({state: 'jumping', yv: config.jumpPower});
+      if (this.get('isDead') || !this.isStanding()) return;
+      this.set({state: 'jumping', yv: config.game.jumpPower});
     },
 
     isStanding: function () { return this.get('state') === 'standing'; },
@@ -106,8 +105,8 @@
       body.user = this;
       this.updateBodyPosition();
       var dir = this.get('dir');
-      var hitBoxScalar = config.hitBoxScalar;
-      _.each(config.hitBoxes[this.get('state')], function (def) {
+      var hitBoxScalar = config.game.hitBoxScalar;
+      _.each(config.game.hitBoxes[this.get('state')], function (def) {
         var fixtureDef = new Box2D.b2FixtureDef();
         fixtureDef.set_isSensor(true);
         var filter = fixtureDef.get_filter();
@@ -142,7 +141,7 @@
 
     clearRecentKills: _.debounce(function () {
       this.set('recentKills', 0);
-    }, config.recentKillDuration),
+    }, config.game.recentKillDuration),
 
     sendKillStreak: function () {
       switch (this.get('killStreak')) {
@@ -190,20 +189,14 @@
     toFrame: function () { return this.attributes; },
 
     toJSON: function () {
-      return this.pick(
-        'id',
-        'username',
-        'displayName',
-        'avatar',
-        'kills',
-        'deaths',
-        'headshots'
-      );
+      return this.pick('id', 'username', 'displayName', 'avatar', 'character');
     }
   });
 
   User.Collection = Model.Collection.extend({
-    model: User
+    model: User,
+
+    comparator: function (user) { return -user.get('kills'); }
   });
 
   node ? module.exports = User : app.User = User;

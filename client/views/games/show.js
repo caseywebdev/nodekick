@@ -10,9 +10,9 @@
   var requestAnimFrame = window.requestAnimFrame;
 
   app.GamesShowView = app.View.extend({
-    width: 2880,
+    width: app.config.game.width,
 
-    height: 1620,
+    height: app.config.game.height,
 
     listeners: {
       users: {add: 'addCharacter', 'remove change:isDead': 'removeCharacter'}
@@ -32,17 +32,10 @@
       this.users = this.model.get('users');
       var line = new PIXI.Graphics();
       line.lineStyle(2, 0xFF0000);
-      line.moveTo(-600, 0);
-      line.lineTo(600, 0);
-      var sawBlade = new PIXI.Sprite(PIXI.TextureCache['saw-blade.png']);
-      sawBlade.anchor.x = sawBlade.anchor.y = 0.5;
-      sawBlade.position.x = 1125;
-      sawBlade.position.y = -250;
-      this.listenTo(this.model, 'step', function (dt) {
-        sawBlade.rotation += Math.PI * 10 * dt;
-      });
+      line.moveTo(-(this.width / 2), 0);
+      line.lineTo(this.width / 2, 0);
       this.layer1.addChild(line);
-      this.layer1.addChild(sawBlade);
+      this.createSawblades();
       _.bindAll(this, 'render');
       this.render();
     },
@@ -50,6 +43,28 @@
     render: function () {
       this.renderer.render(this.stage);
       requestAnimFrame(this.render);
+    },
+
+    createSawblades: function () {
+      var sawBlades = _.flatten(_.map([-1, 1], function (dir) {
+        return _.times(28, function (y) {
+          var sawBlade = new PIXI.Sprite(PIXI.TextureCache['saw-blade.png']);
+          sawBlade.anchor.x = sawBlade.anchor.y = 0.5;
+          sawBlade.position.x = dir * (app.config.game.width / 2);
+          sawBlade.position.y = -((0.5 + y) * (sawBlade.height / 2));
+          sawBlade.scale.x = dir;
+          this.layer2.addChildAt(
+            sawBlade,
+            _.random(this.layer2.children.length)
+          );
+          return sawBlade;
+        }, this);
+      }, this));
+      this.listenTo(this.model, 'step', function (dt) {
+        _.each(sawBlades, function (sawBlade) {
+          sawBlade.rotation += sawBlade.scale.x * Math.PI * 10 * dt;
+        });
+      });
     },
 
     addCharacter: function (user) {

@@ -44,6 +44,11 @@
         keydown: this.onKeydown,
         keyup: this.onKeyup
       });
+      this.views.usersRecentList = new app.ListView({
+        el: this.$('.users-recent-list'),
+        collection: app.game.get('recentUsers'),
+        modelView: app.UsersRecentShowView
+      });
     },
 
     onTouchstart: function (ev) {
@@ -111,6 +116,6 @@
       if (!message) return;
       (new app.MessageShowView({model: message})).render();
       this.showMessage();
-    }, app.config.messageThrottleDuration)
+    }, app.config.game.messageThrottleDuration)
   });
 })();

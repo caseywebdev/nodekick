@@ -19,7 +19,7 @@
   </head>
 
   <body>
-    <div class='top-right-corner'>
+    <div class='session-info'>
       <% if (o.req.user) { %>
       <div class='user-info'>
         <a href='https://twitter.com/<%- o.req.user.get('username') %>'>
@@ -41,29 +41,8 @@
       </div>
       <% } %>
     </div>
-    <div id='scoreboard'></div>
+    <div class='users-recent-list'></div>
     <div id='game'></div>
-    <div id="deathDiv" style="display: none;">
-      <canvas id="deathCanvas" width="100" height="200" style="position: absolute; left: 0; border: solid 1px #FFF; background-color: red;"></canvas>
-      <canvas id="anotherCanvas" width="100" height="200" style="position: absolute; left: 100px; border: solid 1px #F00; background-color: red;"></canvas>
-    </div>
-    <canvas id='stage' class='desktop-only' width='1440' height='810'></canvas>
     <div class='mobile-only js-move-ack move-ack'></div>
-    <div class="keys">
-      <span>up</span> jump/spawn<br>
-      <span>left + right</span> kick<br>
-      Use the arrow keys<br>
-      or swipe with your phone
-    </div>
-    <div class="callout desktop-only">
-      <a href="http://nodeknockout.com/teams/team-us" target="_blank">Nodekick</a> is inspired by <a href="http://www.divekick.com/" target="_blank">Divekick</a>. We aren't affliated with Divekick, but love the game. Go buy it.
-      <br/>
-      <br/>
-      <a href="https://twitter.com/search?q=%23NKO13&src=hash">#NKO13</a> Team Us (as in "us" not "them"):
-      <a href="https://twitter.com/cliftonk">@clifftonk</a>
-      <a href="https://twitter.com/mallioch">@Mallioch</a>
-      <a href="https://twitter.com/amirrajan">@amirrajan</a>
-      <a href="https://twitter.com/caseywebdev">@caseywebdev</a>
-    </div>
   </body>
 </html>

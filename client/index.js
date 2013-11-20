@@ -12,8 +12,8 @@
 //= require config
 //= requireTree setup
 //= requireTree ../models
-//= requireTree views
 //= requireTree templates
+//= requireTree views
 
 (function () {
   'use strict';
@@ -75,7 +75,6 @@
     domReady: function () {
       $('html').addClass(app.config.mobile ? 'js-mobile' : 'js-desktop');
       new app.MainView({el: 'body', messages: app.messages});
-      // new app.ScoresListView({collection: app.scores});
       app.setUpMoveAck();
     },
 
@@ -83,23 +82,6 @@
       if (!app.currentUserId) return;
       var url = '/images/sprite-sheet.png';
       $('.js-move-ack').css('backgroundImage', "url('" + url + "')");
-    },
-
-    messageQueue: [],
-    messageRate: 800,
-    onMessage: function (message) {
-      if (app.currentMessage) {
-        app.messageQueue.push(message);
-      } else {
-        app.currentMessage = message;
-        app.showMessage(message);
-        clearInterval(app.messageInterval);
-        app.messageInterval = setInterval(function () {
-          var msg = app.currentMessage = app.messageQueue.shift();
-          if (!msg) return clearInterval(app.messageInterval);
-          app.showMessage(msg);
-        }, app.messageRate);
-      }
     },
 
     soundManagerReady: function () {

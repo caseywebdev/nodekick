@@ -10,17 +10,21 @@ var defaults = {
       maxAge: 1000 * 60 * 60 * 24 * 365 * 10
     }
   },
-  gravity: 7000,
-  jumpPower: 3000,
-  kickPower: 1500,
-  recentKillDuration: 1000 * 3,
-  recentUserDuration: 1000 * 60 * 5,
-  deathDuration: 2000,
-  bulletTimeDuration: 500,
-  fps: 60,
-  mps: 30,
-  hitBoxes: require('./hit-boxes'),
-  hitBoxScalar: 0.2,
+  game: {
+    gravity: 7000,
+    jumpPower: 3000,
+    kickPower: 1500,
+    recentKillDuration: 1000 * 3,
+    recentUserDuration: 1000 * 60 * 5,
+    deathDuration: 1000 * 1,
+    bulletTimeDuration: 1000 * 0.5,
+    fps: 60,
+    mps: 30,
+    hitBoxes: require('./hit-boxes'),
+    hitBoxScalar: 0.2,
+    width: 2880,
+    height: 1620
+  },
   redis: {
     url: '',
     prefix: 'nodekick:'

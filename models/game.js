@@ -41,12 +41,13 @@
         remove: function (user) {
           this.userTimeouts[user.id] = _.delay(
             _.bind(recentUsers.remove, recentUsers, user),
-            config.recentUserDuration
+            config.game.recentUserDuration
           );
           this.world.DestroyBody(user.body);
+          user.body = null;
         },
         'change:isDead': function (user) {
-          _.delay(_.bind(users.remove, users, user), config.deathDuration);
+          _.delay(_.bind(users.remove, users, user), config.game.deathDuration);
         },
         message: _.partial(this.trigger, 'message')
       });
@@ -69,7 +70,7 @@
     start: function () {
       this.stop();
       this.lastStep = Date.now();
-      this.intervalId = setInterval(this.step, 1000 / config.fps);
+      this.intervalId = setInterval(this.step, 1000 / config.game.fps);
     },
 
     stop: function () { clearInterval(this.intervalId); },
@@ -140,7 +141,7 @@
         var x = user.get('x');
         var absX = Math.abs(x);
         var side = x / absX;
-        if (absX <= 1000) return;
+        if (absX <= config.game.width / 2 - 100) return;
         this.kill(user, {xv: -(side * 4000), yv: -user.get('yv')});
       }, this);
     },
@@ -150,8 +151,28 @@
       this.set('timeScalar', 0.01);
       this.bulletTimeTimeoutId = _.delay(
         _.bind(this.set, this, 'timeScalar', 1),
-        config.bulletTimeDuration
+        config.game.bulletTimeDuration
       );
+    },
+
+    spawn: function (user) {
+      user = this.get('recentUsers').get(user) || user;
+      var spawnBound = (config.game.width / 2) - 200;
+      var x = _.random(-spawnBound, spawnBound);
+      user.set({
+        x: x,
+        y: config.game.height,
+        xv: 0,
+        yv: 0,
+        dir: -(x / Math.abs(x)),
+        state: 'jumping',
+        isDead: false,
+        touchedGround: false,
+        recentKills: 0,
+        killStreak: 0
+      });
+      if (!this.get('users').get(user)) this.get('users').add(user);
+      return user;
     }
   });
 

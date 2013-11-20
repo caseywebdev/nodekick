@@ -33,7 +33,7 @@
     step: function (dt) {
       var sprite = this.get('sprite');
       var xv = this.get('xv');
-      var yv = this.get('yv') + config.gravity * dt;
+      var yv = this.get('yv') + config.game.gravity * dt;
       this.set('yv', yv);
       var av = this.get('av');
       sprite.position.x += xv * dt;
@@ -42,7 +42,7 @@
       sprite.alpha -= this.get('fv') * dt;
       if (sprite.position.y < 0) return;
       var remainingTime = sprite.position.y / yv;
-      yv = -((yv - (remainingTime * config.gravity)) * this.bounce);
+      yv = -((yv - (remainingTime * config.game.gravity)) * this.bounce);
       this.set({xv: xv * this.bounce, yv: yv, av: av * this.bounce});
       sprite.position.y = yv * remainingTime;
     }

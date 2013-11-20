@@ -41,7 +41,7 @@ app.wss.on('connection', function (client) {
         data: jsonpatch.generate(observer)
       }));
     } else if (client.userId) {
-      var user = app.game.get('users').get(client.userId);
+      var user = app.game.get('recentUsers').get(client.userId);
       if (user) {
         if (data.name === 'POST /moves') {
           return movesCreate.run({
@@ -74,7 +74,7 @@ var stateIntervalId = setInterval(function () {
     _.extend(client.state, state);
     client.send(wsMsg('state', jsonpatch.generate(observer)));
   }
-}, 1000 / config.mps);
+}, 1000 / config.game.mps);
 
 process.on('SIGTERM', function () {
   clearInterval(stateIntervalId);
