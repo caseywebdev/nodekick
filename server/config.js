@@ -11,15 +11,15 @@ var defaults = {
     }
   },
   game: {
-    gravity: 7000,
+    gravity: 6000,
     jumpPower: 3000,
-    kickPower: 1500,
+    kickPower: 1400,
     recentKillDuration: 1000 * 3,
     recentUserDuration: 1000 * 60 * 5,
     deathDuration: 1000 * 1,
     bulletTimeDuration: 1000 * 0.5,
     fps: 60,
-    mps: 30,
+    mps: 60,
     hitBoxes: require('./hit-boxes'),
     hitBoxScalar: 0.2,
     width: 2880,

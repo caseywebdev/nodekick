@@ -4,9 +4,9 @@
   window.app.config = {
     mobile: /i(Phone|Pod|Pad)|Android/.test(navigator.userAgent),
     game: {
-      gravity: 7000,
+      gravity: 6000,
       jumpPower: 3000,
-      kickPower: 1500,
+      kickPower: 1400,
       recentKillDuration: 3000,
       fps: 60,
       messageDuration: 3000,

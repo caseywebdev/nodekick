@@ -29,21 +29,16 @@ app.wss.on('connection', function (client) {
     try { data = JSON.parse(data); } catch (e) { return; }
     if (data.name === 'authorize') {
       redis.client.get('liveKey:' + data.data, function (er, id) {
-        if (er) return er;
+        if (er || id == null) {
+          return client.send(JSON.stringify({id: data.id, error: er || 404}));
+        }
         client.userId = id;
         client.send(JSON.stringify({id: data.id}));
       });
-    } else if (data.name === 'game') {
-      var observer = jsonpatch.observe(data.data);
-      _.extend(data.data, app.game.toFrame());
-      client.send(JSON.stringify({
-        id: data.id,
-        data: jsonpatch.generate(observer)
-      }));
     } else if (client.userId) {
       var user = app.game.get('recentUsers').get(client.userId);
       if (user) {
-        if (data.name === 'POST /moves') {
+        if (data.name === 'POST:/moves') {
           return movesCreate.run({
             type: data.data.type,
             user: user,
@@ -53,7 +48,7 @@ app.wss.on('connection', function (client) {
       } else {
         (new User({id: client.userId})).fetch({cb: function (er, user, raw) {
           if (er || !raw) return;
-          if (data.name === 'POST /moves') {
+          if (data.name === 'POST:/moves') {
             movesCreate.run(
               {type: data.data.type, user: user, game: app.game},
               function () {}

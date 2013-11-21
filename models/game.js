@@ -137,7 +137,7 @@
         var absX = Math.abs(x);
         var side = x / absX;
         if (absX <= config.game.width / 2 - 100) return;
-        this.kill(user, {xv: -(side * 4000), yv: -user.get('yv')});
+        this.kill(user, {xv: -(side * 2000), yv: -user.get('yv')});
       }, this);
     },
 
