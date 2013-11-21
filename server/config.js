@@ -19,7 +19,7 @@ var defaults = {
     deathDuration: 1000 * 1,
     bulletTimeDuration: 1000 * 0.5,
     fps: 60,
-    mps: 60,
+    mps: 30,
     hitBoxes: require('./hit-boxes'),
     hitBoxScalar: 0.2,
     width: 2880,
