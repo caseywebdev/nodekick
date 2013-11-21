@@ -12,6 +12,7 @@
     options: [
       'modelView',
       'modelViewOptions',
+      'reverse'
     ],
 
     initialize: function () {
@@ -34,9 +35,10 @@
     },
 
     sortModels: function () {
-      this.$el.html(this.collection.map(function (model) {
+      var sorted = this.collection.map(function (model) {
         return this.views[model.cid].$el.detach();
-      }, this));
+      }, this);
+      this.$el.html(this.reverse ? sorted.reverse() : sorted);
     },
 
     removeModel: function (model) {

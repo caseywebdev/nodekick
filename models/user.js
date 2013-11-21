@@ -196,7 +196,7 @@
   User.Collection = Model.Collection.extend({
     model: User,
 
-    comparator: function (user) { return -user.get('kills'); }
+    comparator: 'kills'
   });
 
   node ? module.exports = User : app.User = User;

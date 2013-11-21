@@ -6,6 +6,7 @@
   var app = window.app;
 
   var jst = window.jst;
+  var requestAnimFrame = window.requestAnimFrame;
 
   app.UsersRecentShowView = app.View.extend({
     template: jst['users/recent/show'],
@@ -20,7 +21,7 @@
       this.$('.js-kills').text(this.model.get('kills'));
       var $el = this.$el;
       $el.removeClass('js-ease').addClass('js-changed');
-      window.requestAnimationFrame(function () {
+      requestAnimFrame(function () {
         $el.addClass('js-ease').removeClass('js-changed');
       });
     }

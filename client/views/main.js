@@ -47,7 +47,8 @@
       this.views.usersRecentList = new app.ListView({
         el: this.$('.users-recent-list'),
         collection: app.game.get('recentUsers'),
-        modelView: app.UsersRecentShowView
+        modelView: app.UsersRecentShowView,
+        reverse: true
       });
     },
 
