@@ -95,35 +95,12 @@
 
     createBody: function () {
       if (!this.world) return;
-      if (this.body) this.world.DestroyBody(this.body);
-      var bodyDef = new Box2D.b2BodyDef();
-      var vector = bodyDef.get_position();
-      vector.set_x(-100);
-      bodyDef.set_position(vector);
-      bodyDef.set_type(Box2D.b2_dynamicBody);
-      var body = this.body = this.world.CreateBody(bodyDef);
-      Box2D.destroy(bodyDef);
+      var body = this.body;
+      if (body) this.world.DestroyBody(body);
+      body = this.body = this.world.CreateBody(this.bodyDef());
       body.user = this;
-      this.updateBodyPosition();
-      var dir = this.get('dir');
-      var hitBoxScalar = config.game.hitBoxScalar;
-      _.each(config.game.hitBoxes[this.get('state')], function (def) {
-        var fixtureDef = new Box2D.b2FixtureDef();
-        fixtureDef.set_isSensor(true);
-        var filter = fixtureDef.get_filter();
-        filter.set_categoryBits(def.filter.categoryBits);
-        filter.set_maskBits(def.filter.maskBits);
-        var vectors = [];
-        for (var i = 0, l = def.shape.length; i < l; i += 2) {
-          vectors.push({
-            x: ((dir === -1 ? 1000 : 0) + dir * def.shape[i]) * hitBoxScalar,
-            y: (2000 - def.shape[i + 1]) * hitBoxScalar
-          });
-        }
-        if (dir === 1) vectors.reverse();
-        fixtureDef.set_shape(Box2D.createPolygonShape(vectors));
+      _.each(this.fixtureDefs(), function (fixtureDef) {
         body.CreateFixture(fixtureDef);
-        Box2D.destroy(fixtureDef);
       });
       this.updateBodyPosition();
     },
@@ -195,7 +172,47 @@
       return this.pick('id', 'username', 'displayName', 'avatar', 'character');
     },
 
-    avatar: function () { return _.result(this, 'url') + '/avatar'; }
+    avatar: function () { return _.result(this, 'url') + '/avatar'; },
+
+    bodyDef: function () { return User.bodyDef(); },
+
+    fixtureDefs: function () {
+      return User.fixtureDefs(
+        this.get('character'),
+        this.get('state'),
+        this.get('dir')
+      );
+    }
+  }, {
+    bodyDef: _.memoize(function () {
+      var bodyDef = new Box2D.b2BodyDef();
+      var vector = bodyDef.get_position();
+      vector.set_x(-100);
+      bodyDef.set_position(vector);
+      bodyDef.set_type(Box2D.b2_dynamicBody);
+      return bodyDef;
+    }),
+
+    fixtureDefs: _.memoize(function (character, state, dir) {
+      var hitBoxScalar = config.game.hitBoxScalar;
+      return _.map(config.game.hitBoxes[state], function (def) {
+        var fixtureDef = new Box2D.b2FixtureDef();
+        fixtureDef.set_isSensor(true);
+        var filter = fixtureDef.get_filter();
+        filter.set_categoryBits(def.filter.categoryBits);
+        filter.set_maskBits(def.filter.maskBits);
+        var vertices = [];
+        for (var i = 0, l = def.shape.length; i < l; i += 2) {
+          vertices.push({
+            x: ((dir === -1 ? 1000 : 0) + dir * def.shape[i]) * hitBoxScalar,
+            y: (2000 - def.shape[i + 1]) * hitBoxScalar
+          });
+        }
+        if (dir === 1) vertices.reverse();
+        fixtureDef.set_shape(Box2D.createPolygonShape(vertices));
+        return fixtureDef;
+      });
+    }, function () { return JSON.stringify(arguments); })
   });
 
   User.Collection = Model.Collection.extend({
