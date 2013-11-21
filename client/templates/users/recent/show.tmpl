@@ -1,4 +1,7 @@
-<a href='https://twitter.com/<%- o.model.get('username') %>'>
-  <img src='<%- o.model.get('avatar') %>' class='avatar'>
+<a
+  href='https://twitter.com/<%- o.model.get('username') %>'
+  title='<%- o.model.get('username') %>'
+>
+  <img src='<%- o.model.avatar() %>' class='avatar'>
 </a
 ><span class='js-kills kills'><%- o.model.get('kills') %></span>

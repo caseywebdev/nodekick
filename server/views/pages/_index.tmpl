@@ -23,7 +23,7 @@
       <% if (o.req.user) { %>
       <div class='user-info'>
         <a href='https://twitter.com/<%- o.req.user.get('username') %>'>
-          <img src='<%- o.req.user.get('avatar') %>' class='avatar'>
+          <img src='<%- o.req.user.avatar() %>' class='avatar'>
         </a>
         <div class='username-and-sign-out'>
           <div class='username'><%- o.req.user.get('username') %></div>

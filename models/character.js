@@ -26,6 +26,7 @@
       var avatar = new PIXI.Sprite(
         PIXI.Texture.fromImage(this.get('user').avatar())
       );
+      avatar.width = avatar.height = 48;
       var username = new PIXI.Text(this.get('user').get('username'), {
         font: "30px 'Helvetica Neue'"
       });
@@ -34,7 +35,7 @@
       username.position.x = avatar.position.x + avatar.width + 10;
       tag.addChild(avatar);
       tag.addChild(username);
-      this.set({sprite: sprite, tag: tag});
+      this.set({sprite: sprite, tag: tag, avatar: avatar, username: username});
       this.updatePosition();
       this.updateDirection();
     },
