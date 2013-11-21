@@ -33,7 +33,7 @@
       this.listenTo(users, {
         add: function (user) {
           clearTimeout(this.userTimeouts[user.id]);
-          this.get('recentUsers').add(user);
+          recentUsers.add(user);
           user.world = this.world;
           user.createBody();
         },
