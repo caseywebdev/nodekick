@@ -136,8 +136,9 @@
         var x = user.get('x');
         var absX = Math.abs(x);
         var side = x / absX;
-        if (absX <= config.game.width / 2 - 100) return;
-        this.kill(user, {xv: -(side * 2000), yv: -user.get('yv')});
+        var limit = (config.game.width / 2) - (config.game.hitBoxScalar * 500);
+        if (absX <= limit) return;
+        this.kill(user, {xv: -(side * 1000), yv: -user.get('yv')});
       }, this);
     },
 
