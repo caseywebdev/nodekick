@@ -190,7 +190,9 @@
 
     toJSON: function () {
       return this.pick('id', 'username', 'displayName', 'avatar', 'character');
-    }
+    },
+
+    avatar: function () { return _.result(this, 'url') + '/avatar'; }
   });
 
   User.Collection = Model.Collection.extend({

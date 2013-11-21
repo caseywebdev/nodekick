@@ -8,6 +8,7 @@
   var _ = window._;
   var PIXI = window.PIXI;
   var requestAnimFrame = window.requestAnimFrame;
+  var PI2 = Math.PI * 2;
 
   app.GamesShowView = app.View.extend({
     width: app.config.game.width,
@@ -23,8 +24,15 @@
       this.renderer = new PIXI.autoDetectRenderer(this.width, this.height);
       this.characters = new app.Character.Collection();
       this.container = new PIXI.DisplayObjectContainer();
-      this.container.addChild(this.layer1 = new PIXI.DisplayObjectContainer());
-      this.container.addChild(this.layer2 = new PIXI.DisplayObjectContainer());
+      this.container.addChild(
+        this.backgroundLayer = new PIXI.DisplayObjectContainer()
+      );
+      this.container.addChild(
+        this.tagLayer = new PIXI.DisplayObjectContainer()
+      );
+      this.container.addChild(
+        this.playerLayer = new PIXI.DisplayObjectContainer()
+      );
       this.container.position.x = this.width / 2;
       this.container.position.y = this.height - 100;
       this.stage.addChild(this.container);
@@ -34,7 +42,7 @@
       line.lineStyle(2, 0xFF0000);
       line.moveTo(-(this.width / 2), 0);
       line.lineTo(this.width / 2, 0);
-      this.layer1.addChild(line);
+      this.backgroundLayer.addChild(line);
       this.createSawblades();
       _.each(this.users.where({isDead: false}), this.addCharacter, this);
       _.bindAll(this, 'render');
@@ -54,17 +62,18 @@
           sawBlade.position.x = dir * (app.config.game.width / 2);
           sawBlade.position.y = -((0.5 + y) * (sawBlade.height / 2));
           sawBlade.scale.x = dir;
-          sawBlade.rotation = Math.PI * 2 * Math.random();
-          this.layer2.addChildAt(
+          sawBlade.rotation = PI2 * Math.random();
+          this.playerLayer.addChildAt(
             sawBlade,
-            _.random(this.layer2.children.length)
+            _.random(this.playerLayer.children.length)
           );
           return sawBlade;
         }, this);
       }, this));
       this.listenTo(this.model, 'step', function (dt) {
         _.each(sawBlades, function (sawBlade) {
-          sawBlade.rotation += sawBlade.scale.x * Math.PI * 10 * dt;
+          sawBlade.rotation =
+            (sawBlade.rotation + sawBlade.scale.x * PI2 * 5 * dt) % PI2;
         });
       });
     },
@@ -72,7 +81,8 @@
     addCharacter: function (user) {
       var character = new app.Character({user: user});
       this.characters.add(character);
-      this.layer2.addChild(character.get('sprite'));
+      this.playerLayer.addChild(character.get('sprite'));
+      this.tagLayer.addChild(character.get('tag'));
     },
 
     removeCharacter: function (user) {
@@ -80,14 +90,15 @@
       if (!character) return;
       var sprite = character.get('sprite');
       this.characters.remove(character);
-      this.layer2.removeChild(sprite);
+      this.playerLayer.removeChild(sprite);
+      this.tagLayer.removeChild(character.get('tag'));
       var killForce = user.get('killForce');
       new app.ExplosionPiece.Collection(null, {
         sprite: sprite,
         rows: 20,
         columns: 10,
         game: this.model,
-        container: this.layer2,
+        container: this.playerLayer,
         xv: (killForce && killForce.xv) || 0,
         yv: (killForce && -killForce.yv) || 0
       });

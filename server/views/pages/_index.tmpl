@@ -26,11 +26,8 @@
           <img src='<%- o.req.user.get('avatar') %>' class='avatar'>
         </a>
         <div class='username-and-sign-out'>
-          <a
-            href='https://twitter.com/<%- o.req.user.get('username') %>'
-            class='username'
-          >@<%- o.req.user.get('username') %></a>
-          <span class='js-sign-out sign-out'>Sign Out</span>
+          <div class='username'><%- o.req.user.get('username') %></div>
+          <div class='js-sign-out sign-out clickable'>Sign Out</div>
         </div>
       </div>
       <% } else { %>

@@ -16,7 +16,7 @@ canvas
 
 body
   text-size-adjust 100%
-  font-family 'Helvetica Nueue', Arial, Helvetica, 'Lucida Grande', sans-serif
+  font-family 'Helvetica Neue', Arial, Helvetica, 'Lucida Grande', sans-serif
   font-size 12px
   overflow hidden
   color #666
@@ -24,14 +24,14 @@ body
   text-align center
 
 a
+.clickable
   text-decoration none
   color #08f
+  cursor pointer
   &:hover
     text-decoration underline
 
 #game
-  // display flex
-  // align-items center
   transform scale(0.5) translate(-50%, -50%)
   width 200%
   height 200%
@@ -47,24 +47,6 @@ a
       content ''
       display block
       padding-top 56.25%
-
-.js-mobile .keys
-  top 200px
-
-.keys
-  position fixed
-  top 20px
-  user-select none
-  left 0
-  right 0
-  font-size 20px
-  font-family 'Piedra' cursive
-  text-transform uppercase
-  text-shadow 0 1px 3px rgba(0, 0, 0, .75)
-  span
-    margin-left 12px
-    margin-right 4px
-    color #bbb
 
 .js-mobile .desktop-only
   display none
@@ -137,6 +119,7 @@ a
   .username-and-sign-out
     padding 5px 10px
     display inline-block
+    text-align center
     .username
       display block
       font-size 16px
@@ -149,17 +132,6 @@ a
   left 50%
   margin-left -640px
   z-index -200
-
-.callout
-  position absolute
-  bottom 20px
-  left 50%
-  width 1280px
-  margin-left -640px
-  font-size 1.2em
-  color #ddd
-  text-shadow 0 2px 2px rgba(0, 0, 0, .75)
-  //  style="font-size: 20px; margin-top: 20px;"
 
 @keyframes message
   2%

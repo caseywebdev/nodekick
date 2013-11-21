@@ -28,6 +28,7 @@
     "redis": "x",
     "hiredis": "x",
     "stylus": "x",
+    "superagent": "x",
     "uglify-js": "x",
     "underscore": "x",
     "underscore-express": "x",

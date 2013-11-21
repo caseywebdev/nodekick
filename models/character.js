@@ -10,7 +10,7 @@
 
   var Character = app.Character = Model.extend({
     initialize: function () {
-      this.createSprite();
+      this.createSpriteAndTag();
       this.listenTo(this.get('user'), {
         'change:character change:state': this.updateTexture,
         'change:x change:y': this.updatePosition,
@@ -18,11 +18,23 @@
       });
     },
 
-    createSprite: function () {
+    createSpriteAndTag: function () {
       var sprite = new PIXI.Sprite(this.texture());
       sprite.anchor.x = 0.5;
       sprite.anchor.y = 0.9;
-      this.set('sprite', sprite);
+      var tag = new PIXI.DisplayObjectContainer();
+      var avatar = new PIXI.Sprite(
+        PIXI.Texture.fromImage(this.get('user').avatar())
+      );
+      var username = new PIXI.Text(this.get('user').get('username'), {
+        font: "30px 'Helvetica Neue'"
+      });
+      avatar.anchor.y = username.anchor.y = 0.5;
+      avatar.position.x = -(avatar.width + username.width + 10) / 2;
+      username.position.x = avatar.position.x + avatar.width + 10;
+      tag.addChild(avatar);
+      tag.addChild(username);
+      this.set({sprite: sprite, tag: tag});
       this.updatePosition();
       this.updateDirection();
     },
@@ -40,9 +52,11 @@
 
     updatePosition: function () {
       var sprite = this.get('sprite');
+      var tag = this.get('tag');
       var user = this.get('user');
-      sprite.position.x = user.get('x');
+      sprite.position.x = tag.position.x = user.get('x');
       sprite.position.y = -user.get('y');
+      tag.position.y = sprite.position.y - sprite.height;
     },
 
     updateDirection: function () {
