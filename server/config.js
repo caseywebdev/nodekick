@@ -45,7 +45,7 @@ module.exports = _.extend(defaults, ({
   production: {
     port: process.env.PORT || 80,
     url: 'http://nodekick.herokuapp.com',
-    session: _.extend({}, defaults.sessions, {
+    session: _.extend({}, defaults.session, {
       secret: process.env.SESSION_SECRET
     }),
     redis: {
