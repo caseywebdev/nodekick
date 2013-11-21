@@ -36,6 +36,7 @@
       line.lineTo(this.width / 2, 0);
       this.layer1.addChild(line);
       this.createSawblades();
+      _.each(this.users.where({isDead: false}), this.addCharacter, this);
       _.bindAll(this, 'render');
       this.render();
     },
