@@ -87,8 +87,8 @@
         columns: 10,
         game: this.model,
         container: this.layer2,
-        xv: user.get('xv') + ((killForce && killForce.xv) || 0),
-        yv: -(user.get('yv') + ((killForce && killForce.yv) || 0))
+        xv: (killForce && killForce.xv) || 0,
+        yv: (killForce && -killForce.yv) || 0
       });
     }
   });
