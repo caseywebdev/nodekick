@@ -53,6 +53,7 @@
           sawBlade.position.x = dir * (app.config.game.width / 2);
           sawBlade.position.y = -((0.5 + y) * (sawBlade.height / 2));
           sawBlade.scale.x = dir;
+          sawBlade.rotation = Math.PI * 2 * Math.random();
           this.layer2.addChildAt(
             sawBlade,
             _.random(this.layer2.children.length)
