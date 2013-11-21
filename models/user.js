@@ -102,6 +102,7 @@
       bodyDef.set_position(vector);
       bodyDef.set_type(Box2D.b2_dynamicBody);
       var body = this.body = this.world.CreateBody(bodyDef);
+      Box2D.destroy(bodyDef);
       body.user = this;
       this.updateBodyPosition();
       var dir = this.get('dir');
@@ -114,13 +115,15 @@
         filter.set_maskBits(def.filter.maskBits);
         var vectors = [];
         for (var i = 0, l = def.shape.length; i < l; i += 2) {
-          var x = ((dir === -1 ? 1000 : 0) + dir * def.shape[i]) * hitBoxScalar;
-          var y = (2000 - def.shape[i + 1]) * hitBoxScalar;
-          vectors.push(new Box2D.b2Vec2(x, y));
+          vectors.push({
+            x: ((dir === -1 ? 1000 : 0) + dir * def.shape[i]) * hitBoxScalar,
+            y: (2000 - def.shape[i + 1]) * hitBoxScalar
+          });
         }
         if (dir === 1) vectors.reverse();
         fixtureDef.set_shape(Box2D.createPolygonShape(vectors));
         body.CreateFixture(fixtureDef);
+        Box2D.destroy(fixtureDef);
       });
       this.updateBodyPosition();
     },

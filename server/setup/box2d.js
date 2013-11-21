@@ -3,14 +3,13 @@
 var _ = require('underscore');
 var Box2D = require('box2d.js').Box2D;
 
-Box2D.createPolygonShape = function (vectors) {
-  var shape = new Box2D.b2PolygonShape(vectors);
-  var buffer = Box2D.allocate(vectors.length * 8, 'float', Box2D.ALLOC_STACK);
-  _.each(vectors, function (vector, i) {
-    Box2D.setValue(buffer + (i * 8), vector.get_x(), 'float');
-    Box2D.setValue(buffer + (i * 8) + 4, vector.get_y(), 'float');
-    Box2D.destroy(vector);
+Box2D.createPolygonShape = function (vertices) {
+  var buffer = Box2D.allocate(vertices.length * 8, 'float', Box2D.ALLOC_STACK);
+  _.each(vertices, function (vertex, i) {
+    Box2D.setValue(buffer + (i * 8), vertex.x, 'float');
+    Box2D.setValue(buffer + (i * 8) + 4, vertex.y, 'float');
   });
-  shape.Set(Box2D.wrapPointer(buffer, Box2D.b2Vec2), vectors.length);
+  var shape = new Box2D.b2PolygonShape();
+  shape.Set(Box2D.wrapPointer(buffer, Box2D.b2Vec2), vertices.length);
   return shape;
 };
