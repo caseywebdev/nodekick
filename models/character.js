@@ -28,7 +28,8 @@
       );
       avatar.width = avatar.height = 48;
       var username = new PIXI.Text(this.get('user').get('username'), {
-        font: "30px 'Helvetica Neue'"
+        font: "30px 'Helvetica Neue'",
+        fill: 'white'
       });
       avatar.anchor.y = username.anchor.y = 0.5;
       avatar.position.x = -(avatar.width + username.width + 10) / 2;

@@ -21,7 +21,8 @@
 
     initialize: function () {
       this.stage = new PIXI.Stage(0xffffff);
-      this.renderer = new PIXI.autoDetectRenderer(this.width, this.height);
+      this.renderer =
+        new PIXI.autoDetectRenderer(this.width, this.height);
       this.characters = new app.Character.Collection();
       this.container = new PIXI.DisplayObjectContainer();
       this.container.addChild(
@@ -35,14 +36,15 @@
       );
       this.container.position.x = this.width / 2;
       this.container.position.y = this.height - 100;
+      var bkg = new PIXI.Sprite(
+        PIXI.Texture.fromImage('/images/background-nighttime-distant.png')
+      );
+      bkg.width = this.width;
+      bkg.height = this.height;
+      this.stage.addChild(bkg);
       this.stage.addChild(this.container);
       this.$el.append(this.renderer.view);
       this.users = this.model.get('users');
-      var line = new PIXI.Graphics();
-      line.lineStyle(2, 0xFF0000);
-      line.moveTo(-(this.width / 2), 0);
-      line.lineTo(this.width / 2, 0);
-      this.backgroundLayer.addChild(line);
       this.createSawblades();
       _.each(this.users.where({isDead: false}), this.addCharacter, this);
       _.bindAll(this, 'render');
