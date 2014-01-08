@@ -1,19 +1,19 @@
-//= require jquery/jquery
-//= require underscore/underscore
-//= require underscore.string/dist/underscore.string.min
-//= require backbone/backbone
-//= require herit/herit
-//= require backbone-relations/backbone-relations
-//= require live/live
-//= require pixi/bin/pixi
-//= require soundmanager/script/soundmanager2
-//= require fast-json-patch/src/json-patch.js
+//= require bower_components/jquery/jquery.js
+//= require bower_components/underscore/underscore.js
+//= require node_modules/underscore.string/dist/underscore.string.min.js
+//= require bower_components/backbone/backbone.js
+//= require bower_components/herit/herit.js
+//= require node_modules/backbone-relations/backbone-relations.js
+//= require bower_components/live/live.js
+//= require bower_components/pixi/bin/pixi.js
+//= require bower_components/soundmanager/script/soundmanager2.js
+//= require node_modules/fast-json-patch/src/json-patch.js
 //= requireSelf
-//= require config
-//= requireTree setup
+//= require ./config.js
+//= requireTree ./setup
 //= requireTree ../models
-//= requireTree templates
-//= requireTree views
+//= requireTree ./templates
+//= requireTree ./views
 
 (function () {
   'use strict';

@@ -1,4 +1,4 @@
-//= require ../../view
+//= require ../../view.js
 
 (function () {
   'use strict';
@@ -9,7 +9,7 @@
   var requestAnimFrame = window.requestAnimFrame;
 
   app.UsersRecentShowView = app.View.extend({
-    template: jst['users/recent/show'],
+    template: JST['users/recent/show'],
 
     className: 'js-users-recent-show',
 

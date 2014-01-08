@@ -2,7 +2,6 @@
 
 var _ = require('underscore');
 var Backbone = require('backbone');
-require('backbone-relations');
 var config = require('../config');
 var redis = require('redis');
 

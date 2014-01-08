@@ -5,12 +5,15 @@
   var app = node ? null : window.app;
 
   var _ = node ? require('underscore') : window._;
-  var Backbone = node ? require('backbone') : window.Backbone;
+  var BackboneRelations =
+    node ?
+    require('backbone-relations') :
+    window.BackboneRelations;
 
-  var Model = Backbone.Model.extend({
+  var Model = BackboneRelations.Model.extend({
     constructor: function () {
       this.constructor.relations();
-      Backbone.Model.apply(this, arguments);
+      BackboneRelations.Model.apply(this, arguments);
     },
 
     validate: function (attrs, options) {
@@ -57,7 +60,7 @@
     }
   });
 
-  Model.Collection = Backbone.Collection.extend({
+  Model.Collection = BackboneRelations.Collection.extend({
     model: Model,
 
     url: function () {
