@@ -29,7 +29,7 @@ heroku-buildpack:
 	rm -fr client
 
 deploy:
-	git push heroku redux:master
+	git push heroku master
 
 audio:
 	scripts/audio-to-mp3.sh
