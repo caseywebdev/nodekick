@@ -5,7 +5,7 @@
 
   var app = window.app;
 
-  var jst = window.jst;
+  var JST = window.JST;
   var requestAnimFrame = window.requestAnimFrame;
 
   app.UsersRecentShowView = app.View.extend({
