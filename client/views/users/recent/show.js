@@ -9,7 +9,7 @@
   var requestAnimFrame = window.requestAnimFrame;
 
   app.UsersRecentShowView = app.View.extend({
-    template: JST['users/recent/show'],
+    template: JST['templates/users/recent/show'],
 
     className: 'js-users-recent-show',
 

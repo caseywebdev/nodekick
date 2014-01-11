@@ -6,6 +6,7 @@
     "client"
   ],
   "options": {
+    "basePath": "client",
     "processors.styl.options.nib": true,
     "processors.tmpl.options.variable": "o"
   },
