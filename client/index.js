@@ -1,4 +1,4 @@
-//= require bower_components/jquery/jquery.js
+//= require bower_components/jquery/dist/jquery.js
 //= require bower_components/underscore/underscore.js
 //= require node_modules/underscore.string/dist/underscore.string.min.js
 //= require bower_components/backbone/backbone.js
